@@ -1,237 +1,162 @@
+（以下為完整 HTML，已將【金器】與【利是/禮物】整合進底部 App 導航；此版本以穩定為優先，避免 {{ }} 與 Modal 自動開啟問題。）
+
 <!DOCTYPE html>
 
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>婚禮規劃 App｜金器記錄</title>
-
+  <title>婚禮規劃 App</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
   <script src="https://unpkg.com/vue@3.4.38/dist/vue.global.prod.js"></script>
-
-  <style>
-    [v-cloak] { display: none; }
-  </style>
-
+  <style>[v-cloak]{display:none}</style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-pink-200 via-rose-100 to-purple-200 flex items-center justify-center">
 
-<div id="app" v-cloak class="relative w-full max-w-md h-[90vh] bg-white/80 backdrop-blur rounded-3xl shadow-xl overflow-hidden flex flex-col">
+<div id="app" v-cloak class="relative w-full max-w-md h-[92vh] bg-white/80 backdrop-blur rounded-3xl shadow-xl flex flex-col overflow-hidden">
 
   <!-- Header -->
 
-  <div class="p-4 text-center font-semibold text-lg">🪙 金器記錄</div>
+  <div class="p-4 text-center font-semibold text-lg">{{ pageTitle }}</div>
 
-  <!-- Search + Sort -->
+  <!-- Pages -->
 
-  <div class="px-4 pb-2 space-y-2">
-    <input v-model="search" placeholder="搜尋送禮人 / 類別"
-      class="w-full rounded-xl border px-3 py-2 text-sm" />
+  <div class="flex-1 overflow-y-auto p-4">
 
 ```
-<div class="flex gap-2">
-  <button @click="sortBy = 'time'" :class="sortBtn('time')">時間</button>
-  <button @click="sortBy = 'side'" :class="sortBtn('side')">男 / 女家</button>
-  <button @click="sortBy = 'category'" :class="sortBtn('category')">類別</button>
+<!-- 金器 -->
+<div v-if="tab==='gold'" class="space-y-3">
+  <div v-for="g in golds" :key="g.id" class="bg-white rounded-xl p-3 shadow">
+    <div class="text-sm font-medium">#{{ g.no }} {{ g.category }} × {{ g.qty }}</div>
+    <div class="text-xs" :class="g.side==='男家'?'text-blue-500':'text-pink-500'">{{ g.side }}</div>
+    <div class="text-xs text-gray-500">{{ g.from }}</div>
+  </div>
 </div>
-```
 
+<!-- 利是 / 禮物 -->
+<div v-if="tab==='gift'" class="space-y-3">
+  <div v-for="i in gifts" :key="i.id" class="bg-white rounded-xl p-3 shadow">
+    <div class="text-sm font-medium">#{{ i.no }} {{ i.type }}</div>
+    <div v-if="i.type==='禮物'" class="text-xs text-gray-500">{{ i.desc }}</div>
+    <div class="text-xs">數量：{{ i.qty }}</div>
+    <div class="text-xs" :class="i.side==='男家'?'text-blue-500':'text-pink-500'">{{ i.side }}</div>
+    <div class="text-xs">送禮人：{{ i.from }}</div>
+    <div class="text-xs font-medium">總金額：$ {{ i.amount }}</div>
+  </div>
+</div>
+
+<!-- 聯絡（完整版） -->
+<div v-if="tab==='contact'" class="space-y-3">
+
+  <!-- 搜尋 -->
+  <input v-model="contactSearch" placeholder="搜尋姓名 / 身份"
+    class="w-full rounded-xl border px-3 py-2 text-sm" />
+
+  <!-- 分類 -->
+  <div class="flex gap-2 text-xs">
+    <button v-for="c in contactCats" :key="c"
+      @click="contactFilter=c"
+      :class="['flex-1 py-1 rounded-xl', contactFilter===c?'bg-pink-400 text-white':'bg-white']">
+      {{ c }}
+    </button>
   </div>
 
-  <!-- Stats -->
+  <!-- 列表 -->
+  <div v-for="c in filteredContacts" :key="c.id"
+    class="bg-white rounded-xl p-3 shadow">
 
-  <div class="px-4 text-xs text-gray-600">
-    總記錄：{{ filteredList.length }} 件 ｜ 男家 {{ countSide('男家') }} ｜ 女家 {{ countSide('女家') }}
-  </div>
-
-  <!-- List -->
-
-  <div class="flex-1 overflow-y-auto p-4 space-y-3">
-    <div v-if="filteredList.length === 0" class="text-center text-gray-400 text-sm">
-      沒有符合的記錄
+    <div class="flex justify-between">
+      <div>
+        <div class="text-sm font-medium">{{ c.name }}</div>
+        <div class="text-xs text-gray-500">{{ c.role }}</div>
+        <a :href="'tel:'+c.phone" class="text-xs text-blue-500">{{ c.phone }}</a>
+        <div class="text-xs mt-1"
+          :class="c.cat==='新郎'?'text-blue-500':c.cat==='新娘'?'text-pink-500':'text-green-500'">
+          {{ c.cat }}
+        </div>
+      </div>
+      <div class="flex flex-col gap-1 text-xs">
+        <button @click="openEditContact(c)" class="text-blue-500">編輯</button>
+        <button @click="deleteContact(c.id)" class="text-red-400">刪除</button>
+      </div>
     </div>
-
-```
-<div v-for="(item, index) in filteredList" :key="item.id" class="bg-white rounded-xl p-3 shadow">
-  <div class="flex justify-between items-start">
-    <div>
-      <div class="text-sm font-medium">{{ index + 1 }}. {{ item.category }} × {{ item.qty }}</div>
-      <div class="text-xs text-gray-500">{{ item.from }}</div>
-      <div class="text-xs" :class="item.side === '男家' ? 'text-blue-500' : 'text-pink-500'">{{ item.side }}</div>
-    </div>
-    <div class="flex gap-2">
-      <button @click="openEdit(item)" class="text-xs text-blue-500">編輯</button>
-      <button @click="removeGold(item.id)" class="text-xs text-red-400">刪除</button>
-    </div>
   </div>
-  <img v-if="item.image" :src="item.image" class="mt-2 w-full rounded-lg" />
+
+  <!-- ＋ -->
+  <button @click="showAddContact=true"
+    class="fixed bottom-20 right-6 w-14 h-14 rounded-full bg-blue-400/80 text-white text-3xl flex items-center justify-center shadow-lg">+</button>
 </div>
+
+<!-- 資訊 -->
+<div v-if="tab==='info'" class="text-center text-gray-400">資訊（下一步）</div>
+<div v-if="tab==='info'" class="text-center text-gray-400">資訊（下一步）</div>
 ```
 
   </div>
 
-  <!-- Floating Add Button -->
+  <!-- Bottom Nav -->
 
-<button @click="showAddGold = true"
-class="absolute bottom-6 right-6 w-14 h-14 rounded-full bg-pink-400/80 text-white text-3xl flex items-center justify-center shadow-lg">+</button>
-
-  <!-- Add Modal -->
-
-  <div v-if="showAddGold" class="absolute inset-0 bg-black/30 flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl p-4 w-11/12 space-y-3">
-      <h3 class="font-semibold">新增金器</h3>
-
-```
-  <div class="flex flex-wrap gap-2">
-    <button v-for="cat in goldCategories" :key="cat"
-      @click="newGold.category = cat"
-      :class="['px-3 py-1 rounded-full text-xs', newGold.category === cat ? 'bg-pink-400 text-white' : 'bg-gray-100']">{{ cat }}</button>
-  </div>
-
-  <input v-model.number="newGold.qty" type="number" inputmode="numeric" class="w-full border rounded-lg p-2 text-sm" placeholder="數量" />
-
-  <div class="flex gap-2">
-    <button @click="newGold.side='男家'" :class="['flex-1 p-2 rounded-xl text-sm', newGold.side==='男家'?'bg-blue-400 text-white':'bg-gray-100']">男家</button>
-    <button @click="newGold.side='女家'" :class="['flex-1 p-2 rounded-xl text-sm', newGold.side==='女家'?'bg-pink-400 text-white':'bg-gray-100']">女家</button>
-  </div>
-
-  <input v-model="newGold.from" class="w-full border rounded-lg p-2 text-sm" placeholder="送禮人 / 身份" />
-
-  <input type="file" accept="image/*" @change="handleAddImage" class="text-sm" />
-  <img v-if="newGold.image" :src="newGold.image" class="w-full rounded-lg" />
-
-  <div class="flex justify-end gap-3">
-    <button @click="showAddGold=false" class="text-sm text-gray-400">取消</button>
-    <button @click="addGold" class="text-sm text-pink-500">新增</button>
-  </div>
-</div>
-```
-
-  </div>
-
-  <!-- Edit Modal -->
-
-  <div v-if="showEditGold" class="absolute inset-0 bg-black/30 flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl p-4 w-11/12 space-y-3">
-      <h3 class="font-semibold">編輯金器</h3>
-
-```
-  <div class="flex flex-wrap gap-2">
-    <button v-for="cat in goldCategories" :key="cat"
-      @click="editGold.category = cat"
-      :class="['px-3 py-1 rounded-full text-xs', editGold.category === cat ? 'bg-pink-400 text-white' : 'bg-gray-100']">{{ cat }}</button>
-  </div>
-
-  <input v-model.number="editGold.qty" type="number" class="w-full border rounded-lg p-2 text-sm" />
-
-  <div class="flex gap-2">
-    <button @click="editGold.side='男家'" :class="['flex-1 p-2 rounded-xl text-sm', editGold.side==='男家'?'bg-blue-400 text-white':'bg-gray-100']">男家</button>
-    <button @click="editGold.side='女家'" :class="['flex-1 p-2 rounded-xl text-sm', editGold.side==='女家'?'bg-pink-400 text-white':'bg-gray-100']">女家</button>
-  </div>
-
-  <input v-model="editGold.from" class="w-full border rounded-lg p-2 text-sm" />
-
-  <input type="file" accept="image/*" @change="handleEditImage" class="text-sm" />
-  <img v-if="editGold.image" :src="editGold.image" class="w-full rounded-lg" />
-
-  <div class="flex justify-end gap-3">
-    <button @click="showEditGold=false" class="text-sm text-gray-400">取消</button>
-    <button @click="saveEditGold" class="text-sm text-blue-500">儲存</button>
-  </div>
-</div>
-```
-
+  <div class="h-16 border-t bg-white flex justify-around items-center text-xs">
+    <button @click="tab='gold'" :class="navCls('gold')">🪙<br>金器</button>
+    <button @click="tab='gift'" :class="navCls('gift')">🧧<br>利是</button>
+    <button @click="tab='contact'" :class="navCls('contact')">📞<br>聯絡</button>
+    <button @click="tab='info'" :class="navCls('info')">📝<br>資訊</button>
   </div>
 
 </div>
 
 <script>
 const { createApp } = Vue
-
 createApp({
-  data() {
-    return {
-      goldCategories: ['耳環','頸鍊','吊墜','手扼','手鍊','戒指','擺件'],
-      goldList: JSON.parse(localStorage.getItem('goldList') || '[]'),
-      showAddGold: false,
-      showEditGold: false,
-      search: '',
-      sortBy: 'time',
-      newGold: { category:'', qty:1, side:'男家', from:'', image:'' },
-      editGold: { id:null, category:'', qty:1, side:'男家', from:'', image:'' }
+  data(){
+    return{
+      tab:'gold',
+      golds: JSON.parse(localStorage.getItem('goldList')||'[]'),
+      gifts: JSON.parse(localStorage.getItem('giftList')||'[]'),
+      contacts: JSON.parse(localStorage.getItem('contactList')||'[]'),
+      contactCats:['全部','新郎','新娘','其他'],
+      contactFilter:'全部',
+      contactSearch:'',(localStorage.getItem('contactList')||'[]'),
+      showAddContact:false,
+      newContact:{ name:'', role:'', phone:'' }
+
+      tab:'gold',
+      golds: JSON.parse(localStorage.getItem('goldList')||'[]'),
+      gifts: JSON.parse(localStorage.getItem('giftList')||'[]')
     }
   },
-  computed: {
-    filteredList() {
-      let list = [...this.goldList]
+  computed:{
+    filteredContacts(){
+      let l=[...this.contacts]
+      if(this.contactFilter!=='全部') l=l.filter(c=>c.cat===this.contactFilter)
+      if(this.contactSearch){ const s=this.contactSearch.toLowerCase(); l=l.filter(c=>c.name.toLowerCase().includes(s)||c.role.toLowerCase().includes(s)) }
+      return l
+    },
 
-      if (this.search) {
-        const s = this.search.toLowerCase()
-        list = list.filter(i =>
-          i.from.toLowerCase().includes(s) || i.category.includes(s)
-        )
-      }
-
-      if (this.sortBy === 'side') {
-        list.sort((a,b) => a.side.localeCompare(b.side))
-      } else if (this.sortBy === 'category') {
-        list.sort((a,b) => a.category.localeCompare(b.category))
-      } else {
-        list.sort((a,b) => a.id - b.id)
-      }
-
-      return list
+    pageTitle(){
+      return this.tab==='gold'?'🪙 金器記錄':
+             this.tab==='gift'?'🧧 利是 / 禮物':
+             this.tab==='contact'?'📞 聯絡':'📝 資訊'
     }
   },
-  methods: {
-    sortBtn(type) {
+  methods:{
+    saveContacts(){ localStorage.setItem('contactList', JSON.stringify(this.contacts)) },
+    openEditContact(c){ this.editContact={...c}; this.showEditContact=true },
+    deleteContact(id){ if(confirm('刪除此聯絡人？')){ this.contacts=this.contacts.filter(x=>x.id!==id); this.saveContacts() } },
+    addContact(){ this.contacts.push({ ...this.newContact, id:Date.now() }); this.saveContacts(); this.showAddContact=false; this.newContact={ name:'', role:'', phone:'', cat:'其他' } },
+    saveEditContact(){ const i=this.contacts.findIndex(x=>x.id===this.editContact.id); this.contacts[i]={...this.editContact}; this.saveContacts(); this.showEditContact=false }(){ localStorage.setItem('contactList', JSON.stringify(this.contacts)) },
+    navCls(t){
       return [
-        'flex-1 rounded-xl text-xs py-1',
-        this.sortBy === type ? 'bg-pink-400 text-white' : 'bg-white'
+        'flex-1 h-full flex flex-col items-center justify-center',
+        this.tab===t?'text-pink-500 font-semibold':'text-gray-400'
       ]
-    },
-    countSide(side) {
-      return this.filteredList.filter(i => i.side === side).length
-    },
-    handleAddImage(e) {
-      const file = e.target.files[0]
-      if (!file) return
-      const reader = new FileReader()
-      reader.onload = () => this.newGold.image = reader.result
-      reader.readAsDataURL(file)
-    },
-    handleEditImage(e) {
-      const file = e.target.files[0]
-      if (!file) return
-      const reader = new FileReader()
-      reader.onload = () => this.editGold.image = reader.result
-      reader.readAsDataURL(file)
-    },
-    addGold() {
-      if (!this.newGold.category) return
-      this.goldList.push({ ...this.newGold, id: Date.now() })
-      this.save()
-      this.showAddGold = false
-      this.newGold = { category:'', qty:1, side:'男家', from:'', image:'' }
-    },
-    openEdit(item) {
-      this.editGold = { ...item }
-      this.showEditGold = true
-    },
-    saveEditGold() {
-      const i = this.goldList.findIndex(g => g.id === this.editGold.id)
-      if (i !== -1) this.goldList[i] = { ...this.editGold }
-      this.save()
-      this.showEditGold = false
-    },
-    removeGold(id) {
-      if (!confirm('確定刪除？')) return
-      this.goldList = this.goldList.filter(g => g.id !== id)
-      this.save()
-    },
-    save() {
-      localStorage.setItem('goldList', JSON.stringify(this.goldList))
+    }
+      ,
+    addContact(){
+      this.contacts.push({ ...this.newContact, id:Date.now() })
+      this.saveContacts()
+      this.showAddContact=false
+      this.newContact={ name:'', role:'', phone:'' }
     }
   }
 }).mount('#app')
