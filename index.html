@@ -7,7 +7,6 @@
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-
   <!-- Vue 3 -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
@@ -42,7 +41,6 @@
     <!-- 行程 -->
     <div v-if="currentTab==='schedule'" class="space-y-3">
       <h2 class="font-semibold">⛪ 婚禮當天行程</h2>
-
       <div v-for="(item,idx) in schedule" :key="idx" class="bg-white rounded-2xl p-3 shadow-soft flex justify-between">
         <div>
           <div class="text-sm font-medium">{{ item.time }}</div>
@@ -50,18 +48,34 @@
         </div>
         <button @click="schedule.splice(idx,1)" class="text-xs text-red-400">刪除</button>
       </div>
+    </div>
 
-      <div class="bg-white rounded-2xl p-3 shadow-soft space-y-2">
-        <input v-model="newSchedule.time" placeholder="時間" class="w-full border rounded-xl p-2 text-sm" />
-        <input v-model="newSchedule.title" placeholder="事項" class="w-full border rounded-xl p-2 text-sm" />
-        <button @click="addSchedule" class="w-full bg-pinky rounded-xl p-2 text-sm">新增</button>
+    <!-- 金器 -->
+    <div v-if="currentTab==='gold'" class="space-y-3">
+      <h2 class="font-semibold">🪙 金器</h2>
+      <div class="bg-white rounded-2xl p-3 shadow-soft text-sm text-gray-500">
+        （功能稍後加入）
+      </div>
+    </div>
+
+    <!-- 利是 / 禮物 -->
+    <div v-if="currentTab==='red'" class="space-y-3">
+      <h2 class="font-semibold">🧧 利是 / 禮物</h2>
+      <div class="bg-white rounded-2xl p-3 shadow-soft text-sm text-gray-500">
+        （功能稍後加入）
+      </div>
+    </div>
+
+    <!-- 資訊 -->
+    <div v-if="currentTab==='info'" class="space-y-3">
+      <h2 class="font-semibold">📝 資訊</h2>
+      <div class="bg-white rounded-2xl p-3 shadow-soft text-sm text-gray-500">
+        物資 List / 影相次序 / 晚宴座位表（稍後加入）
       </div>
     </div>
 
     <!-- 聯絡 -->
     <div v-if="currentTab==='contacts'" class="space-y-3">
-
-      <!-- 分類 -->
       <div class="flex gap-2">
         <button v-for="g in contactGroups" :key="g"
           @click="activeContactGroup=g"
@@ -70,54 +84,25 @@
         </button>
       </div>
 
-      <!-- 聯絡列表 -->
       <div class="bg-white rounded-2xl p-3 shadow-soft space-y-2">
-        <div v-if="contacts[activeContactGroup].length===0" class="text-xs text-gray-400 text-center">尚未新增聯絡人</div>
-
-        <div v-for="(c,idx) in contacts[activeContactGroup]" :key="idx">
-
-          <!-- 檢視模式 -->
-          <div v-if="editIndex!==idx" class="flex justify-between items-center text-sm">
-            <div>
-              <div class="font-medium">{{ c.name }}</div>
-              <div class="text-xs text-gray-500">{{ c.role }}｜{{ c.phone }}</div>
-            </div>
-            <div class="flex gap-2">
-              <button @click="startEdit(c,idx)" class="text-xs text-blue-400">編輯</button>
-              <button @click="removeContact(idx)" class="text-xs text-red-400">刪除</button>
-            </div>
+        <div v-for="(c,idx) in contacts[activeContactGroup]" :key="idx" class="flex justify-between text-sm">
+          <div>
+            <div class="font-medium">{{ c.name }}</div>
+            <div class="text-xs text-gray-500">{{ c.role }}｜{{ c.phone }}</div>
           </div>
-
-          <!-- 編輯模式 -->
-          <div v-else class="mt-2 bg-gray-50 rounded-xl p-2 space-y-1">
-            <input v-model="editContact.name" class="w-full border rounded-lg p-1 text-sm" />
-            <input v-model="editContact.role" class="w-full border rounded-lg p-1 text-sm" />
-            <input v-model="editContact.phone" class="w-full border rounded-lg p-1 text-sm" />
-            <div class="flex justify-end gap-3">
-              <button @click="cancelEdit" class="text-xs text-gray-400">取消</button>
-              <button @click="saveEdit(idx)" class="text-xs text-green-500">儲存</button>
-            </div>
-          </div>
-
         </div>
       </div>
-
-      <!-- 新增聯絡 -->
-      <div class="bg-white rounded-2xl p-3 shadow-soft space-y-2">
-        <input v-model="newContact.name" placeholder="姓名" class="w-full border rounded-xl p-2 text-sm" />
-        <input v-model="newContact.role" placeholder="身份" class="w-full border rounded-xl p-2 text-sm" />
-        <input v-model="newContact.phone" placeholder="電話" class="w-full border rounded-xl p-2 text-sm" />
-        <button @click="addContact" class="w-full bg-minty rounded-xl p-2 text-sm">新增聯絡人</button>
-      </div>
-
     </div>
 
   </div>
 
   <!-- Bottom Navigation -->
-  <div class="shrink-0 grid grid-cols-2 text-center border-t bg-white">
-    <button @click="currentTab='schedule'" :class="['p-3 text-sm', currentTab==='schedule'?'text-pink-500 font-semibold':'']">⛪ 行程</button>
-    <button @click="currentTab='contacts'" :class="['p-3 text-sm', currentTab==='contacts'?'text-pink-500 font-semibold':'']">📞 聯絡</button>
+  <div class="shrink-0 grid grid-cols-5 text-center border-t bg-white text-xs">
+    <button @click="currentTab='schedule'" :class="['p-3', currentTab==='schedule'?'text-pink-500 font-semibold':'']">⛪ 行程</button>
+    <button @click="currentTab='gold'" :class="['p-3', currentTab==='gold'?'text-pink-500 font-semibold':'']">🪙 金器</button>
+    <button @click="currentTab='red'" :class="['p-3', currentTab==='red'?'text-pink-500 font-semibold':'']">🧧 禮物</button>
+    <button @click="currentTab='info'" :class="['p-3', currentTab==='info'?'text-pink-500 font-semibold':'']">📝 資訊</button>
+    <button @click="currentTab='contacts'" :class="['p-3', currentTab==='contacts'?'text-pink-500 font-semibold':'']">📞 聯絡</button>
   </div>
 
 </div>
@@ -130,48 +115,9 @@ createApp({
     return {
       currentTab:'schedule',
       schedule: JSON.parse(localStorage.getItem('schedule')||'[]'),
-      newSchedule:{ time:'', title:'' },
-
       contactGroups:['新郎','新娘','其他'],
       activeContactGroup:'新郎',
-      contacts: JSON.parse(localStorage.getItem('contacts')||'{"新郎":[],"新娘":[],"其他":[]}'),
-
-      newContact:{ name:'', role:'', phone:'' },
-      editIndex:null,
-      editContact:{ name:'', role:'', phone:'' }
-    }
-  },
-  watch:{
-    schedule:{ handler(v){ localStorage.setItem('schedule',JSON.stringify(v)) }, deep:true },
-    contacts:{ handler(v){ localStorage.setItem('contacts',JSON.stringify(v)) }, deep:true }
-  },
-  methods:{
-    addSchedule(){
-      if(this.newSchedule.time && this.newSchedule.title){
-        this.schedule.push({...this.newSchedule})
-        this.newSchedule={time:'',title:''}
-      }
-    },
-    addContact(){
-      if(this.newContact.name && this.newContact.phone){
-        this.contacts[this.activeContactGroup].push({...this.newContact})
-        this.newContact={name:'',role:'',phone:''}
-      }
-    },
-    removeContact(idx){
-      this.contacts[this.activeContactGroup].splice(idx,1)
-    },
-    startEdit(c,idx){
-      this.editIndex=idx
-      this.editContact={...c}
-    },
-    cancelEdit(){
-      this.editIndex=null
-      this.editContact={name:'',role:'',phone:''}
-    },
-    saveEdit(idx){
-      this.contacts[this.activeContactGroup][idx]={...this.editContact}
-      this.cancelEdit()
+      contacts: JSON.parse(localStorage.getItem('contacts')||'{"新郎":[],"新娘":[],"其他":[]}')
     }
   }
 }).mount('#app')
