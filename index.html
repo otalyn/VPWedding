@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>婚禮規劃 App</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/vue@3.4.38/dist/vue.global.prod.js"></script>
@@ -212,4 +212,4 @@ createApp({
     saveEditContact(){ const i=this.contacts.findIndex(x=>x.id===this.currentContact.id); this.contacts[i]={...this.currentContact}; localStorage.setItem('contactList',JSON.stringify(this.contacts)); this.closeContactModal() },
     deleteContact(id){ if(confirm('刪除此聯絡人？')){ this.contacts=this.contacts.filter(x=>x.id!==id); localStorage.setItem('contactList',JSON.stringify(this.contacts)) } }
   }
-}).mount
+}).
