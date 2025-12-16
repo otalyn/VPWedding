@@ -41,48 +41,29 @@
   <!-- Main Content -->
   <div class="flex-1 overflow-y-auto p-4 space-y-4">
 
-    <!-- 聯絡 -->
-    <div v-if="currentTab==='contacts'" class="space-y-3">
+    <!-- 🪙 金器分頁 -->
+    <div v-if="currentTab==='gold'" class="space-y-3">
 
-      <!-- 搜尋 -->
-      <input v-model="search" placeholder="搜尋聯絡人" class="w-full border rounded-xl p-2 text-sm" />
+      <h2 class="font-semibold">🪙 金器記錄</h2>
 
-      <!-- 分類 -->
-      <div class="flex gap-2">
-        <button v-for="g in contactGroups" :key="g"
-          @click="activeContactGroup=g; cancelEdit()"
-          :class="['flex-1 p-2 rounded-xl text-sm font-medium', groupBtnClass(g)]">
-          {{ g }}
-        </button>
-      </div>
+      <!-- 金器列表 -->
+      <div class="space-y-2">
+        <div v-for="(item,idx) in goldList" :key="item.id" class="bg-white rounded-2xl p-3 shadow-soft flex gap-3">
 
-      <!-- 聯絡列表 -->
-      <div class="bg-white rounded-2xl p-3 shadow-soft space-y-2">
-        <div v-if="filteredContacts.length===0" class="text-xs text-gray-400 text-center">沒有符合的聯絡人</div>
+          <!-- 編號 -->
+          <div class="text-xs text-gray-400">#{{ idx + 1 }}</div>
 
-        <div v-for="(c,idx) in filteredContacts" :key="idx" class="space-y-1">
+          <!-- 圖片 -->
+          <img v-if="item.image" :src="item.image" class="w-16 h-16 rounded-xl object-cover" />
+          <div v-else class="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center text-xs text-gray-400">無圖</div>
 
-          <!-- 查看模式 -->
-          <div v-if="editIndex!==idx" class="flex justify-between items-center text-sm">
-            <div>
-              <div class="font-medium">{{ c.name }}</div>
-              <div class="text-xs text-gray-500">{{ c.role }}</div>
-              <a :href="'tel:'+c.phone" class="text-xs text-blue-500 underline">📞 {{ c.phone }}</a>
-            </div>
-            <div class="flex gap-2">
-              <button @click="startEdit(c,idx)" class="text-xs text-blue-400">編輯</button>
-              <button @click="removeContact(activeContactGroup,idx)" class="text-xs text-red-400">刪除</button>
-            </div>
-          </div>
-
-          <!-- 編輯模式 -->
-          <div v-else class="bg-gray-50 rounded-xl p-2 space-y-1">
-            <input v-model="editContact.name" class="w-full border rounded-lg p-1 text-sm" />
-            <input v-model="editContact.role" class="w-full border rounded-lg p-1 text-sm" />
-            <input v-model="editContact.phone" class="w-full border rounded-lg p-1 text-sm" />
-            <div class="flex justify-end gap-2">
-              <button @click="cancelEdit" class="text-xs text-gray-400">取消</button>
-              <button @click="saveEdit(idx)" class="text-xs text-green-500">儲存</button>
+          <!-- 資訊 -->
+          <div class="flex-1">
+            <div class="text-sm font-medium">{{ item.category }} × {{ item.qty }}</div>
+            <div class="text-xs text-gray-500">{{ item.from }}</div>
+            <div class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs"
+              :class="item.side==='男家'?'bg-groom':'bg-bride'">
+              {{ item.side }}
             </div>
           </div>
 
@@ -94,30 +75,55 @@
   </div>
 
   <!-- Floating Add Button -->
-  <button v-if="currentTab==='contacts'" @click="showAdd=true"
+  <button v-if="currentTab==='gold'" @click="showAddGold=true"
     class="absolute bottom-20 right-4 w-14 h-14 rounded-full bg-pinky/80 text-white text-3xl shadow-soft flex items-center justify-center">＋</button>
 
-  <!-- Add Contact Modal -->
-  <div v-if="showAdd" class="absolute inset-0 bg-black/30 flex items-center justify-center">
-    <div class="bg-white rounded-2xl p-4 w-11/12 space-y-2 shadow-soft">
-      <h3 class="font-semibold">新增聯絡人</h3>
-      <input v-model="newContact.name" placeholder="姓名" class="w-full border rounded-lg p-2 text-sm" />
-      <input v-model="newContact.role" placeholder="身份" class="w-full border rounded-lg p-2 text-sm" />
-      <input v-model="newContact.phone" placeholder="電話" class="w-full border rounded-lg p-2 text-sm" />
-      <div class="flex justify-end gap-3 pt-2">
-        <button @click="showAdd=false" class="text-sm text-gray-400">取消</button>
-        <button @click="addContact(); showAdd=false" class="text-sm text-green-500">新增</button>
+  <!-- 新增金器 Modal -->
+  <div v-if="showAddGold" class="absolute inset-0 bg-black/30 flex items-center justify-center">
+    <div class="bg-white rounded-2xl p-4 w-11/12 space-y-3 shadow-soft">
+
+      <h3 class="font-semibold">新增金器</h3>
+
+      <!-- 金器類別 -->
+      <div class="flex flex-wrap gap-2">
+        <button v-for="c in goldCategories" :key="c"
+          @click="newGold.category=c"
+          :class="['px-3 py-1 rounded-full text-xs', newGold.category===c?'bg-pinky':'bg-gray-100']">
+          {{ c }}
+        </button>
       </div>
+
+      <!-- 數量 -->
+      <input v-model.number="newGold.qty" type="number" inputmode="numeric" placeholder="數量"
+        class="w-full border rounded-lg p-2 text-sm" />
+
+      <!-- 男 / 女家 -->
+      <div class="flex gap-2">
+        <button @click="newGold.side='男家'" :class="['flex-1 p-2 rounded-xl text-sm', newGold.side==='男家'?'bg-groom':'bg-gray-100']">男家</button>
+        <button @click="newGold.side='女家'" :class="['flex-1 p-2 rounded-xl text-sm', newGold.side==='女家'?'bg-bride':'bg-gray-100']">女家</button>
+      </div>
+
+      <!-- 送禮人 -->
+      <input v-model="newGold.from" placeholder="送禮人 / 身份" class="w-full border rounded-lg p-2 text-sm" />
+
+      <!-- 圖片 -->
+      <input type="file" accept="image/*" @change="handleImage" class="text-sm" />
+
+      <div class="flex justify-end gap-3">
+        <button @click="showAddGold=false" class="text-sm text-gray-400">取消</button>
+        <button @click="addGold" class="text-sm text-green-500">新增</button>
+      </div>
+
     </div>
   </div>
 
   <!-- Bottom Navigation -->
   <div class="shrink-0 grid grid-cols-5 text-center border-t bg-white text-xs">
     <button class="p-3">⛪ 行程</button>
-    <button class="p-3">🪙 金器</button>
+    <button class="p-3 text-pink-500 font-semibold">🪙 金器</button>
     <button class="p-3">🧧 禮物</button>
     <button class="p-3">📝 資訊</button>
-    <button class="p-3 text-pink-500 font-semibold">📞 聯絡</button>
+    <button class="p-3">📞 聯絡</button>
   </div>
 
 </div>
@@ -128,44 +134,33 @@ const { createApp } = Vue
 createApp({
   data(){
     return {
-      currentTab:'contacts',
-      contactGroups:['新郎','新娘','其他'],
-      activeContactGroup:'新郎',
-      contacts: JSON.parse(localStorage.getItem('contacts')||'{"新郎":[],"新娘":[],"其他":[]}'),
-      search:'',
-      showAdd:false,
-      newContact:{ name:'', role:'', phone:'' },
-      editIndex:null,
-      editContact:{ name:'', role:'', phone:'' }
-    }
-  },
-  computed:{
-    filteredContacts(){
-      return this.contacts[this.activeContactGroup].filter(c=>
-        c.name.includes(this.search) || c.role.includes(this.search) || c.phone.includes(this.search)
-      )
+      currentTab:'gold',
+      goldCategories:['耳環','頸鍊','吊墜','手扼','手鍊','戒指','擺件'],
+      goldList: JSON.parse(localStorage.getItem('goldList')||'[]'),
+      showAddGold:false,
+      newGold:{ category:'', qty:1, side:'男家', from:'', image:'' }
     }
   },
   watch:{
-    contacts:{ deep:true, handler(v){ localStorage.setItem('contacts',JSON.stringify(v)) } }
+    goldList:{ deep:true, handler(v){ localStorage.setItem('goldList',JSON.stringify(v)) } }
   },
   methods:{
-    groupBtnClass(g){
-      if(this.activeContactGroup!==g) return 'bg-gray-100'
-      if(g==='新郎') return 'bg-groom'
-      if(g==='新娘') return 'bg-bride'
-      return 'bg-other'
+    addGold(){
+      if(!this.newGold.category || !this.newGold.qty) return
+      this.goldList.push({
+        id: Date.now(),
+        ...this.newGold
+      })
+      this.newGold={ category:'', qty:1, side:'男家', from:'', image:'' }
+      this.showAddGold=false
     },
-    addContact(){
-      const { name, role, phone } = this.newContact
-      if(!name || !phone) return
-      this.contacts[this.activeContactGroup].push({ name, role, phone })
-      this.newContact={ name:'', role:'', phone:'' }
-    },
-    startEdit(c,idx){ this.editIndex=idx; this.editContact={...c} },
-    cancelEdit(){ this.editIndex=null },
-    saveEdit(idx){ this.contacts[this.activeContactGroup][idx]={...this.editContact}; this.cancelEdit() },
-    removeContact(g,idx){ this.contacts[g].splice(idx,1) }
+    handleImage(e){
+      const file = e.target.files[0]
+      if(!file) return
+      const reader = new FileReader()
+      reader.onload = ()=>{ this.newGold.image = reader.result }
+      reader.readAsDataURL(file)
+    }
   }
 }).mount('#app')
 </script>
