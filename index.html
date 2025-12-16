@@ -109,16 +109,51 @@
       <div class="bg-white rounded-2xl p-3 shadow-soft space-y-2">
         <div v-if="contacts[activeContactGroup].length===0" class="text-xs text-gray-400 text-center">尚未新增聯絡人</div>
 
-        <div v-for="(c,idx) in contacts[activeContactGroup]" class="flex justify-between items-center text-sm">
-          <div>
-            <div class="font-medium">{{ c.name }}</div>
-            <div class="text-xs text-gray-500">{{ c.role }}｜{{ c.phone }}</div>
+        <div v-for="(c,idx) in contacts[activeContactGroup]" class="space-y-1">
+          <!-- 顯示模式 -->
+          <div v-if="editIndex!==idx" class="flex justify-between items-center text-sm">
+            <div>
+              <div class="font-medium">{{ c.name }}</div>
+              <div class="text-xs text-gray-500">{{ c.role }}｜{{ c.phone }}</div>
+            </div>
+            <div class="flex gap-2">
+              <button @click="startEdit(c,idx)" class="text-xs text-blue-400">編輯</button>
+              <button @click="removeContact(activeContactGroup,idx)" class="text-red-400 text-xs">刪除</button>
+            </div>
           </div>
-          <button @click="removeContact(activeContactGroup,idx)" class="text-red-400 text-xs">刪除</button>
+
+          <!-- 編輯模式 -->
+          <div v-else class="bg-gray-50 rounded-xl p-2 space-y-1">
+            <input v-model="editContact.name" class="w-full border rounded-lg p-1 text-sm" />
+            <input v-model="editContact.role" class="w-full border rounded-lg p-1 text-sm" />
+            <input v-model="editContact.phone" class="w-full border rounded-lg p-1 text-sm" />
+            <div class="flex justify-end gap-2">
+              <button @click="cancelEdit" class="text-xs text-gray-400">取消</button>
+              <button @click="saveEdit(idx)" class="text-xs text-green-500">儲存</button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- 新增聯絡人 -->
+      <!-- 新增聯絡人 -->"startEdit(c,idx)" class="text-xs text-blue-400">編輯</button>
+              <button @click="removeContact(activeContactGroup,idx)" class="text-red-400 text-xs">刪除</button>
+            </div>
+          </div>
+
+          <!-- 編輯模式 -->
+          <div v-else class="bg-gray-50 rounded-xl p-2 space-y-1">
+            <input v-model="editContact.name" class="w-full border rounded-lg p-1 text-sm" />
+            <input v-model="editContact.role" class="w-full border rounded-lg p-1 text-sm" />
+            <input v-model="editContact.phone" class="w-full border rounded-lg p-1 text-sm" />
+            <div class="flex justify-end gap-2">
+              <button @click="cancelEdit" class="text-xs text-gray-400">取消</button>
+              <button @click="saveEdit(idx)" class="text-xs text-green-500">儲存</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!
       <div class="bg-white rounded-2xl p-3 shadow-soft space-y-2">
         <input v-model="newContact.name" placeholder="姓名" class="w-full border rounded-xl p-2 text-sm" />
         <input v-model="newContact.role" placeholder="身份 / 角色" class="w-full border rounded-xl p-2 text-sm" />
@@ -132,7 +167,9 @@
 
   <!-- Bottom Nav -->
   <div class="grid grid-cols-4 text-xs text-center border-t bg-white">
-    <button v-for="t in tabs" @click="currentTab=t.key" :class="['p-2', currentTab===t.key?'text-pink-500 font-semibold':'']">{{ t.label }}</button>
+    <button v-for="t in tabs" @click="currentTab=t.key" :cnewContact:{ name:'', role:'', phone:'' },
+      editIndex:null,
+      editContact:{ name:'', role:'', phone:'' },k-500 font-semibold':'']">{{ t.label }}</button>
   </div>
 
 </div>
@@ -151,24 +188,34 @@ createApp({
         {key:'info',label:'📝 資訊'},
         {key:'contacts',label:'📞 聯絡'}
       ],
-      schedule: JSON.parse(localStorage.getItem('schedule')||'[]'),
-      gifts: JSON.parse(localStorage.getItem('gifts')||'{"gold":[],"red":[]}'),
-      infoTabs:['物資List','影相次序','晚宴座位表'],
-      info: JSON.parse(localStorage.getItem('info')||'{"物資List":[],"影相次序":[],"晚宴座位表":[]}'),
-      contactGroups:['新郎','新娘','其他'],
-      activeContactGroup:'新郎',
-      contacts: JSON.parse(localStorage.getItem('contacts')||'{"新郎":[],"新娘":[],"其他":[]}'),
-      newContact:{ name:'', role:'', phone:'' },
-      newSchedule:{time:'',title:''},
-      newGift:'',
-      newInfo:''
-    }
-  },
-  watch:{
-    schedule:{handler(v){localStorage.setItem('schedule',JSON.stringify(v))},deep:true},
-    gifts:{handler(v){localStorage.setItem('gifts',JSON.stringify(v))},deep:true},
-    info:{handler(v){localStorage.setItem('info',JSON.stringify(v))},deep:true},
-    contacts:{handler(v){localStorage.setItem('contacts',JSON.stringify(v))},deep:true}
+      schedule: JSON.parse(localStorage.getItem('schedulemethods:{
+    addSchedule(){ if(this.newSchedule.time&&this.newSchedule.title){ this.schedule.push({...this.newSchedule}); this.newSchedule={time:'',title:''} } },
+    addGift(){ if(this.newGift){ this.gifts[this.giftType].push(this.newGift); this.newGift='' } },
+    addInfo(){ if(this.newInfo){ this.info[this.infoTab].push(this.newInfo); this.newInfo='' } },
+    addContact(){
+      const { name, role, phone } = this.newContact
+      if(name && phone){
+        this.contacts[this.activeContactGroup].push({ name, role, phone })
+        this.newContact = { name:'', role:'', phone:'' }
+      }
+    },
+    startEdit(c,idx){
+      this.editIndex = idx
+      this.editContact = { ...c }
+    },
+    cancelEdit(){
+      this.editIndex = null
+      this.editContact = { name:'', role:'', phone:'' }
+    },
+    saveEdit(idx){
+      this.contacts[this.activeContactGroup][idx] = { ...this.editContact }
+      this.cancelEdit()
+    },
+    removeItem(k,i){ this[k].splice(i,1) },
+    removeGift(i){ this.gifts[this.giftType].splice(i,1) },
+    removeInfo(i){ this.info[this.infoTab].splice(i,1) },
+    removeContact(g,i){ this.contacts[g].splice(i,1) }
+  }etItem('contacts',JSON.stringify(v))},deep:true}
   },
   methods:{
     addSchedule(){ if(this.newSchedule.time&&this.newSchedule.title){ this.schedule.push({...this.newSchedule}); this.newSchedule={time:'',title:''} } },
