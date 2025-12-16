@@ -20,80 +20,97 @@
             minty: '#C9EDE0',
             skysoft: '#CFE8F7',
             lavender: '#E6D9F7'
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(0,0,0,0.08)'
           }
         }
       }
     }
   </script>
 </head>
-<body class="bg-gradient-to-br from-pinky via-lavender to-minty min-h-screen flex justify-center">
+<body class="bg-gradient-to-br from-pinky via-lavender to-minty min-h-screen flex justify-center items-center">
 
-<div id="app" class="w-full max-w-md bg-white/80 backdrop-blur rounded-3xl shadow-xl m-4 overflow-hidden">
+<div id="app" class="w-full max-w-md h-[90vh] bg-white/80 backdrop-blur rounded-3xl shadow-soft overflow-hidden flex flex-col">
 
   <!-- Header -->
   <div class="p-4 text-center font-semibold text-lg">💍 婚禮規劃</div>
 
-  <!-- Tabs -->
-  <div class="grid grid-cols-4 text-xs text-center border-t">
-    <button v-for="t in tabs" :key="t.key"
-      @click="currentTab = t.key"
-      :class="['p-2', currentTab===t.key ? 'bg-pinky/40 font-semibold' : '']">
-      {{ t.label }}
-    </button>
-  </div>
-
   <!-- Content -->
-  <div class="p-4 space-y-4">
+  <div class="flex-1 overflow-y-auto p-4 space-y-4">
 
     <!-- 行程表 -->
     <div v-if="currentTab==='schedule'" class="space-y-3">
       <h2 class="font-semibold">⛪ 婚禮當天行程</h2>
-      <div v-for="item in schedule" class="bg-white rounded-xl p-3 shadow">
-        <div class="text-sm font-medium">{{ item.time }}</div>
-        <div class="text-gray-600 text-xs">{{ item.title }}</div>
+
+      <div v-for="(item,idx) in schedule" class="bg-white rounded-2xl p-3 shadow-soft flex justify-between items-center">
+        <div>
+          <div class="text-sm font-medium">{{ item.time }}</div>
+          <div class="text-xs text-gray-500">{{ item.title }}</div>
+        </div>
+        <button @click="removeItem('schedule',idx)" class="text-xs text-red-400">刪除</button>
+      </div>
+
+      <div class="bg-white rounded-2xl p-3 shadow-soft space-y-2">
+        <input v-model="newSchedule.time" placeholder="時間" class="w-full border rounded-xl p-2 text-sm" />
+        <input v-model="newSchedule.title" placeholder="事項" class="w-full border rounded-xl p-2 text-sm" />
+        <button @click="addSchedule" class="w-full bg-pinky rounded-xl p-2 text-sm">新增</button>
       </div>
     </div>
 
-    <!-- 收禮記錄 -->
+    <!-- 收禮 -->
     <div v-if="currentTab==='gifts'" class="space-y-3">
       <div class="flex gap-2">
-        <button class="flex-1 rounded-xl p-2"
-          :class="giftType==='gold'?'bg-pinky':'bg-gray-100'"
-          @click="giftType='gold'">🪙 金器</button>
-        <button class="flex-1 rounded-xl p-2"
-          :class="giftType==='red'?'bg-pinky':'bg-gray-100'"
-          @click="giftType='red'">🧧 利是/禮物</button>
+        <button @click="giftType='gold'" :class="giftType==='gold'?'bg-pinky':'bg-gray-100'" class="flex-1 p-2 rounded-xl">🪙 金器</button>
+        <button @click="giftType='red'" :class="giftType==='red'?'bg-pinky':'bg-gray-100'" class="flex-1 p-2 rounded-xl">🧧 利是/禮物</button>
       </div>
-      <div v-for="g in gifts[giftType]" class="bg-white rounded-xl p-3 shadow text-sm">
+
+      <div v-for="(g,idx) in gifts[giftType]" class="bg-white rounded-2xl p-3 shadow-soft flex justify-between text-sm">
         {{ g }}
+        <button @click="removeGift(idx)" class="text-red-400 text-xs">刪除</button>
+      </div>
+
+      <div class="bg-white rounded-2xl p-3 shadow-soft flex gap-2">
+        <input v-model="newGift" placeholder="內容" class="flex-1 border rounded-xl p-2 text-sm" />
+        <button @click="addGift" class="bg-pinky rounded-xl px-4">＋</button>
       </div>
     </div>
 
     <!-- 資訊 -->
     <div v-if="currentTab==='info'" class="space-y-3">
       <div class="flex gap-1 text-xs">
-        <button v-for="i in infoTabs" :key="i"
-          @click="infoTab=i"
-          :class="['flex-1 p-2 rounded-xl', infoTab===i?'bg-minty':'bg-gray-100']">
-          {{ i }}
-        </button>
+        <button v-for="i in infoTabs" @click="infoTab=i" :class="['flex-1 p-2 rounded-xl', infoTab===i?'bg-minty':'bg-gray-100']">{{ i }}</button>
       </div>
-      <ul class="bg-white rounded-xl p-3 shadow text-sm space-y-1">
-        <li v-for="x in info[infoTab]">• {{ x }}</li>
-      </ul>
+
+      <div v-for="(x,idx) in info[infoTab]" class="bg-white rounded-2xl p-3 shadow-soft flex justify-between text-sm">
+        {{ x }}
+        <button @click="removeInfo(idx)" class="text-red-400 text-xs">刪除</button>
+      </div>
+
+      <div class="bg-white rounded-2xl p-3 shadow-soft flex gap-2">
+        <input v-model="newInfo" placeholder="新增內容" class="flex-1 border rounded-xl p-2 text-sm" />
+        <button @click="addInfo" class="bg-minty rounded-xl px-4">＋</button>
+      </div>
     </div>
 
     <!-- 聯絡 -->
     <div v-if="currentTab==='contacts'" class="space-y-3">
-      <div v-for="(list, group) in contacts" class="bg-white rounded-xl p-3 shadow">
-        <div class="font-medium text-sm mb-1">{{ group }}</div>
-        <div v-for="c in list" class="text-xs text-gray-600">
-          {{ c.name }}（{{ c.role }}）- {{ c.phone }}
+      <div v-for="(list, group) in contacts" class="bg-white rounded-2xl p-3 shadow-soft">
+        <div class="font-medium text-sm mb-2">{{ group }}</div>
+        <div v-for="(c,idx) in list" class="text-xs text-gray-600 flex justify-between">
+          {{ c.name }}（{{ c.role }}）{{ c.phone }}
+          <button @click="removeContact(group,idx)" class="text-red-400">刪除</button>
         </div>
       </div>
     </div>
 
   </div>
+
+  <!-- Bottom Nav -->
+  <div class="grid grid-cols-4 text-xs text-center border-t bg-white">
+    <button v-for="t in tabs" @click="currentTab=t.key" :class="['p-2', currentTab===t.key?'text-pink-500 font-semibold':'']">{{ t.label }}</button>
+  </div>
+
 </div>
 
 <script>
@@ -101,38 +118,39 @@ const { createApp } = Vue
 createApp({
   data(){
     return {
-      currentTab: 'schedule',
-      giftType: 'gold',
-      infoTab: '物資List',
-      tabs: [
-        { key:'schedule', label:'⛪ 行程' },
-        { key:'gifts', label:'🧧 收禮' },
-        { key:'info', label:'📝 資訊' },
-        { key:'contacts', label:'📞 聯絡' }
+      currentTab:'schedule',
+      giftType:'gold',
+      infoTab:'物資List',
+      tabs:[
+        {key:'schedule',label:'⛪ 行程'},
+        {key:'gifts',label:'🧧 收禮'},
+        {key:'info',label:'📝 資訊'},
+        {key:'contacts',label:'📞 聯絡'}
       ],
-      schedule: [
-        { time:'09:00', title:'新娘化妝' },
-        { time:'11:00', title:'接新娘' },
-        { time:'15:00', title:'教堂儀式' }
-      ],
-      gifts: {
-        gold: ['龍鳳鈪一對', '金頸鏈'],
-        red: ['張三 $2000', '李四 香檳一支']
-      },
-      infoTabs: ['物資List','影相次序','晚宴座位表'],
-      info: {
-        '物資List': ['戒指','誓詞卡','花球'],
-        '影相次序': ['新郎新娘','雙方父母','大合照'],
-        '晚宴座位表': ['主家席','親友席','朋友席']
-      },
-      contacts: {
-        '新郎': [{name:'阿明', role:'新郎', phone:'91234567'}],
-        '新娘': [{name:'阿欣', role:'新娘', phone:'98765432'}],
-        '教堂': [{name:'陳牧師', role:'牧師', phone:'90001111'}],
-        '晚宴': [{name:'酒店經理', role:'Coordinator', phone:'93334444'}],
-        '其他': []
-      }
+      schedule: JSON.parse(localStorage.getItem('schedule')||'[]'),
+      gifts: JSON.parse(localStorage.getItem('gifts')||'{"gold":[],"red":[]}'),
+      infoTabs:['物資List','影相次序','晚宴座位表'],
+      info: JSON.parse(localStorage.getItem('info')||'{"物資List":[],"影相次序":[],"晚宴座位表":[]}'),
+      contacts: JSON.parse(localStorage.getItem('contacts')||'{"新郎":[],"新娘":[],"教堂":[],"晚宴":[],"其他":[]}'),
+      newSchedule:{time:'',title:''},
+      newGift:'',
+      newInfo:''
     }
+  },
+  watch:{
+    schedule:{handler(v){localStorage.setItem('schedule',JSON.stringify(v))},deep:true},
+    gifts:{handler(v){localStorage.setItem('gifts',JSON.stringify(v))},deep:true},
+    info:{handler(v){localStorage.setItem('info',JSON.stringify(v))},deep:true},
+    contacts:{handler(v){localStorage.setItem('contacts',JSON.stringify(v))},deep:true}
+  },
+  methods:{
+    addSchedule(){ if(this.newSchedule.time&&this.newSchedule.title){ this.schedule.push({...this.newSchedule}); this.newSchedule={time:'',title:''} } },
+    addGift(){ if(this.newGift){ this.gifts[this.giftType].push(this.newGift); this.newGift='' } },
+    addInfo(){ if(this.newInfo){ this.info[this.infoTab].push(this.newInfo); this.newInfo='' } },
+    removeItem(k,i){ this[k].splice(i,1) },
+    removeGift(i){ this.gifts[this.giftType].splice(i,1) },
+    removeInfo(i){ this.info[this.infoTab].splice(i,1) },
+    removeContact(g,i){ this.contacts[g].splice(i,1) }
   }
 }).mount('#app')
 </script>
