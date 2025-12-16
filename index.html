@@ -1,5 +1,3 @@
-（以下為完整 HTML，已將【金器】與【利是/禮物】整合進底部 App 導航；此版本以穩定為優先，避免 {{ }} 與 Modal 自動開啟問題。）
-
 <!DOCTYPE html>
 
 <html lang="zh-HK">
@@ -89,7 +87,6 @@
 
 <!-- 資訊 -->
 <div v-if="tab==='info'" class="text-center text-gray-400">資訊（下一步）</div>
-<div v-if="tab==='info'" class="text-center text-gray-400">資訊（下一步）</div>
 ```
 
   </div>
@@ -116,51 +113,31 @@ createApp({
       contacts: JSON.parse(localStorage.getItem('contactList')||'[]'),
       contactCats:['全部','新郎','新娘','其他'],
       contactFilter:'全部',
-      contactSearch:'',(localStorage.getItem('contactList')||'[]'),
+      contactSearch:'',
       showAddContact:false,
-      newContact:{ name:'', role:'', phone:'' }
-
-      tab:'gold',
-      golds: JSON.parse(localStorage.getItem('goldList')||'[]'),
-      gifts: JSON.parse(localStorage.getItem('giftList')||'[]')
+      newContact:{ name:'', role:'', phone:'', cat:'其他' },
+      editContact:{}
     }
   },
   computed:{
+    pageTitle(){
+      return this.tab==='gold'?'🪙 金器記錄':
+             this.tab==='gift'?'🧧 利是 / 禮物':
+             this.tab==='contact'?'📞 聯絡':'📝 資訊'
+    },
     filteredContacts(){
       let l=[...this.contacts]
       if(this.contactFilter!=='全部') l=l.filter(c=>c.cat===this.contactFilter)
       if(this.contactSearch){ const s=this.contactSearch.toLowerCase(); l=l.filter(c=>c.name.toLowerCase().includes(s)||c.role.toLowerCase().includes(s)) }
       return l
-    },
-
-    pageTitle(){
-      return this.tab==='gold'?'🪙 金器記錄':
-             this.tab==='gift'?'🧧 利是 / 禮物':
-             this.tab==='contact'?'📞 聯絡':'📝 資訊'
     }
   },
   methods:{
+    navCls(t){
+      return ['flex-1 h-full flex flex-col items-center justify-center', this.tab===t?'text-pink-500 font-semibold':'text-gray-400']
+    },
     saveContacts(){ localStorage.setItem('contactList', JSON.stringify(this.contacts)) },
     openEditContact(c){ this.editContact={...c}; this.showEditContact=true },
     deleteContact(id){ if(confirm('刪除此聯絡人？')){ this.contacts=this.contacts.filter(x=>x.id!==id); this.saveContacts() } },
     addContact(){ this.contacts.push({ ...this.newContact, id:Date.now() }); this.saveContacts(); this.showAddContact=false; this.newContact={ name:'', role:'', phone:'', cat:'其他' } },
-    saveEditContact(){ const i=this.contacts.findIndex(x=>x.id===this.editContact.id); this.contacts[i]={...this.editContact}; this.saveContacts(); this.showEditContact=false }(){ localStorage.setItem('contactList', JSON.stringify(this.contacts)) },
-    navCls(t){
-      return [
-        'flex-1 h-full flex flex-col items-center justify-center',
-        this.tab===t?'text-pink-500 font-semibold':'text-gray-400'
-      ]
-    }
-      ,
-    addContact(){
-      this.contacts.push({ ...this.newContact, id:Date.now() })
-      this.saveContacts()
-      this.showAddContact=false
-      this.newContact={ name:'', role:'', phone:'' }
-    }
-  }
-}).mount('#app')
-</script>
-
-</body>
-</html>
+    saveEditContact(){ const i=this.contacts.findIndex(x=>x.id===this.editContact.id); this.contacts[i]={...this.editContact
