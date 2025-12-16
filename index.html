@@ -33,7 +33,7 @@
 
 <body class="bg-gradient-to-br from-pinky via-lavender to-minty min-h-screen flex justify-center items-center">
 
-<div id="app" class="relative w-full max-w-md h-[90vh] bg-white/80 backdrop-blur rounded-3xl shadow-soft overflow-hidden flex flex-col">
+<div id="app" v-cloak class="relative w-full max-w-md h-[90vh] bg-white/80 backdrop-blur rounded-3xl shadow-soft overflow-hidden flex flex-col">
 
   <!-- Header -->
   <div class="p-4 text-center font-semibold text-lg shrink-0">💍 婚禮規劃</div>
@@ -136,10 +136,10 @@
 
       <!-- 金器類別 -->
       <div class="flex flex-wrap gap-2">
-        <button v-for="c in goldCategories" :key="c"
-          @click="editGold.category=c"
-          :class="['px-3 py-1 rounded-full text-xs', editGold.category===c?'bg-pinky':'bg-gray-100']">
-          {{ c }}
+        <button v-for="cat in goldCategories" :key="cat"
+          @click="editGold.category=cat"
+          :class="['px-3 py-1 rounded-full text-xs', editGold.category===cat?'bg-pinky':'bg-gray-100']">
+          {{ cat }}
         </button>
       </div>
 
@@ -149,8 +149,10 @@
 
       <!-- 男 / 女家 -->
       <div class="flex gap-2">
-        <button @click="editGold.side='男家'" :class="['flex-1 p-2 rounded-xl text-sm', editGold.side==='男家'?'bg-groom':'bg-gray-100']">男家</button>
-        <button @click="editGold.side='女家'" :class="['flex-1 p-2 rounded-xl text-sm', editGold.side==='女家'?'bg-bride':'bg-gray-100']">女家</button>
+        <button @click="editGold.side='男家'"
+          :class="['flex-1 p-2 rounded-xl text-sm', editGold.side==='男家'?'bg-groom':'bg-gray-100']">男家</button>
+        <button @click="editGold.side='女家'"
+          :class="['flex-1 p-2 rounded-xl text-sm', editGold.side==='女家'?'bg-bride':'bg-gray-100']">女家</button>
       </div>
 
       <!-- 送禮人 -->
@@ -190,8 +192,9 @@ createApp({
       showAddGold:false,
       showEditGold:false,
       newGold:{ category:'', qty:1, side:'男家', from:'', image:'' },
-      editGold:{}
+      editGold:{ id:null, category:'', qty:1, side:'男家', from:'', image:'' }
     }
+  }
   }
     }
   },
