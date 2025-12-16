@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>婚禮規劃 App</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/vue@3.4.38/dist/vue.global.prod.js"></script>
@@ -18,10 +18,7 @@
   <!-- Pages -->
   <div class="flex-1 overflow-y-auto p-4">
 
-    <!-- 當日行程 placeholder -->
-    <div v-if="tab==='schedule'" class="text-center text-gray-400">當日行程（下一步）</div>
-
-    <!-- 金器 -->
+    <!-- 金器分頁 -->
     <div v-if="tab==='gold'" class="space-y-3">
       <div v-for="g in golds" :key="g.id" class="bg-white rounded-xl p-3 shadow">
         <div class="text-sm font-medium">#{{ g.no }} {{ g.category }} × {{ g.qty }}</div>
@@ -35,7 +32,7 @@
       <button @click="showAddGold=true" class="fixed bottom-20 right-6 w-14 h-14 rounded-full bg-pink-400/80 text-white text-3xl flex items-center justify-center shadow-lg">+</button>
     </div>
 
-    <!-- Add / Edit Gold Modal -->
+    <!-- 新增/編輯金器 Modal -->
     <div v-if="showAddGold || showEditGold" class="absolute inset-0 bg-black/30 flex items-center justify-center z-50">
       <div class="bg-white rounded-2xl p-4 w-11/12 space-y-3">
         <h3 class="font-semibold">{{ showAddGold ? '新增金器' : '編輯金器' }}</h3>
@@ -56,47 +53,7 @@
       </div>
     </div>
 
-    <!-- 利是 / 禮物 -->
-    <div v-if="tab==='gift'" class="space-y-3">
-      <div v-for="i in gifts" :key="i.id" class="bg-white rounded-xl p-3 shadow">
-        <div class="text-sm font-medium">#{{ i.no }} {{ i.type }}</div>
-        <div v-if="i.type==='禮物'" class="text-xs text-gray-500">{{ i.desc }}</div>
-        <div class="text-xs">數量：{{ i.qty }}</div>
-        <div class="text-xs" :class="i.side==='男家'?'text-blue-500':'text-pink-500'">{{ i.side }}</div>
-        <div class="text-xs">送禮人：{{ i.from }}</div>
-        <div class="text-xs font-medium">總金額：$ {{ i.amount }}</div>
-        <div class="flex gap-2 text-xs mt-1">
-          <button @click="openEditGift(i)" class="text-blue-500">編輯</button>
-          <button @click="deleteGift(i.id)" class="text-red-400">刪除</button>
-        </div>
-      </div>
-      <button @click="showAddGift=true" class="fixed bottom-20 right-6 w-14 h-14 rounded-full bg-purple-400/80 text-white text-3xl flex items-center justify-center shadow-lg">+</button>
-    </div>
-
-    <!-- Add / Edit Gift Modal -->
-    <div v-if="showAddGift || showEditGift" class="absolute inset-0 bg-black/30 flex items-center justify-center z-50">
-      <div class="bg-white rounded-2xl p-4 w-11/12 space-y-3">
-        <h3 class="font-semibold">{{ showAddGift ? '新增利是/禮物' : '編輯利是/禮物' }}</h3>
-        <div class="flex gap-2">
-          <button @click="currentGift.type='利是'" :class="['flex-1 p-2 rounded-xl text-sm', currentGift.type==='利是'?'bg-purple-400 text-white':'bg-gray-100']">利是</button>
-          <button @click="currentGift.type='禮物'" :class="['flex-1 p-2 rounded-xl text-sm', currentGift.type==='禮物'?'bg-green-400 text-white':'bg-gray-100']">禮物</button>
-        </div>
-        <input v-if="currentGift.type==='禮物'" v-model="currentGift.desc" class="w-full border rounded-lg p-2 text-sm" placeholder="說明" />
-        <input v-model.number="currentGift.qty" type="number" class="w-full border rounded-lg p-2 text-sm" placeholder="數量" />
-        <div class="flex gap-2">
-          <button @click="currentGift.side='男家'" :class="['flex-1 p-2 rounded-xl text-sm', currentGift.side==='男家'?'bg-blue-400 text-white':'bg-gray-100']">男家</button>
-          <button @click="currentGift.side='女家'" :class="['flex-1 p-2 rounded-xl text-sm', currentGift.side==='女家'?'bg-pink-400 text-white':'bg-gray-100']">女家</button>
-        </div>
-        <input v-model="currentGift.from" class="w-full border rounded-lg p-2 text-sm" placeholder="送禮人" />
-        <input v-model.number="currentGift.amount" type="number" class="w-full border rounded-lg p-2 text-sm" placeholder="總金額" />
-        <div class="flex justify-end gap-3">
-          <button @click="closeGiftModal" class="text-sm text-gray-400">取消</button>
-          <button @click="showAddGift ? addGift() : saveEditGift()" class="text-sm text-purple-500">{{ showAddGift ? '新增' : '儲存' }}</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 聯絡 -->
+    <!-- 聯絡分頁 -->
     <div v-if="tab==='contact'" class="space-y-3">
       <input v-model="contactSearch" placeholder="搜尋姓名 / 身份" class="w-full rounded-xl border px-3 py-2 text-sm" />
       <div class="flex gap-2 text-xs">
@@ -119,7 +76,7 @@
       <button @click="showAddContact=true" class="fixed bottom-20 right-6 w-14 h-14 rounded-full bg-blue-400/80 text-white text-3xl flex items-center justify-center shadow-lg">+</button>
     </div>
 
-    <!-- Add / Edit Contact Modal -->
+    <!-- 新增/編輯聯絡 Modal -->
     <div v-if="showAddContact || showEditContact" class="absolute inset-0 bg-black/30 flex items-center justify-center z-50">
       <div class="bg-white rounded-2xl p-4 w-11/12 space-y-3">
         <h3 class="font-semibold">{{ showAddContact ? '新增聯絡人' : '編輯聯絡人' }}</h3>
@@ -138,16 +95,13 @@
       </div>
     </div>
 
-    <!-- 資訊 -->
-    <div v-if="tab==='info'" class="text-center text-gray-400">資訊（下一步）</div>
-
   </div>
 
   <!-- Bottom Nav -->
   <div class="h-16 border-t bg-white flex justify-around items-center text-xs">
     <button @click="tab='schedule'" :class="navCls('schedule')">⛪<br>當日行程</button>
     <button @click="tab='gold'" :class="navCls('gold')">🪙<br>金器</button>
-    <button @click="tab='gift'" :class="navCls('gift')">🧧<br>利是</button>
+    <button @click="tab='gift'" :class="navCls('gift')">🧧<br>利是/禮物</button>
     <button @click="tab='contact'" :class="navCls('contact')">📞<br>聯絡</button>
     <button @click="tab='info'" :class="navCls('info')">📝<br>資訊</button>
   </div>
@@ -186,10 +140,10 @@ createApp({
              this.tab==='contact'?'📞 聯絡':'📝 資訊'
     },
     filteredContacts(){
-      let l=[...this.contacts]
-      if(this.contactFilter!=='全部') l=l.filter(c=>c.cat===this.contactFilter)
-      if(this.contactSearch){ const s=this.contactSearch.toLowerCase(); l=l.filter(c=>c.name.toLowerCase().includes(s)||c.role.toLowerCase().includes(s)) }
-      return l
+      let l=[...this.contacts];
+      if(this.contactFilter!=='全部') l=l.filter(c=>c.cat===this.contactFilter);
+      if(this.contactSearch){ const s=this.contactSearch.toLowerCase(); l=l.filter(c=>c.name.toLowerCase().includes(s)||c.role.toLowerCase().includes(s)); }
+      return l;
     }
   },
   methods:{
@@ -212,4 +166,8 @@ createApp({
     saveEditContact(){ const i=this.contacts.findIndex(x=>x.id===this.currentContact.id); this.contacts[i]={...this.currentContact}; localStorage.setItem('contactList',JSON.stringify(this.contacts)); this.closeContactModal() },
     deleteContact(id){ if(confirm('刪除此聯絡人？')){ this.contacts=this.contacts.filter(x=>x.id!==id); localStorage.setItem('contactList',JSON.stringify(this.contacts)) } }
   }
-}).
+}).mount('#app')
+</script>
+
+</body>
+</html>
