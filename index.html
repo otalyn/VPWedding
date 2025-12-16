@@ -184,69 +184,28 @@
 const { createApp } = Vue
 
 createApp({
-  data(){
+  data() {
     return {
-      currentTab:'contact',
-      goldCategories:['耳環','頸鍊','吊墜','手扼','手鍊','戒指','擺件'],
-      goldList: JSON.parse(localStorage.getItem('goldList')||'[]'),
-      showAddGold:false,
-      showEditGold:false,
-      newGold:{ category:'', qty:1, side:'男家', from:'', image:'' },
-      editGold:{ id:null, category:'', qty:1, side:'男家', from:'', image:'' }
-    }
-  }
-  }
-    }
-  },
-  watch:{
-    goldList:{ deep:true, handler(v){ localStorage.setItem('goldList',JSON.stringify(v)) } }
-  },
-  methods:{
-    startEditGold(item){
-      this.editGold = JSON.parse(JSON.stringify(item))
-      this.showEditGold = true
-    },
-    deleteGold(id){
-      if(confirm('確定刪除此金器記錄？')){
-        this.goldList = this.goldList.filter(g=>g.id!==id)
+      currentTab: 'gold',
+
+      goldCategories: ['耳環','頸鍊','吊墜','手扼','手鍊','戒指','擺件'],
+
+      goldList: [],
+      showEditGold: false,
+
+      editGold: {
+        id: null,
+        category: '',
+        qty: 1,
+        side: '男家',
+        from: '',
+        image: ''
       }
-    },
-    saveEditGold(){
-      const idx = this.goldList.findIndex(g=>g.id===this.editGold.id)
-      if(idx>-1){
-        this.goldList[idx] = this.editGold
-      }
-      this.showEditGold = false
-    }
-    },
-    addGold(){
-      if(!this.newGold.category || !this.newGold.qty) return
-      this.goldList.push({
-        id: Date.now(),
-        ...this.newGold
-      })
-      this.newGold={ category:'', qty:1, side:'男家', from:'', image:'' }
-      this.showAddGold=false
-    },
-    handleImage(e){
-      const file = e.target.files[0]
-      if(!file) return
-      const reader = new FileReader()
-      reader.onload = ()=>{ this.newGold.image = reader.result }
-      reader.readAsDataURL(file)
-    },
-    handleEditImage(e){
-      const file = e.target.files[0]
-      if(!file) return
-      const reader = new FileReader()
-      reader.onload = ()=>{ this.editGold.image = reader.result }
-      reader.readAsDataURL(file)
-    }
-      reader.readAsDataURL(file)
     }
   }
 }).mount('#app')
 </script>
+
 
 </body>
 </html>
