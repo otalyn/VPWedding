@@ -65,8 +65,35 @@
         <div class="text-xs" :class="i.side==='男家'?'text-blue-500':'text-pink-500'">{{ i.side }}</div>
         <div class="text-xs">送禮人：{{ i.from }}</div>
         <div class="text-xs font-medium">總金額：$ {{ i.amount }}</div>
+        <div class="flex gap-2 text-xs mt-1">
+          <button @click="openEditGift(i)" class="text-blue-500">編輯</button>
+          <button @click="deleteGift(i.id)" class="text-red-400">刪除</button>
+        </div>
       </div>
       <button @click="showAddGift=true" class="fixed bottom-20 right-6 w-14 h-14 rounded-full bg-purple-400/80 text-white text-3xl flex items-center justify-center shadow-lg">+</button>
+    </div>
+
+    <!-- Add / Edit Gift Modal -->
+    <div v-if="showAddGift || showEditGift" class="absolute inset-0 bg-black/30 flex items-center justify-center z-50">
+      <div class="bg-white rounded-2xl p-4 w-11/12 space-y-3">
+        <h3 class="font-semibold">{{ showAddGift ? '新增利是/禮物' : '編輯利是/禮物' }}</h3>
+        <div class="flex gap-2">
+          <button @click="currentGift.type='利是'" :class="['flex-1 p-2 rounded-xl text-sm', currentGift.type==='利是'?'bg-purple-400 text-white':'bg-gray-100']">利是</button>
+          <button @click="currentGift.type='禮物'" :class="['flex-1 p-2 rounded-xl text-sm', currentGift.type==='禮物'?'bg-green-400 text-white':'bg-gray-100']">禮物</button>
+        </div>
+        <input v-if="currentGift.type==='禮物'" v-model="currentGift.desc" class="w-full border rounded-lg p-2 text-sm" placeholder="說明" />
+        <input v-model.number="currentGift.qty" type="number" class="w-full border rounded-lg p-2 text-sm" placeholder="數量" />
+        <div class="flex gap-2">
+          <button @click="currentGift.side='男家'" :class="['flex-1 p-2 rounded-xl text-sm', currentGift.side==='男家'?'bg-blue-400 text-white':'bg-gray-100']">男家</button>
+          <button @click="currentGift.side='女家'" :class="['flex-1 p-2 rounded-xl text-sm', currentGift.side==='女家'?'bg-pink-400 text-white':'bg-gray-100']">女家</button>
+        </div>
+        <input v-model="currentGift.from" class="w-full border rounded-lg p-2 text-sm" placeholder="送禮人" />
+        <input v-model.number="currentGift.amount" type="number" class="w-full border rounded-lg p-2 text-sm" placeholder="總金額" />
+        <div class="flex justify-end gap-3">
+          <button @click="closeGiftModal" class="text-sm text-gray-400">取消</button>
+          <button @click="showAddGift ? addGift() : saveEditGift()" class="text-sm text-purple-500">{{ showAddGift ? '新增' : '儲存' }}</button>
+        </div>
+      </div>
     </div>
 
     <!-- 聯絡 -->
@@ -92,6 +119,25 @@
       <button @click="showAddContact=true" class="fixed bottom-20 right-6 w-14 h-14 rounded-full bg-blue-400/80 text-white text-3xl flex items-center justify-center shadow-lg">+</button>
     </div>
 
+    <!-- Add / Edit Contact Modal -->
+    <div v-if="showAddContact || showEditContact" class="absolute inset-0 bg-black/30 flex items-center justify-center z-50">
+      <div class="bg-white rounded-2xl p-4 w-11/12 space-y-3">
+        <h3 class="font-semibold">{{ showAddContact ? '新增聯絡人' : '編輯聯絡人' }}</h3>
+        <input v-model="currentContact.name" class="w-full border rounded-lg p-2 text-sm" placeholder="姓名" />
+        <input v-model="currentContact.role" class="w-full border rounded-lg p-2 text-sm" placeholder="身份" />
+        <input v-model="currentContact.phone" class="w-full border rounded-lg p-2 text-sm" placeholder="電話" />
+        <select v-model="currentContact.cat" class="w-full border rounded-lg p-2 text-sm">
+          <option>新郎</option>
+          <option>新娘</option>
+          <option>其他</option>
+        </select>
+        <div class="flex justify-end gap-3">
+          <button @click="closeContactModal" class="text-sm text-gray-400">取消</button>
+          <button @click="showAddContact ? addContact() : saveEditContact()" class="text-sm text-blue-500">{{ showAddContact ? '新增' : '儲存' }}</button>
+        </div>
+      </div>
+    </div>
+
     <!-- 資訊 -->
     <div v-if="tab==='info'" class="text-center text-gray-400">資訊（下一步）</div>
 
@@ -114,6 +160,7 @@ createApp({
   data(){
     return{
       tab:'schedule',
+      categories:['耳環','頸鍊','吊墜','手扼','手鍊','戒指','擺件'],
       golds: JSON.parse(localStorage.getItem('goldList')||'[]'),
       gifts: JSON.parse(localStorage.getItem('giftList')||'[]'),
       contacts: JSON.parse(localStorage.getItem('contactList')||'[]'),
@@ -124,9 +171,11 @@ createApp({
       showEditGold:false,
       currentGold:{},
       showAddGift:false,
+      showEditGift:false,
+      currentGift:{},
       showAddContact:false,
-      newContact:{ name:'', role:'', phone:'', cat:'其他' },
-      editContact:{}
+      showEditContact:false,
+      currentContact:{}
     }
   },
   computed:{
@@ -146,28 +195,21 @@ createApp({
   methods:{
     navCls(t){ return ['flex-1 h-full flex flex-col items-center justify-center', this.tab===t?'text-pink-500 font-semibold':'text-gray-400'] },
     closeGoldModal(){ this.showAddGold=false; this.showEditGold=false; this.currentGold={} },
-    addGold(){
-      const no=this.golds.length+1
-      this.golds.push({...this.currentGold, id:Date.now(), no})
-      localStorage.setItem('goldList', JSON.stringify(this.golds))
-      this.closeGoldModal()
-    },
+    addGold(){ const no=this.golds.length+1; this.golds.push({...this.currentGold,id:Date.now(),no}); localStorage.setItem('goldList',JSON.stringify(this.golds)); this.closeGoldModal() },
     openEditGold(g){ this.currentGold={...g}; this.showEditGold=true },
-    saveEditGold(){
-      const i=this.golds.findIndex(x=>x.id===this.currentGold.id)
-      this.golds[i]={...this.currentGold}
-      localStorage.setItem('goldList', JSON.stringify(this.golds))
-      this.closeGoldModal()
-    },
-    deleteGold(id){ if(confirm('刪除這筆金器？')){ this.golds=this.golds.filter(x=>x.id!==id); localStorage.setItem('goldList', JSON.stringify(this.golds)) } },
-    saveContacts(){ localStorage.setItem('contactList', JSON.stringify(this.contacts)) },
-    openEditContact(c){ this.editContact={...c}; this.showEditContact=true },
-    deleteContact(id){ if(confirm('刪除此聯絡人？')){ this.contacts=this.contacts.filter(x=>x.id!==id); this.saveContacts() } },
-    addContact(){ this.contacts.push({ ...this.newContact, id:Date.now() }); this.saveContacts(); this.showAddContact=false; this.newContact={ name:'', role:'', phone:'', cat:'其他' } },
-    saveEditContact(){ const i=this.contacts.findIndex(x=>x.id===this.editContact.id); this.contacts[i]={...this.editContact}; this.saveContacts(); this.showEditContact=false }
+    saveEditGold(){ const i=this.golds.findIndex(x=>x.id===this.currentGold.id); this.golds[i]={...this.currentGold}; localStorage.setItem('goldList',JSON.stringify(this.golds)); this.closeGoldModal() },
+    deleteGold(id){ if(confirm('刪除這筆金器？')){ this.golds=this.golds.filter(x=>x.id!==id); localStorage.setItem('goldList',JSON.stringify(this.golds)) } },
+
+    closeGiftModal(){ this.showAddGift=false; this.showEditGift=false; this.currentGift={} },
+    openEditGift(g){ this.currentGift={...g}; this.showEditGift=true },
+    addGift(){ const no=this.gifts.length+1; this.gifts.push({...this.currentGift,id:Date.now(),no}); localStorage.setItem('giftList',JSON.stringify(this.gifts)); this.closeGiftModal() },
+    saveEditGift(){ const i=this.gifts.findIndex(x=>x.id===this.currentGift.id); this.gifts[i]={...this.currentGift}; localStorage.setItem('giftList',JSON.stringify(this.gifts)); this.closeGiftModal() },
+    deleteGift(id){ if(confirm('刪除這筆禮物？')){ this.gifts=this.gifts.filter(x=>x.id!==id); localStorage.setItem('giftList',JSON.stringify(this.gifts)) } },
+
+    closeContactModal(){ this.showAddContact=false; this.showEditContact=false; this.currentContact={} },
+    openEditContact(c){ this.currentContact={...c}; this.showEditContact=true },
+    addContact(){ this.contacts.push({...this.currentContact,id:Date.now()}); localStorage.setItem('contactList',JSON.stringify(this.contacts)); this.closeContactModal() },
+    saveEditContact(){ const i=this.contacts.findIndex(x=>x.id===this.currentContact.id); this.contacts[i]={...this.currentContact}; localStorage.setItem('contactList',JSON.stringify(this.contacts)); this.closeContactModal() },
+    deleteContact(id){ if(confirm('刪除此聯絡人？')){ this.contacts=this.contacts.filter(x=>x.id!==id); localStorage.setItem('contactList',JSON.stringify(this.contacts)) } }
   }
 }).mount('#app')
-</script>
-
-</body>
-</html>
