@@ -33,7 +33,7 @@
 
 <body class="bg-gradient-to-br from-pinky via-lavender to-minty min-h-screen flex justify-center items-center">
 
-<div id="app" class="w-full max-w-md h-[90vh] bg-white/80 backdrop-blur rounded-3xl shadow-soft overflow-hidden flex flex-col">
+<div id="app" class="relative w-full max-w-md h-[90vh] bg-white/80 backdrop-blur rounded-3xl shadow-soft overflow-hidden flex flex-col">
 
   <!-- Header -->
   <div class="p-4 text-center font-semibold text-lg shrink-0">💍 婚禮規劃</div>
@@ -44,7 +44,10 @@
     <!-- 聯絡 -->
     <div v-if="currentTab==='contacts'" class="space-y-3">
 
-      <!-- 分類按鈕 -->
+      <!-- 搜尋 -->
+      <input v-model="search" placeholder="搜尋聯絡人" class="w-full border rounded-xl p-2 text-sm" />
+
+      <!-- 分類 -->
       <div class="flex gap-2">
         <button v-for="g in contactGroups" :key="g"
           @click="activeContactGroup=g; cancelEdit()"
@@ -55,9 +58,9 @@
 
       <!-- 聯絡列表 -->
       <div class="bg-white rounded-2xl p-3 shadow-soft space-y-2">
-        <div v-if="contacts[activeContactGroup].length===0" class="text-xs text-gray-400 text-center">尚未新增聯絡人</div>
+        <div v-if="filteredContacts.length===0" class="text-xs text-gray-400 text-center">沒有符合的聯絡人</div>
 
-        <div v-for="(c,idx) in contacts[activeContactGroup]" :key="idx" class="space-y-1">
+        <div v-for="(c,idx) in filteredContacts" :key="idx" class="space-y-1">
 
           <!-- 查看模式 -->
           <div v-if="editIndex!==idx" class="flex justify-between items-center text-sm">
@@ -74,9 +77,9 @@
 
           <!-- 編輯模式 -->
           <div v-else class="bg-gray-50 rounded-xl p-2 space-y-1">
-            <input v-model="editContact.name" placeholder="姓名" class="w-full border rounded-lg p-1 text-sm" />
-            <input v-model="editContact.role" placeholder="身份" class="w-full border rounded-lg p-1 text-sm" />
-            <input v-model="editContact.phone" placeholder="電話" class="w-full border rounded-lg p-1 text-sm" />
+            <input v-model="editContact.name" class="w-full border rounded-lg p-1 text-sm" />
+            <input v-model="editContact.role" class="w-full border rounded-lg p-1 text-sm" />
+            <input v-model="editContact.phone" class="w-full border rounded-lg p-1 text-sm" />
             <div class="flex justify-end gap-2">
               <button @click="cancelEdit" class="text-xs text-gray-400">取消</button>
               <button @click="saveEdit(idx)" class="text-xs text-green-500">儲存</button>
@@ -86,25 +89,35 @@
         </div>
       </div>
 
-      <!-- 新增聯絡人 -->
-      <div class="bg-white rounded-2xl p-3 shadow-soft space-y-2">
-        <input v-model="newContact.name" placeholder="姓名" class="w-full border rounded-lg p-2 text-sm" />
-        <input v-model="newContact.role" placeholder="身份" class="w-full border rounded-lg p-2 text-sm" />
-        <input v-model="newContact.phone" placeholder="電話" class="w-full border rounded-lg p-2 text-sm" />
-        <button @click="addContact" class="w-full bg-pinky rounded-xl p-2 text-sm font-medium">新增聯絡人</button>
-      </div>
-
     </div>
 
   </div>
 
+  <!-- Floating Add Button -->
+  <button v-if="currentTab==='contacts'" @click="showAdd=true"
+    class="absolute bottom-20 right-4 w-14 h-14 rounded-full bg-pinky/80 text-white text-3xl shadow-soft flex items-center justify-center">＋</button>
+
+  <!-- Add Contact Modal -->
+  <div v-if="showAdd" class="absolute inset-0 bg-black/30 flex items-center justify-center">
+    <div class="bg-white rounded-2xl p-4 w-11/12 space-y-2 shadow-soft">
+      <h3 class="font-semibold">新增聯絡人</h3>
+      <input v-model="newContact.name" placeholder="姓名" class="w-full border rounded-lg p-2 text-sm" />
+      <input v-model="newContact.role" placeholder="身份" class="w-full border rounded-lg p-2 text-sm" />
+      <input v-model="newContact.phone" placeholder="電話" class="w-full border rounded-lg p-2 text-sm" />
+      <div class="flex justify-end gap-3 pt-2">
+        <button @click="showAdd=false" class="text-sm text-gray-400">取消</button>
+        <button @click="addContact(); showAdd=false" class="text-sm text-green-500">新增</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Bottom Navigation -->
   <div class="shrink-0 grid grid-cols-5 text-center border-t bg-white text-xs">
-    <button @click="currentTab='schedule'" class="p-3">⛪ 行程</button>
-    <button @click="currentTab='gold'" class="p-3">🪙 金器</button>
-    <button @click="currentTab='red'" class="p-3">🧧 禮物</button>
-    <button @click="currentTab='info'" class="p-3">📝 資訊</button>
-    <button @click="currentTab='contacts'" class="p-3 text-pink-500 font-semibold">📞 聯絡</button>
+    <button class="p-3">⛪ 行程</button>
+    <button class="p-3">🪙 金器</button>
+    <button class="p-3">🧧 禮物</button>
+    <button class="p-3">📝 資訊</button>
+    <button class="p-3 text-pink-500 font-semibold">📞 聯絡</button>
   </div>
 
 </div>
@@ -119,9 +132,18 @@ createApp({
       contactGroups:['新郎','新娘','其他'],
       activeContactGroup:'新郎',
       contacts: JSON.parse(localStorage.getItem('contacts')||'{"新郎":[],"新娘":[],"其他":[]}'),
+      search:'',
+      showAdd:false,
       newContact:{ name:'', role:'', phone:'' },
       editIndex:null,
       editContact:{ name:'', role:'', phone:'' }
+    }
+  },
+  computed:{
+    filteredContacts(){
+      return this.contacts[this.activeContactGroup].filter(c=>
+        c.name.includes(this.search) || c.role.includes(this.search) || c.phone.includes(this.search)
+      )
     }
   },
   watch:{
@@ -141,7 +163,7 @@ createApp({
       this.newContact={ name:'', role:'', phone:'' }
     },
     startEdit(c,idx){ this.editIndex=idx; this.editContact={...c} },
-    cancelEdit(){ this.editIndex=null; this.editContact={ name:'', role:'', phone:'' } },
+    cancelEdit(){ this.editIndex=null },
     saveEdit(idx){ this.contacts[this.activeContactGroup][idx]={...this.editContact}; this.cancelEdit() },
     removeContact(g,idx){ this.contacts[g].splice(idx,1) }
   }
