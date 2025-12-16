@@ -8,7 +8,7 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Vue 3 -->
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://unpkg.com/vue@3.4.38/dist/vue.global.prod.js"></script>
 
   <script>
     tailwind.config = {
@@ -33,7 +33,7 @@
 
 <body class="bg-gradient-to-br from-pinky via-lavender to-minty min-h-screen flex justify-center items-center">
 
-<div id="app" v-cloak class="relative w-full max-w-md h-[90vh] bg-white/80 backdrop-blur rounded-3xl shadow-soft overflow-hidden flex flex-col">
+<div id="app" v-cloak style="display:none" class="relative w-full max-w-md h-[90vh] bg-white/80 backdrop-blur rounded-3xl shadow-soft overflow-hidden flex flex-col">
 
   <!-- Header -->
   <div class="p-4 text-center font-semibold text-lg shrink-0">💍 婚禮規劃</div>
@@ -245,7 +245,7 @@ createApp({
       reader.readAsDataURL(file)
     }
   }
-}).mount('#app')
+}).mount('#app');document.getElementById('app').style.display='flex'
 </script>
 
 </body>
