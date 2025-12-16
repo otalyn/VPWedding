@@ -120,10 +120,10 @@
   <!-- Bottom Navigation -->
   <div class="shrink-0 grid grid-cols-5 text-center border-t bg-white text-xs">
     <button class="p-3">⛪ 行程</button>
-    <button class="p-3 text-pink-500 font-semibold">🪙 金器</button>
+    <button class="p-3" :class="currentTab==='gold'?'text-pink-500 font-semibold':''" @click="currentTab='gold'">🪙 金器</button>
     <button class="p-3">🧧 禮物</button>
     <button class="p-3">📝 資訊</button>
-    <button class="p-3">📞 聯絡</button>
+    <button class="p-3" @click="currentTab='contact'">📞 聯絡</button>
   </div>
 
 </div>
@@ -134,7 +134,7 @@ const { createApp } = Vue
 createApp({
   data(){
     return {
-      currentTab:'gold',
+      currentTab:'contact',
       goldCategories:['耳環','頸鍊','吊墜','手扼','手鍊','戒指','擺件'],
       goldList: JSON.parse(localStorage.getItem('goldList')||'[]'),
       showAddGold:false,
