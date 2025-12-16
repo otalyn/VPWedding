@@ -17,7 +17,10 @@
           colors: {
             pinky: '#F6C1D1',
             minty: '#C9EDE0',
-            lavender: '#E6D9F7'
+            lavender: '#E6D9F7',
+            groom: '#BFD9FF',
+            bride: '#F6C1D1',
+            other: '#C9EDE0'
           },
           boxShadow: {
             soft: '0 10px 25px rgba(0,0,0,0.08)'
@@ -38,44 +41,14 @@
   <!-- Main Content -->
   <div class="flex-1 overflow-y-auto p-4 space-y-4">
 
-    <!-- 行程 -->
-    <div v-if="currentTab==='schedule'" class="space-y-3">
-      <h2 class="font-semibold">⛪ 婚禮當天行程</h2>
-      <div v-for="(item,idx) in schedule" :key="idx" class="bg-white rounded-2xl p-3 shadow-soft flex justify-between">
-        <div>
-          <div class="text-sm font-medium">{{ item.time }}</div>
-          <div class="text-xs text-gray-500">{{ item.title }}</div>
-        </div>
-        <button @click="removeSchedule(idx)" class="text-xs text-red-400">刪除</button>
-      </div>
-    </div>
-
-    <!-- 金器 -->
-    <div v-if="currentTab==='gold'" class="space-y-3">
-      <h2 class="font-semibold">🪙 金器</h2>
-      <div class="bg-white rounded-2xl p-3 shadow-soft text-sm text-gray-500">（功能稍後加入）</div>
-    </div>
-
-    <!-- 利是 / 禮物 -->
-    <div v-if="currentTab==='red'" class="space-y-3">
-      <h2 class="font-semibold">🧧 利是 / 禮物</h2>
-      <div class="bg-white rounded-2xl p-3 shadow-soft text-sm text-gray-500">（功能稍後加入）</div>
-    </div>
-
-    <!-- 資訊 -->
-    <div v-if="currentTab==='info'" class="space-y-3">
-      <h2 class="font-semibold">📝 資訊</h2>
-      <div class="bg-white rounded-2xl p-3 shadow-soft text-sm text-gray-500">物資 List / 影相次序 / 晚宴座位表（稍後加入）</div>
-    </div>
-
     <!-- 聯絡 -->
     <div v-if="currentTab==='contacts'" class="space-y-3">
 
-      <!-- 分類 -->
+      <!-- 分類按鈕 -->
       <div class="flex gap-2">
         <button v-for="g in contactGroups" :key="g"
           @click="activeContactGroup=g; cancelEdit()"
-          :class="['flex-1 p-2 rounded-xl text-sm', activeContactGroup===g?'bg-pinky':'bg-gray-100']">
+          :class="['flex-1 p-2 rounded-xl text-sm font-medium', groupBtnClass(g)]">
           {{ g }}
         </button>
       </div>
@@ -90,7 +63,8 @@
           <div v-if="editIndex!==idx" class="flex justify-between items-center text-sm">
             <div>
               <div class="font-medium">{{ c.name }}</div>
-              <div class="text-xs text-gray-500">{{ c.role }}｜{{ c.phone }}</div>
+              <div class="text-xs text-gray-500">{{ c.role }}</div>
+              <a :href="'tel:'+c.phone" class="text-xs text-blue-500 underline">📞 {{ c.phone }}</a>
             </div>
             <div class="flex gap-2">
               <button @click="startEdit(c,idx)" class="text-xs text-blue-400">編輯</button>
@@ -126,11 +100,11 @@
 
   <!-- Bottom Navigation -->
   <div class="shrink-0 grid grid-cols-5 text-center border-t bg-white text-xs">
-    <button @click="currentTab='schedule'" :class="['p-3', currentTab==='schedule'?'text-pink-500 font-semibold':'']">⛪ 行程</button>
-    <button @click="currentTab='gold'" :class="['p-3', currentTab==='gold'?'text-pink-500 font-semibold':'']">🪙 金器</button>
-    <button @click="currentTab='red'" :class="['p-3', currentTab==='red'?'text-pink-500 font-semibold':'']">🧧 禮物</button>
-    <button @click="currentTab='info'" :class="['p-3', currentTab==='info'?'text-pink-500 font-semibold':'']">📝 資訊</button>
-    <button @click="currentTab='contacts'" :class="['p-3', currentTab==='contacts'?'text-pink-500 font-semibold':'']">📞 聯絡</button>
+    <button @click="currentTab='schedule'" class="p-3">⛪ 行程</button>
+    <button @click="currentTab='gold'" class="p-3">🪙 金器</button>
+    <button @click="currentTab='red'" class="p-3">🧧 禮物</button>
+    <button @click="currentTab='info'" class="p-3">📝 資訊</button>
+    <button @click="currentTab='contacts'" class="p-3 text-pink-500 font-semibold">📞 聯絡</button>
   </div>
 
 </div>
@@ -141,51 +115,35 @@ const { createApp } = Vue
 createApp({
   data(){
     return {
-      currentTab:'schedule',
-      schedule: JSON.parse(localStorage.getItem('schedule')||'[]'),
-
+      currentTab:'contacts',
       contactGroups:['新郎','新娘','其他'],
       activeContactGroup:'新郎',
       contacts: JSON.parse(localStorage.getItem('contacts')||'{"新郎":[],"新娘":[],"其他":[]}'),
-
       newContact:{ name:'', role:'', phone:'' },
       editIndex:null,
       editContact:{ name:'', role:'', phone:'' }
     }
   },
   watch:{
-    contacts:{
-      deep:true,
-      handler(v){ localStorage.setItem('contacts',JSON.stringify(v)) }
-    },
-    schedule:{
-      deep:true,
-      handler(v){ localStorage.setItem('schedule',JSON.stringify(v)) }
-    }
+    contacts:{ deep:true, handler(v){ localStorage.setItem('contacts',JSON.stringify(v)) } }
   },
   methods:{
-    removeSchedule(i){ this.schedule.splice(i,1) },
+    groupBtnClass(g){
+      if(this.activeContactGroup!==g) return 'bg-gray-100'
+      if(g==='新郎') return 'bg-groom'
+      if(g==='新娘') return 'bg-bride'
+      return 'bg-other'
+    },
     addContact(){
       const { name, role, phone } = this.newContact
       if(!name || !phone) return
       this.contacts[this.activeContactGroup].push({ name, role, phone })
-      this.newContact = { name:'', role:'', phone:'' }
+      this.newContact={ name:'', role:'', phone:'' }
     },
-    startEdit(c,idx){
-      this.editIndex = idx
-      this.editContact = { ...c }
-    },
-    cancelEdit(){
-      this.editIndex = null
-      this.editContact = { name:'', role:'', phone:'' }
-    },
-    saveEdit(idx){
-      this.contacts[this.activeContactGroup][idx] = { ...this.editContact }
-      this.cancelEdit()
-    },
-    removeContact(g,idx){
-      this.contacts[g].splice(idx,1)
-    }
+    startEdit(c,idx){ this.editIndex=idx; this.editContact={...c} },
+    cancelEdit(){ this.editIndex=null; this.editContact={ name:'', role:'', phone:'' } },
+    saveEdit(idx){ this.contacts[this.activeContactGroup][idx]={...this.editContact}; this.cancelEdit() },
+    removeContact(g,idx){ this.contacts[g].splice(idx,1) }
   }
 }).mount('#app')
 </script>
