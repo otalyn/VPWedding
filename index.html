@@ -212,4 +212,4 @@ createApp({
     saveEditContact(){ const i=this.contacts.findIndex(x=>x.id===this.currentContact.id); this.contacts[i]={...this.currentContact}; localStorage.setItem('contactList',JSON.stringify(this.contacts)); this.closeContactModal() },
     deleteContact(id){ if(confirm('刪除此聯絡人？')){ this.contacts=this.contacts.filter(x=>x.id!==id); localStorage.setItem('contactList',JSON.stringify(this.contacts)) } }
   }
-}).mount('#app')
+}).mount
