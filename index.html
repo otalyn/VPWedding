@@ -54,10 +54,10 @@
 
       <!-- 金器列表 -->
       <div class="space-y-2">
-        <div v-for="(item,idx) in goldList" :key="item.id" class="bg-white rounded-2xl p-3 shadow-soft flex gap-3">
+        <div v-for="(item,idx) in goldList" :key="item.id" class="bg-white rounded-2xl p-3 shadow-soft flex gap-3 items-start">
 
           <!-- 編號 -->
-          <div class="text-xs text-gray-400">#{{ idx + 1 }}</div>
+          <div class="text-xs text-gray-400 mt-1">#{{ idx + 1 }}</div>
 
           <!-- 圖片 -->
           <img v-if="item.image" :src="item.image" class="w-16 h-16 rounded-xl object-cover" />
@@ -73,6 +73,11 @@
             </div>
           </div>
 
+          <!-- 操作 -->
+          <div class="flex flex-col gap-2 text-xs">
+            <button @click="startEditGold(item)" class="text-blue-400">✏️</button>
+            <button @click="deleteGold(item.id)" class="text-red-400">🗑️</button>
+          </div>
         </div>
       </div>
 
@@ -123,6 +128,45 @@
     </div>
   </div>
 
+  <!-- 編輯金器 Modal -->
+  <div v-if="showEditGold" class="absolute inset-0 bg-black/30 flex items-center justify-center">
+    <div class="bg-white rounded-2xl p-4 w-11/12 space-y-3 shadow-soft">
+
+      <h3 class="font-semibold">編輯金器</h3>
+
+      <!-- 金器類別 -->
+      <div class="flex flex-wrap gap-2">
+        <button v-for="c in goldCategories" :key="c"
+          @click="editGold.category=c"
+          :class="['px-3 py-1 rounded-full text-xs', editGold.category===c?'bg-pinky':'bg-gray-100']">
+          {{ c }}
+        </button>
+      </div>
+
+      <!-- 數量 -->
+      <input v-model.number="editGold.qty" type="number" inputmode="numeric" placeholder="數量"
+        class="w-full border rounded-lg p-2 text-sm" />
+
+      <!-- 男 / 女家 -->
+      <div class="flex gap-2">
+        <button @click="editGold.side='男家'" :class="['flex-1 p-2 rounded-xl text-sm', editGold.side==='男家'?'bg-groom':'bg-gray-100']">男家</button>
+        <button @click="editGold.side='女家'" :class="['flex-1 p-2 rounded-xl text-sm', editGold.side==='女家'?'bg-bride':'bg-gray-100']">女家</button>
+      </div>
+
+      <!-- 送禮人 -->
+      <input v-model="editGold.from" placeholder="送禮人 / 身份" class="w-full border rounded-lg p-2 text-sm" />
+
+      <!-- 圖片 -->
+      <input type="file" accept="image/*" @change="handleEditImage" class="text-sm" />
+
+      <div class="flex justify-end gap-3">
+        <button @click="showEditGold=false" class="text-sm text-gray-400">取消</button>
+        <button @click="saveEditGold" class="text-sm text-blue-500">儲存</button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Bottom Navigation -->
   <div class="shrink-0 grid grid-cols-5 text-center border-t bg-white text-xs">
     <button class="p-3">⛪ 行程</button>
@@ -144,13 +188,34 @@ createApp({
       goldCategories:['耳環','頸鍊','吊墜','手扼','手鍊','戒指','擺件'],
       goldList: JSON.parse(localStorage.getItem('goldList')||'[]'),
       showAddGold:false,
-      newGold:{ category:'', qty:1, side:'男家', from:'', image:'' }
+      showEditGold:false,
+      newGold:{ category:'', qty:1, side:'男家', from:'', image:'' },
+      editGold:{}
+    }
+  }
     }
   },
   watch:{
     goldList:{ deep:true, handler(v){ localStorage.setItem('goldList',JSON.stringify(v)) } }
   },
   methods:{
+    startEditGold(item){
+      this.editGold = JSON.parse(JSON.stringify(item))
+      this.showEditGold = true
+    },
+    deleteGold(id){
+      if(confirm('確定刪除此金器記錄？')){
+        this.goldList = this.goldList.filter(g=>g.id!==id)
+      }
+    },
+    saveEditGold(){
+      const idx = this.goldList.findIndex(g=>g.id===this.editGold.id)
+      if(idx>-1){
+        this.goldList[idx] = this.editGold
+      }
+      this.showEditGold = false
+    }
+    },
     addGold(){
       if(!this.newGold.category || !this.newGold.qty) return
       this.goldList.push({
@@ -165,6 +230,15 @@ createApp({
       if(!file) return
       const reader = new FileReader()
       reader.onload = ()=>{ this.newGold.image = reader.result }
+      reader.readAsDataURL(file)
+    },
+    handleEditImage(e){
+      const file = e.target.files[0]
+      if(!file) return
+      const reader = new FileReader()
+      reader.onload = ()=>{ this.editGold.image = reader.result }
+      reader.readAsDataURL(file)
+    }
       reader.readAsDataURL(file)
     }
   }
