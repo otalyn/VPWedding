@@ -27,8 +27,33 @@
         <div class="text-sm font-medium">#{{ g.no }} {{ g.category }} × {{ g.qty }}</div>
         <div class="text-xs" :class="g.side==='男家'?'text-blue-500':'text-pink-500'">{{ g.side }}</div>
         <div class="text-xs text-gray-500">{{ g.from }}</div>
+        <div class="flex gap-2 text-xs mt-1">
+          <button @click="openEditGold(g)" class="text-blue-500">編輯</button>
+          <button @click="deleteGold(g.id)" class="text-red-400">刪除</button>
+        </div>
       </div>
       <button @click="showAddGold=true" class="fixed bottom-20 right-6 w-14 h-14 rounded-full bg-pink-400/80 text-white text-3xl flex items-center justify-center shadow-lg">+</button>
+    </div>
+
+    <!-- Add / Edit Gold Modal -->
+    <div v-if="showAddGold || showEditGold" class="absolute inset-0 bg-black/30 flex items-center justify-center z-50">
+      <div class="bg-white rounded-2xl p-4 w-11/12 space-y-3">
+        <h3 class="font-semibold">{{ showAddGold ? '新增金器' : '編輯金器' }}</h3>
+        <div class="flex flex-wrap gap-2">
+          <button v-for="c in categories" :key="c" @click="currentGold.category=c"
+            :class="['px-3 py-1 rounded-full text-xs', currentGold.category===c?'bg-pink-400 text-white':'bg-gray-100']">{{ c }}</button>
+        </div>
+        <input v-model.number="currentGold.qty" type="number" class="w-full border rounded-lg p-2 text-sm" placeholder="數量" />
+        <div class="flex gap-2">
+          <button @click="currentGold.side='男家'" :class="['flex-1 p-2 rounded-xl text-sm', currentGold.side==='男家'?'bg-blue-400 text-white':'bg-gray-100']">男家</button>
+          <button @click="currentGold.side='女家'" :class="['flex-1 p-2 rounded-xl text-sm', currentGold.side==='女家'?'bg-pink-400 text-white':'bg-gray-100']">女家</button>
+        </div>
+        <input v-model="currentGold.from" class="w-full border rounded-lg p-2 text-sm" placeholder="送禮人" />
+        <div class="flex justify-end gap-3">
+          <button @click="closeGoldModal" class="text-sm text-gray-400">取消</button>
+          <button @click="showAddGold ? addGold() : saveEditGold()" class="text-sm text-pink-500">{{ showAddGold ? '新增' : '儲存' }}</button>
+        </div>
+      </div>
     </div>
 
     <!-- 利是 / 禮物 -->
@@ -96,6 +121,8 @@ createApp({
       contactFilter:'全部',
       contactSearch:'',
       showAddGold:false,
+      showEditGold:false,
+      currentGold:{},
       showAddGift:false,
       showAddContact:false,
       newContact:{ name:'', role:'', phone:'', cat:'其他' },
@@ -117,9 +144,22 @@ createApp({
     }
   },
   methods:{
-    navCls(t){
-      return ['flex-1 h-full flex flex-col items-center justify-center', this.tab===t?'text-pink-500 font-semibold':'text-gray-400']
+    navCls(t){ return ['flex-1 h-full flex flex-col items-center justify-center', this.tab===t?'text-pink-500 font-semibold':'text-gray-400'] },
+    closeGoldModal(){ this.showAddGold=false; this.showEditGold=false; this.currentGold={} },
+    addGold(){
+      const no=this.golds.length+1
+      this.golds.push({...this.currentGold, id:Date.now(), no})
+      localStorage.setItem('goldList', JSON.stringify(this.golds))
+      this.closeGoldModal()
     },
+    openEditGold(g){ this.currentGold={...g}; this.showEditGold=true },
+    saveEditGold(){
+      const i=this.golds.findIndex(x=>x.id===this.currentGold.id)
+      this.golds[i]={...this.currentGold}
+      localStorage.setItem('goldList', JSON.stringify(this.golds))
+      this.closeGoldModal()
+    },
+    deleteGold(id){ if(confirm('刪除這筆金器？')){ this.golds=this.golds.filter(x=>x.id!==id); localStorage.setItem('goldList', JSON.stringify(this.golds)) } },
     saveContacts(){ localStorage.setItem('contactList', JSON.stringify(this.contacts)) },
     openEditContact(c){ this.editContact={...c}; this.showEditContact=true },
     deleteContact(id){ if(confirm('刪除此聯絡人？')){ this.contacts=this.contacts.filter(x=>x.id!==id); this.saveContacts() } },
