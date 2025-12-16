@@ -1,181 +1,149 @@
 <!DOCTYPE html>
+
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>婚禮規劃 Web App</title>
+  <title>婚禮規劃 App</title>
 
-  <!-- Tailwind CSS -->
+  <!-- Tailwind -->
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Vue 3 -->
+
+  <!-- Vue 3 (穩定版 CDN) -->
+
   <script src="https://unpkg.com/vue@3.4.38/dist/vue.global.prod.js"></script>
 
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            pinky: '#F6C1D1',
-            minty: '#C9EDE0',
-            lavender: '#E6D9F7',
-            groom: '#BFD9FF',
-            bride: '#F6C1D1',
-            other: '#C9EDE0'
-          },
-          boxShadow: {
-            soft: '0 10px 25px rgba(0,0,0,0.08)'
-          }
-        }
-      }
-    }
-  </script>
+  <style>
+    [v-cloak] { display: none; }
+  </style>
+
 </head>
+<body class="min-h-screen bg-gradient-to-br from-pink-200 via-rose-100 to-purple-200 flex items-center justify-center">
 
-<body class="bg-gradient-to-br from-pinky via-lavender to-minty min-h-screen flex justify-center items-center">
-
-<div id="app" v-cloak class="relative w-full max-w-md h-[90vh] bg-white/80 backdrop-blur rounded-3xl shadow-soft overflow-hidden flex flex-col" class="relative w-full max-w-md h-[90vh] bg-white/80 backdrop-blur rounded-3xl shadow-soft overflow-hidden flex flex-col">
+<div id="app" v-cloak
+  class="relative w-full max-w-md h-[90vh] bg-white/80 backdrop-blur rounded-3xl shadow-xl overflow-hidden flex flex-col">
 
   <!-- Header -->
-  <div class="p-4 text-center font-semibold text-lg shrink-0">💍 婚禮規劃</div>
 
-  <!-- Main Content -->
-  <div class="flex-1 overflow-y-auto p-4 space-y-4">
+  <div class="p-4 text-center font-semibold text-lg">🪙 金器記錄</div>
 
-    <!-- 📞 聯絡分頁 -->
-    <div v-if="currentTab==='contact'" class="space-y-3">
-      <h2 class="font-semibold">📞 聯絡</h2>
-      <div class="text-sm text-gray-400">（聯絡分頁內容已保留，下一步會完整接回）</div>
-    </div>
+  <!-- 金器列表 -->
 
-    <!-- 🪙 金器分頁 -->
-    <div v-if="currentTab==='gold'" class="space-y-3">
+  <div class="flex-1 overflow-y-auto p-4 space-y-3">
 
-      <h2 class="font-semibold">🪙 金器記錄</h2>
+```
+<div v-if="goldList.length === 0" class="text-center text-gray-400 text-sm">
+  尚未有金器記錄
+</div>
 
-      <!-- 金器列表 -->
-      <div class="space-y-2">
-        <div v-for="(item,idx) in goldList" :key="item.id" class="bg-white rounded-2xl p-3 shadow-soft flex gap-3 items-start">
+<div v-for="(item, index) in goldList" :key="item.id"
+  class="bg-white rounded-xl p-3 shadow flex justify-between items-center">
 
-          <!-- 編號 -->
-          <div class="text-xs text-gray-400 mt-1">#{{ idx + 1 }}</div>
-
-          <!-- 圖片 -->
-          <img v-if="item.image" :src="item.image" class="w-16 h-16 rounded-xl object-cover" />
-          <div v-else class="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center text-xs text-gray-400">無圖</div>
-
-          <!-- 資訊 -->
-          <div class="flex-1">
-            <div class="text-sm font-medium">{{ item.category }} × {{ item.qty }}</div>
-            <div class="text-xs text-gray-500">{{ item.from }}</div>
-            <div class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs"
-              :class="item.side==='男家'?'bg-groom':'bg-bride'">
-              {{ item.side }}
-            </div>
-          </div>
-
-          <!-- 操作 -->
-          <div class="flex flex-col gap-2 text-xs">
-            <button @click="startEditGold(item)" class="text-blue-400">✏️</button>
-            <button @click="deleteGold(item.id)" class="text-red-400">🗑️</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- Floating Add Button -->
-  <button v-if="currentTab==='gold'" @click="showAddGold=true"
-    class="absolute bottom-20 right-4 w-14 h-14 rounded-full bg-pinky/80 text-white text-3xl shadow-soft flex items-center justify-center">＋</button>
-
-  <!-- 新增金器 Modal -->
-  <div v-if="showAddGold" class="absolute inset-0 bg-black/30 flex items-center justify-center">
-    <div class="bg-white rounded-2xl p-4 w-11/12 space-y-3 shadow-soft">
-
-      <h3 class="font-semibold">新增金器</h3>
-
-      <!-- 金器類別 -->
-      <div class="flex flex-wrap gap-2">
-        <button v-for="c in goldCategories" :key="c"
-          @click="newGold.category=c"
-          :class="['px-3 py-1 rounded-full text-xs', newGold.category===c?'bg-pinky':'bg-gray-100']">
-          {{ c }}
-        </button>
-      </div>
-
-      <!-- 數量 -->
-      <input v-model.number="newGold.qty" type="number" inputmode="numeric" placeholder="數量"
-        class="w-full border rounded-lg p-2 text-sm" />
-
-      <!-- 男 / 女家 -->
-      <div class="flex gap-2">
-        <button @click="newGold.side='男家'" :class="['flex-1 p-2 rounded-xl text-sm', newGold.side==='男家'?'bg-groom':'bg-gray-100']">男家</button>
-        <button @click="newGold.side='女家'" :class="['flex-1 p-2 rounded-xl text-sm', newGold.side==='女家'?'bg-bride':'bg-gray-100']">女家</button>
-      </div>
-
-      <!-- 送禮人 -->
-      <input v-model="newGold.from" placeholder="送禮人 / 身份" class="w-full border rounded-lg p-2 text-sm" />
-
-      <!-- 圖片 -->
-      <input type="file" accept="image/*" @change="handleImage" class="text-sm" />
-
-      <div class="flex justify-end gap-3">
-        <button @click="showAddGold=false" class="text-sm text-gray-400">取消</button>
-        <button @click="addGold" class="text-sm text-green-500">新增</button>
-      </div>
-
+  <div>
+    <div class="text-sm font-medium">{{ index + 1 }}. {{ item.category }} × {{ item.qty }}</div>
+    <div class="text-xs text-gray-500">{{ item.from }}</div>
+    <div class="text-xs"
+      :class="item.side === '男家' ? 'text-blue-500' : 'text-pink-500'">
+      {{ item.side }}
     </div>
   </div>
 
-  <!-- 編輯金器 Modal -->
-  <div v-if="showEditGold" class="absolute inset-0 bg-black/30 flex items-center justify-center">
-    <div class="bg-white rounded-2xl p-4 w-11/12 space-y-3 shadow-soft">
+  <div class="flex gap-2">
+    <button @click="openEdit(item)" class="text-xs text-blue-500">編輯</button>
+    <button @click="removeGold(item.id)" class="text-xs text-red-400">刪除</button>
+  </div>
+</div>
+```
 
-      <h3 class="font-semibold">編輯金器</h3>
-
-      <!-- 金器類別 -->
-      <div class="flex flex-wrap gap-2">
-        <button v-for="cat in goldCategories" :key="cat"
-          @click="editGold.category=cat"
-          :class="['px-3 py-1 rounded-full text-xs', editGold.category===cat?'bg-pinky':'bg-gray-100']">
-          {{ cat }}
-        </button>
-      </div>
-
-      <!-- 數量 -->
-      <input v-model.number="editGold.qty" type="number" inputmode="numeric" placeholder="數量"
-        class="w-full border rounded-lg p-2 text-sm" />
-
-      <!-- 男 / 女家 -->
-      <div class="flex gap-2">
-        <button @click="editGold.side='男家'"
-          :class="['flex-1 p-2 rounded-xl text-sm', editGold.side==='男家'?'bg-groom':'bg-gray-100']">男家</button>
-        <button @click="editGold.side='女家'"
-          :class="['flex-1 p-2 rounded-xl text-sm', editGold.side==='女家'?'bg-bride':'bg-gray-100']">女家</button>
-      </div>
-
-      <!-- 送禮人 -->
-      <input v-model="editGold.from" placeholder="送禮人 / 身份" class="w-full border rounded-lg p-2 text-sm" />
-
-      <!-- 圖片 -->
-      <input type="file" accept="image/*" @change="handleEditImage" class="text-sm" />
-
-      <div class="flex justify-end gap-3">
-        <button @click="showEditGold=false" class="text-sm text-gray-400">取消</button>
-        <button @click="saveEditGold" class="text-sm text-blue-500">儲存</button>
-      </div>
-
-    </div>
   </div>
 
-  <!-- Bottom Navigation -->
-  <div class="shrink-0 grid grid-cols-5 text-center border-t bg-white text-xs">
-    <button class="p-3">⛪ 行程</button>
-    <button class="p-3" :class="currentTab==='gold'?'text-pink-500 font-semibold':''" @click="currentTab='gold'">🪙 金器</button>
-    <button class="p-3">🧧 禮物</button>
-    <button class="p-3">📝 資訊</button>
-    <button class="p-3" @click="currentTab='contact'">📞 聯絡</button>
+  <!-- 右下角加號 -->
+
+<button @click="showAddGold = true"
+class="absolute bottom-6 right-6 w-14 h-14 rounded-full
+bg-pink-400/80 text-white text-3xl
+flex items-center justify-center shadow-lg">
++ </button>
+
+  <!-- 新增 Modal -->
+
+  <div v-if="showAddGold"
+    class="absolute inset-0 bg-black/30 flex items-center justify-center z-50">
+
+```
+<div class="bg-white rounded-2xl p-4 w-11/12 space-y-3">
+  <h3 class="font-semibold">新增金器</h3>
+
+  <!-- 類別 -->
+  <div class="flex flex-wrap gap-2">
+    <button v-for="cat in goldCategories" :key="cat"
+      @click="newGold.category = cat"
+      :class="['px-3 py-1 rounded-full text-xs', newGold.category === cat ? 'bg-pink-400 text-white' : 'bg-gray-100']">
+      {{ cat }}
+    </button>
+  </div>
+
+  <!-- 數量 -->
+  <input v-model.number="newGold.qty" type="number" inputmode="numeric"
+    class="w-full border rounded-lg p-2 text-sm" placeholder="數量" />
+
+  <!-- 男 / 女家 -->
+  <div class="flex gap-2">
+    <button @click="newGold.side='男家'"
+      :class="['flex-1 p-2 rounded-xl text-sm', newGold.side==='男家'?'bg-blue-400 text-white':'bg-gray-100']">男家</button>
+    <button @click="newGold.side='女家'"
+      :class="['flex-1 p-2 rounded-xl text-sm', newGold.side==='女家'?'bg-pink-400 text-white':'bg-gray-100']">女家</button>
+  </div>
+
+  <!-- 送禮人 -->
+  <input v-model="newGold.from" class="w-full border rounded-lg p-2 text-sm" placeholder="送禮人 / 身份" />
+
+  <div class="flex justify-end gap-3">
+    <button @click="showAddGold=false" class="text-sm text-gray-400">取消</button>
+    <button @click="addGold" class="text-sm text-pink-500">新增</button>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- 編輯 Modal -->
+
+  <div v-if="showEditGold"
+    class="absolute inset-0 bg-black/30 flex items-center justify-center z-50">
+
+```
+<div class="bg-white rounded-2xl p-4 w-11/12 space-y-3">
+  <h3 class="font-semibold">編輯金器</h3>
+
+  <div class="flex flex-wrap gap-2">
+    <button v-for="cat in goldCategories" :key="cat"
+      @click="editGold.category = cat"
+      :class="['px-3 py-1 rounded-full text-xs', editGold.category === cat ? 'bg-pink-400 text-white' : 'bg-gray-100']">
+      {{ cat }}
+    </button>
+  </div>
+
+  <input v-model.number="editGold.qty" type="number"
+    class="w-full border rounded-lg p-2 text-sm" />
+
+  <div class="flex gap-2">
+    <button @click="editGold.side='男家'"
+      :class="['flex-1 p-2 rounded-xl text-sm', editGold.side==='男家'?'bg-blue-400 text-white':'bg-gray-100']">男家</button>
+    <button @click="editGold.side='女家'"
+      :class="['flex-1 p-2 rounded-xl text-sm', editGold.side==='女家'?'bg-pink-400 text-white':'bg-gray-100']">女家</button>
+  </div>
+
+  <input v-model="editGold.from" class="w-full border rounded-lg p-2 text-sm" />
+
+  <div class="flex justify-end gap-3">
+    <button @click="showEditGold=false" class="text-sm text-gray-400">取消</button>
+    <button @click="saveEditGold" class="text-sm text-blue-500">儲存</button>
+  </div>
+</div>
+```
+
   </div>
 
 </div>
@@ -186,26 +154,40 @@ const { createApp } = Vue
 createApp({
   data() {
     return {
-      currentTab: 'gold',
-
       goldCategories: ['耳環','頸鍊','吊墜','手扼','手鍊','戒指','擺件'],
+      goldList: JSON.parse(localStorage.getItem('goldList') || '[]'),
 
-      goldList: [],
+      showAddGold: false,
       showEditGold: false,
 
-      editGold: {
-        id: null,
-        category: '',
-        qty: 1,
-        side: '男家',
-        from: '',
-        image: ''
-      }
+      newGold: { category:'', qty:1, side:'男家', from:'', image:'' }, qty:1,editGold: { id:null, category:'', qty:1, side:'男家', from:'', image:'' }
+      if (!this.newGold.category) return
+      this.goldList.push({ ...this.newGold, id: Date.now() })
+      this.save()
+      this.showAddGold = false
+      this.newGold = { category:'', qty:1, side:'男家', from:'' }
+    },
+    openEdit(item) {
+      this.editGold = { ...item }
+      this.showEditGold = true
+    },
+    saveEditGold() {
+      const i = this.goldList.findIndex(g => g.id === this.editGold.id)
+      if (i !== -1) this.goldList[i] = { ...this.editGold }
+      this.save()
+      this.showEditGold = false
+    },
+    removeGold(id) {
+      if (!confirm('確定刪除？')) return
+      this.goldList = this.goldList.filter(g => g.id !== id)
+      this.save()
+    },
+    save() {
+      localStorage.setItem('goldList', JSON.stringify(this.goldList))
     }
   }
 }).mount('#app')
 </script>
-
 
 </body>
 </html>
