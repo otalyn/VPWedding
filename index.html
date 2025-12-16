@@ -46,52 +46,80 @@
           <div class="text-sm font-medium">{{ item.time }}</div>
           <div class="text-xs text-gray-500">{{ item.title }}</div>
         </div>
-        <button @click="schedule.splice(idx,1)" class="text-xs text-red-400">刪除</button>
+        <button @click="removeSchedule(idx)" class="text-xs text-red-400">刪除</button>
       </div>
     </div>
 
     <!-- 金器 -->
     <div v-if="currentTab==='gold'" class="space-y-3">
       <h2 class="font-semibold">🪙 金器</h2>
-      <div class="bg-white rounded-2xl p-3 shadow-soft text-sm text-gray-500">
-        （功能稍後加入）
-      </div>
+      <div class="bg-white rounded-2xl p-3 shadow-soft text-sm text-gray-500">（功能稍後加入）</div>
     </div>
 
     <!-- 利是 / 禮物 -->
     <div v-if="currentTab==='red'" class="space-y-3">
       <h2 class="font-semibold">🧧 利是 / 禮物</h2>
-      <div class="bg-white rounded-2xl p-3 shadow-soft text-sm text-gray-500">
-        （功能稍後加入）
-      </div>
+      <div class="bg-white rounded-2xl p-3 shadow-soft text-sm text-gray-500">（功能稍後加入）</div>
     </div>
 
     <!-- 資訊 -->
     <div v-if="currentTab==='info'" class="space-y-3">
       <h2 class="font-semibold">📝 資訊</h2>
-      <div class="bg-white rounded-2xl p-3 shadow-soft text-sm text-gray-500">
-        物資 List / 影相次序 / 晚宴座位表（稍後加入）
-      </div>
+      <div class="bg-white rounded-2xl p-3 shadow-soft text-sm text-gray-500">物資 List / 影相次序 / 晚宴座位表（稍後加入）</div>
     </div>
 
     <!-- 聯絡 -->
     <div v-if="currentTab==='contacts'" class="space-y-3">
+
+      <!-- 分類 -->
       <div class="flex gap-2">
         <button v-for="g in contactGroups" :key="g"
-          @click="activeContactGroup=g"
+          @click="activeContactGroup=g; cancelEdit()"
           :class="['flex-1 p-2 rounded-xl text-sm', activeContactGroup===g?'bg-pinky':'bg-gray-100']">
           {{ g }}
         </button>
       </div>
 
+      <!-- 聯絡列表 -->
       <div class="bg-white rounded-2xl p-3 shadow-soft space-y-2">
-        <div v-for="(c,idx) in contacts[activeContactGroup]" :key="idx" class="flex justify-between text-sm">
-          <div>
-            <div class="font-medium">{{ c.name }}</div>
-            <div class="text-xs text-gray-500">{{ c.role }}｜{{ c.phone }}</div>
+        <div v-if="contacts[activeContactGroup].length===0" class="text-xs text-gray-400 text-center">尚未新增聯絡人</div>
+
+        <div v-for="(c,idx) in contacts[activeContactGroup]" :key="idx" class="space-y-1">
+
+          <!-- 查看模式 -->
+          <div v-if="editIndex!==idx" class="flex justify-between items-center text-sm">
+            <div>
+              <div class="font-medium">{{ c.name }}</div>
+              <div class="text-xs text-gray-500">{{ c.role }}｜{{ c.phone }}</div>
+            </div>
+            <div class="flex gap-2">
+              <button @click="startEdit(c,idx)" class="text-xs text-blue-400">編輯</button>
+              <button @click="removeContact(activeContactGroup,idx)" class="text-xs text-red-400">刪除</button>
+            </div>
           </div>
+
+          <!-- 編輯模式 -->
+          <div v-else class="bg-gray-50 rounded-xl p-2 space-y-1">
+            <input v-model="editContact.name" placeholder="姓名" class="w-full border rounded-lg p-1 text-sm" />
+            <input v-model="editContact.role" placeholder="身份" class="w-full border rounded-lg p-1 text-sm" />
+            <input v-model="editContact.phone" placeholder="電話" class="w-full border rounded-lg p-1 text-sm" />
+            <div class="flex justify-end gap-2">
+              <button @click="cancelEdit" class="text-xs text-gray-400">取消</button>
+              <button @click="saveEdit(idx)" class="text-xs text-green-500">儲存</button>
+            </div>
+          </div>
+
         </div>
       </div>
+
+      <!-- 新增聯絡人 -->
+      <div class="bg-white rounded-2xl p-3 shadow-soft space-y-2">
+        <input v-model="newContact.name" placeholder="姓名" class="w-full border rounded-lg p-2 text-sm" />
+        <input v-model="newContact.role" placeholder="身份" class="w-full border rounded-lg p-2 text-sm" />
+        <input v-model="newContact.phone" placeholder="電話" class="w-full border rounded-lg p-2 text-sm" />
+        <button @click="addContact" class="w-full bg-pinky rounded-xl p-2 text-sm font-medium">新增聯絡人</button>
+      </div>
+
     </div>
 
   </div>
@@ -115,9 +143,48 @@ createApp({
     return {
       currentTab:'schedule',
       schedule: JSON.parse(localStorage.getItem('schedule')||'[]'),
+
       contactGroups:['新郎','新娘','其他'],
       activeContactGroup:'新郎',
-      contacts: JSON.parse(localStorage.getItem('contacts')||'{"新郎":[],"新娘":[],"其他":[]}')
+      contacts: JSON.parse(localStorage.getItem('contacts')||'{"新郎":[],"新娘":[],"其他":[]}'),
+
+      newContact:{ name:'', role:'', phone:'' },
+      editIndex:null,
+      editContact:{ name:'', role:'', phone:'' }
+    }
+  },
+  watch:{
+    contacts:{
+      deep:true,
+      handler(v){ localStorage.setItem('contacts',JSON.stringify(v)) }
+    },
+    schedule:{
+      deep:true,
+      handler(v){ localStorage.setItem('schedule',JSON.stringify(v)) }
+    }
+  },
+  methods:{
+    removeSchedule(i){ this.schedule.splice(i,1) },
+    addContact(){
+      const { name, role, phone } = this.newContact
+      if(!name || !phone) return
+      this.contacts[this.activeContactGroup].push({ name, role, phone })
+      this.newContact = { name:'', role:'', phone:'' }
+    },
+    startEdit(c,idx){
+      this.editIndex = idx
+      this.editContact = { ...c }
+    },
+    cancelEdit(){
+      this.editIndex = null
+      this.editContact = { name:'', role:'', phone:'' }
+    },
+    saveEdit(idx){
+      this.contacts[this.activeContactGroup][idx] = { ...this.editContact }
+      this.cancelEdit()
+    },
+    removeContact(g,idx){
+      this.contacts[g].splice(idx,1)
     }
   }
 }).mount('#app')
