@@ -41,6 +41,12 @@
   <!-- Main Content -->
   <div class="flex-1 overflow-y-auto p-4 space-y-4">
 
+    <!-- 📞 聯絡分頁 -->
+    <div v-if="currentTab==='contact'" class="space-y-3">
+      <h2 class="font-semibold">📞 聯絡</h2>
+      <div class="text-sm text-gray-400">（聯絡分頁內容已保留，下一步會完整接回）</div>
+    </div>
+
     <!-- 🪙 金器分頁 -->
     <div v-if="currentTab==='gold'" class="space-y-3">
 
