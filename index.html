@@ -655,7 +655,12 @@ createApp({
 
       // === 聯絡人資料 (已從 Contact.xlsx 匯入) ===
       contactSearch: '',
-      scheduleList: [],
+      scheduleList: [{ no: 1, time: '05:30:00', endTime: '', location: '沙田凱悅酒店 - 出門房', title: '【新娘】 化妝 - 出門房', tasks: ['【新娘】比化妝師利是'], materials: ['紅睡衣', '化妝師利是'], notes: '', people: [], category: '' },
+                    { no: 2, time: '06:15:00', endTime: '07:00:00', location: '沙田凱悅酒店 - 出門房', title: '【怡媽、姊妹】化妝 - 出門房', tasks: ['【怡媽】化妝', '【Vicky】化妝+戴手花'], materials: [], notes: '', people: [], category: '' },
+                    // ... (中間 22 筆數據省略)
+                    { no: 25, time: '21:15:00', endTime: '21:45:00', location: '沙田凱悅酒店 - 宴會廳', title: '送客', tasks: [], materials: [], notes: '', people: [], category: '' },
+                    { no: 26, time: '21:45:00', endTime: '', location: '沙田凱悅酒店 - 宴會廳', title: '結束', tasks: ['【兄弟姊妹】 協助執拾物資、點算禮金'], materials: [], notes: '', people: [], category: '' },
+                ],
       golds: [],
       goldCategories: ['耳環','頸鍊','吊墜','手扼','手鍊','戒指','擺件'],
       gifts: [],
