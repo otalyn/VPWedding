@@ -104,9 +104,9 @@ body {
               </div>
             </div>
             <div v-if="s.expanded" class="mt-3 pt-3 border-t border-gray-200/50 text-xs text-gray-600 space-y-2">
-              <div v-if="s.tasks"><strong>任務:</strong> {{ s.tasks }}</div>
-              <div v-if="s.items"><strong>物資:</strong> {{ s.items }}</div>
-              <div v-if="s.note"><strong>備註:</strong> {{ s.note }}</div>
+              <div v-if="s.tasks"><strong class="text-purple-600">任務:</strong> <div class="whitespace-pre-line pl-1">{{ s.tasks }}</div></div>
+              <div v-if="s.items"><strong class="text-amber-600">物資:</strong> <div class="whitespace-pre-line pl-1">{{ s.items }}</div></div>
+              <div v-if="s.note"><strong class="text-gray-500">備註:</strong> <div class="whitespace-pre-line pl-1">{{ s.note }}</div></div>
               <button @click.stop="openEditSchedule(s)" class="w-full mt-2 bg-purple-500 text-white py-1.5 rounded-lg font-bold">編輯詳情</button>
             </div>
           </div>
@@ -421,30 +421,52 @@ body {
   <div v-if="showGoldModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
     <div class="modal-content w-full max-w-sm rounded-[2rem] p-6 space-y-4 overflow-y-auto max-h-[85vh]">
       <h3 class="text-center font-black text-gray-700">管理金器</h3>
-      <div class="grid grid-cols-2 gap-2">
-        <div><label class="text-[10px] text-gray-400">編號</label><input type="number" v-model.number="currentGold.no" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
-        <div><label class="text-[10px] text-gray-400">數量</label><input type="number" v-model.number="currentGold.qty" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
+      
+      <div>
+        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">編號 (No.)</label>
+        <div class="w-full bg-gray-100 text-gray-500 border rounded-xl p-3 text-sm font-mono">#{{ currentGold.no }}</div>
       </div>
-      <select v-model="currentGold.category" class="w-full bg-white/50 border rounded-xl p-3 text-sm">
-        <option value="" disabled>選擇類別</option>
-        <option v-for="cat in goldCategories" :key="cat" :value="cat">{{ cat }}</option>
-      </select>
-      <input v-model="currentGold.from" class="w-full bg-white/50 border rounded-xl p-3 text-sm" placeholder="由誰送出 (如: 嫲嫲)"/>
-      <select v-model="currentGold.side" class="w-full bg-white/50 border rounded-xl p-3 text-sm">
-         <option value="" disabled>選擇家系</option>
-         <option value="男家">男家</option>
-         <option value="女家">女家</option>
-      </select>
-      <div class="space-y-1">
-        <label class="text-[10px] text-gray-400 font-bold uppercase">圖片</label>
-        <div class="flex items-center gap-2 bg-gray-100 p-2 rounded-xl">
-          <input type="file" @change="loadGoldImage" class="text-[10px] text-gray-500 w-full">
+
+      <div>
+        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">類別</label>
+        <div class="flex flex-wrap gap-2">
+            <button v-for="cat in goldCategories" :key="cat" @click="currentGold.category = cat"
+                    :class="currentGold.category === cat ? 'bg-amber-500 text-white shadow-md' : 'bg-gray-100 text-gray-600'"
+                    class="px-3 py-2 rounded-lg text-xs font-bold transition">
+                {{ cat }}
+            </button>
         </div>
-        <img v-if="currentGold.image" :src="currentGold.image" class="w-full h-20 object-cover rounded-lg border border-white mt-2">
       </div>
-      <div class="flex justify-end gap-4 pt-4">
+
+      <div>
+        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">數量</label>
+        <input type="number" v-model.number="currentGold.qty" class="w-full bg-white/50 border rounded-xl p-3 text-sm font-bold" min="1" />
+      </div>
+
+      <div>
+        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">家系</label>
+        <div class="flex gap-2">
+            <button @click="currentGold.side='男家'" :class="currentGold.side==='男家'?'bg-blue-500 text-white shadow-md':'bg-gray-100 text-gray-500'" class="flex-1 py-3 rounded-xl text-xs font-bold transition">👦 男家</button>
+            <button @click="currentGold.side='女家'" :class="currentGold.side==='女家'?'bg-pink-500 text-white shadow-md':'bg-gray-100 text-gray-500'" class="flex-1 py-3 rounded-xl text-xs font-bold transition">👧 女家</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">送禮人</label>
+        <input v-model="currentGold.from" class="w-full bg-white/50 border rounded-xl p-3 text-sm" placeholder="如: 嫲嫲"/>
+      </div>
+
+      <div>
+        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">圖片</label>
+        <div class="flex items-center gap-2 bg-gray-50 p-2 rounded-xl border border-dashed border-gray-300">
+          <input type="file" @change="loadGoldImage" class="text-[10px] text-gray-500 w-full file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:bg-amber-100 file:text-amber-700">
+        </div>
+        <img v-if="currentGold.image" :src="currentGold.image" class="w-full h-32 object-cover rounded-xl border border-white shadow-sm mt-2">
+      </div>
+
+      <div class="flex justify-end gap-4 pt-4 border-t border-gray-100 mt-2">
         <button @click="showGoldModal=false" class="text-gray-400 font-bold text-sm">取消</button>
-        <button @click="saveGold" class="bg-amber-500 text-white px-6 py-2 rounded-xl font-bold text-sm">儲存</button>
+        <button @click="saveGold" class="bg-amber-500 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-md active:scale-95 transition">儲存</button>
       </div>
     </div>
   </div>
@@ -452,25 +474,51 @@ body {
   <div v-if="showGiftModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
     <div class="modal-content w-full max-w-sm rounded-[2rem] p-6 space-y-4 overflow-y-auto max-h-[85vh]">
       <h3 class="text-center font-black text-gray-700">管理利是/禮物</h3>
-      <div class="flex bg-gray-100 rounded-xl p-1">
-        <button @click="currentGift.type='利是'" :class="currentGift.type==='利是'?'bg-rose-500 text-white shadow-sm':'text-gray-400'" class="flex-1 py-2 rounded-lg text-xs font-bold transition">🧧 利是</button>
-        <button @click="currentGift.type='禮物'" :class="currentGift.type==='禮物'?'bg-emerald-500 text-white shadow-sm':'text-gray-400'" class="flex-1 py-2 rounded-lg text-xs font-bold transition">🎁 禮物</button>
+      
+      <div>
+         <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">編號 (No.)</label>
+         <div class="w-full bg-gray-100 text-gray-500 border rounded-xl p-3 text-sm font-mono">#{{ currentGift.no }}</div>
       </div>
-      <div class="grid grid-cols-3 gap-2">
-        <div><label class="text-[10px] text-gray-400">編號</label><input type="number" v-model.number="currentGift.no" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
-        <div><label class="text-[10px] text-gray-400">金額/價值</label><input type="number" v-model.number="currentGift.amount" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
-        <div><label class="text-[10px] text-gray-400">數量</label><input type="number" v-model.number="currentGift.qty" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
+
+      <div class="flex bg-gray-100 rounded-xl p-1 gap-1">
+        <button @click="currentGift.type='利是'" :class="currentGift.type==='利是'?'bg-rose-500 text-white shadow-sm':'text-gray-400 hover:bg-gray-200'" class="flex-1 py-2 rounded-lg text-xs font-bold transition">🧧 利是</button>
+        <button @click="currentGift.type='禮物'" :class="currentGift.type==='禮物'?'bg-emerald-500 text-white shadow-sm':'text-gray-400 hover:bg-gray-200'" class="flex-1 py-2 rounded-lg text-xs font-bold transition">🎁 禮物</button>
       </div>
-      <input v-if="currentGift.type==='禮物'" v-model="currentGift.desc" class="w-full bg-white/50 border rounded-xl p-3 text-sm" placeholder="禮物描述 (如: Dyson風筒)"/>
-      <input v-model="currentGift.from" class="w-full bg-white/50 border rounded-xl p-3 text-sm" placeholder="由誰送出 (如: John Lee)"/>
-      <select v-model="currentGift.side" class="w-full bg-white/50 border rounded-xl p-3 text-sm">
-         <option value="" disabled>選擇家系</option>
-         <option value="男家">男家</option>
-         <option value="女家">女家</option>
-      </select>
-      <div class="flex justify-end gap-4 pt-4">
+
+      <div v-if="currentGift.type==='禮物'" class="animate-fade-in">
+        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">禮物描述</label>
+        <input v-model="currentGift.desc" class="w-full bg-white/50 border rounded-xl p-3 text-sm focus:ring-2 ring-emerald-200 outline-none" placeholder="如: Dyson風筒"/>
+      </div>
+
+      <div>
+        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">數量</label>
+        <input type="number" v-model.number="currentGift.qty" class="w-full bg-white/50 border rounded-xl p-3 text-sm font-bold" min="1"/>
+      </div>
+
+      <div>
+        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">家系</label>
+        <div class="flex gap-2">
+            <button @click="currentGift.side='男家'" :class="currentGift.side==='男家'?'bg-blue-500 text-white shadow-md':'bg-gray-100 text-gray-500'" class="flex-1 py-3 rounded-xl text-xs font-bold transition">👦 男家</button>
+            <button @click="currentGift.side='女家'" :class="currentGift.side==='女家'?'bg-pink-500 text-white shadow-md':'bg-gray-100 text-gray-500'" class="flex-1 py-3 rounded-xl text-xs font-bold transition">👧 女家</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">送禮人</label>
+        <input v-model="currentGift.from" class="w-full bg-white/50 border rounded-xl p-3 text-sm" placeholder="如: John Lee"/>
+      </div>
+
+      <div>
+        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">總金額 / 價值</label>
+        <div class="relative">
+            <span class="absolute left-4 top-3 text-gray-400 font-bold">$</span>
+            <input type="number" v-model.number="currentGift.amount" class="w-full bg-white/50 border rounded-xl p-3 pl-8 text-sm font-mono font-bold text-rose-600 outline-none focus:ring-2 ring-rose-200" placeholder="0"/>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-4 pt-4 border-t border-gray-100 mt-2">
         <button @click="showGiftModal=false" class="text-gray-400 font-bold text-sm">取消</button>
-        <button @click="saveGift" class="bg-rose-500 text-white px-6 py-2 rounded-xl font-bold text-sm">儲存</button>
+        <button @click="saveGift" class="bg-rose-500 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-md active:scale-95 transition">儲存</button>
       </div>
     </div>
   </div>
@@ -513,7 +561,7 @@ createApp({
       currentPhotoList: { title: '', groups: [] },
       photoEditingIndex: -1,
 
-      // === 座位表資料 (已根據 Excel/CSV 匯入) ===
+      // === 座位表資料 ===
       seatTables: [
         {
           id: 1, category: "主家席 (女家)",
@@ -653,19 +701,113 @@ createApp({
       currentTable: null,
       editingTableIndex: -1,
 
-      // === 聯絡人資料 (已從 Contact.xlsx 匯入) ===
+      // === 聯絡人資料 ===
       contactSearch: '',
-      scheduleList: [{ no: 1, time: '05:30:00', endTime: '', location: '沙田凱悅酒店 - 出門房', title: '【新娘】 化妝 - 出門房', tasks: ['【新娘】比化妝師利是'], materials: ['紅睡衣', '化妝師利是'], notes: '', people: [], category: '' },
-                    { no: 2, time: '06:15:00', endTime: '07:00:00', location: '沙田凱悅酒店 - 出門房', title: '【怡媽、姊妹】化妝 - 出門房', tasks: ['【怡媽】化妝', '【Vicky】化妝+戴手花'], materials: [], notes: '', people: [], category: '' },
-                    // ... (中間 22 筆數據省略)
-                    { no: 25, time: '21:15:00', endTime: '21:45:00', location: '沙田凱悅酒店 - 宴會廳', title: '送客', tasks: [], materials: [], notes: '', people: [], category: '' },
-                    { no: 26, time: '21:45:00', endTime: '', location: '沙田凱悅酒店 - 宴會廳', title: '結束', tasks: ['【兄弟姊妹】 協助執拾物資、點算禮金'], materials: [], notes: '', people: [], category: '' },
-                ],
+      
+      // === 行程資料 (已從 Excel 匯入並格式化) ===
+      scheduleList: [
+        {
+            id: 1,
+            startTime: '05:30',
+            endTime: '',
+            place: '沙田凱悅酒店 - 出門房',
+            title: '【新娘】 化妝 - 出門房',
+            tasks: '【新娘】比化妝師利是',
+            items: '紅睡衣\n化妝師利是',
+            note: '',
+            people: ['新娘'],
+            expanded: false
+        },
+        {
+            id: 2,
+            startTime: '06:15',
+            endTime: '07:00',
+            place: '沙田凱悅酒店 - 出門房',
+            title: '【怡媽、姊妹】化妝 - 出門房',
+            tasks: '【怡媽】化妝\n【Vicky】化妝+戴手花',
+            items: '',
+            note: '',
+            people: ['怡媽','Vicky'],
+            expanded: false
+        },
+        {
+            id: 3,
+            startTime: '07:00',
+            endTime: '07:45',
+            place: '沙田凱悅酒店 - 出門房',
+            title: '【怡媽、姊妹】化妝、準備',
+            tasks: '【Bonnie、Ling】化妝+戴手花\n【怡媽】準備金器俾攝影師影相\n【Vicky】準備帖(中西式各1張)+戒指+褂+褂鞋俾攝影師影\n【Anna、Chelsie】準備敬茶物資+煲水+清洗',
+            items: '姊妹手花\n敬茶物資(茶具、紅棗、蓮子、茶葉、紙杯、跪墊1套)\n褂 褂鞋',
+            note: '',
+            people: ['怡媽','Vicky','Bonnie','Ling','Anna','Chelsie'],
+            expanded: false
+        },
+        {
+            id: 4,
+            startTime: '07:45',
+            endTime: '08:30',
+            place: '沙田凱悅酒店 - 出門房',
+            title: '【怡媽、姊妹】化妝、準備',
+            tasks: '【Chelsie 、Anna】化妝+戴手花\n【Bonnie、Ling】預備玩新郎物資',
+            items: '姊妹手花\n玩新郎物資',
+            note: '',
+            people: ['怡媽','Bonnie','Ling','Anna','Chelsie'],
+            expanded: false
+        },
+        {
+            id: 5,
+            startTime: '08:30',
+            endTime: '09:30',
+            place: '沙田凱悅酒店 - 出門房',
+            title: '【新娘 姊妹 家人】拍換褂照 - 出門房',
+            tasks: '【新娘】派姊妹利是+會撒紙碎\n【怡媽】幫新娘著上身+講心底話\n【姊妹】幫新娘著下身',
+            items: '褂\n姊妹利是',
+            note: '',
+            people: ['新娘','怡媽'],
+            expanded: false
+        },
+        {
+            id: 6,
+            startTime: '08:30',
+            endTime: '09:15',
+            place: '沙田凱悅酒店 - 客房',
+            title: '【新郎】 化妝 - 客房',
+            tasks: '房卡',
+            items: '',
+            note: '',
+            people: ['新郎'],
+            expanded: false
+        },
+        {
+            id: 7,
+            startTime: '08:45',
+            endTime: '09:15',
+            place: '沙田凱悅酒店 - 客房',
+            title: '【禧媽】 化妝 - 客房',
+            tasks: '',
+            items: '',
+            note: '',
+            people: ['禧媽'],
+            expanded: false
+        },
+        {
+            id: 8,
+            startTime: '09:15',
+            endTime: '10:00',
+            place: '沙田凱悅酒店 - 客房',
+            title: '【兄弟】集合+合照 - 酒店樓下',
+            tasks: '【攝影師Calvin Mak】到酒店樓下\n【新郎】比攝影師+兄弟利是+花球\n【兄弟】去男家房放袋+戴襟花',
+            items: '兄弟利是\n攝影師利是\n兄弟襟花',
+            note: '【禧爸】交房卡比兄弟',
+            people: ['新郎','禧爸'],
+            expanded: false
+        }
+      ],
       golds: [],
       goldCategories: ['耳環','頸鍊','吊墜','手扼','手鍊','戒指','擺件'],
       gifts: [],
       contacts: [
-          // 聯絡人列表已從 Contact.xlsx 匯入
+          // 聯絡人列表
           { side: '男家', role: '新郎', name: 'Hei（周諾禧）', phone: '67465278', deleted: false },
           { side: '男家', role: '伴郎．兄弟', name: '發', phone: '53734945', deleted: false },
           { side: '男家', role: '兄弟（婚禮統籌）', name: '史', phone: '53072037', deleted: false },
@@ -708,7 +850,7 @@ createApp({
       contactCats: ['男家', '女家', '其他'],
       contactFilter: '女家',
 
-      // === 影相次序資料 (已根據 CSV 檔案更新) ===
+      // === 影相次序資料 ===
       photoSchedules: [ 
         { title: "教堂拍照名單 (18組)", groups: [ 
           { name: "主禮人", count: 7, cat: "other" }, 
@@ -1110,7 +1252,9 @@ createApp({
         }
     },
     openAddGold() {
-        this.currentGold = { id: null, no: this.golds.length + 1, qty: 1, category: '', from: '', side: '男家', image: '', deleted: false };
+        // ID 邏輯修正: 不論軟刪除與否，永遠使用總長度+1，確保ID不會重複或變更
+        const nextId = this.golds.length + 1;
+        this.currentGold = { id: null, no: nextId, qty: 1, category: '手扼', from: '', side: '男家', image: '', deleted: false };
         this.showGoldModal = true;
     },
     openEditGold(g) {
@@ -1118,8 +1262,8 @@ createApp({
         this.showGoldModal = true;
     },
     saveGold() {
-        if (!this.currentGold.no || !this.currentGold.category || !this.currentGold.from) {
-            alert('編號、類別和送出人為必填');
+        if (!this.currentGold.category) {
+            alert('類別為必選');
             return;
         }
 
@@ -1149,7 +1293,8 @@ createApp({
 
     // ==================== 利是/禮物邏輯 ====================
     openAddGift() {
-        this.currentGift = { id: null, no: this.gifts.length + 1, type: '利是', amount: null, qty: 1, from: '', side: '男家', desc: '', deleted: false };
+        const nextId = this.gifts.length + 1;
+        this.currentGift = { id: null, no: nextId, type: '利是', amount: null, qty: 1, from: '', side: '男家', desc: '', deleted: false };
         this.showGiftModal = true;
     },
     openEditGift(g) {
@@ -1157,8 +1302,8 @@ createApp({
         this.showGiftModal = true;
     },
     saveGift() {
-        if (!this.currentGift.no || !this.currentGift.amount || !this.currentGift.from) {
-            alert('編號、金額和送出人為必填');
+        if (!this.currentGift.no) {
+            alert('編號為必填');
             return;
         }
 
@@ -1314,7 +1459,8 @@ createApp({
         try {
           const parsedData = JSON.parse(data);
           if(key === 'wedding_items') this.itemLists = parsedData;
-          else if(key === 'scheduleList') this.scheduleList = parsedData;
+          // 行程數據故意不載入，以保留本次匯入的 CSV 資料
+          // else if(key === 'scheduleList') this.scheduleList = parsedData;
           else if(key === 'goldList') this.golds = parsedData;
           else if(key === 'giftList') this.gifts = parsedData;
           // 聯絡人列表故意不載入，以保留本次匯入的 Excel 資料
