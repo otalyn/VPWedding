@@ -849,6 +849,19 @@ createApp({
             this.sync('contactList', this.contacts);
         }
     },
+    getWhatsAppLink(phone) {
+        if (!phone) return '#';
+        
+        // 確保電話號碼為純數字。這是最關鍵的一步！
+        let cleaned = phone.replace(/[^\d]/g, ''); 
+        
+        // 檢查是否已包含區號，如果號碼是 8 位且沒有區號，則預設加上香港區號 852
+        if (cleaned.length === 8) {
+            cleaned = '852' + cleaned;
+        }
+
+        return `https://wa.me/${cleaned}`;
+    },
 
     // ==================== 座位表邏輯 ====================
     openEditSeatModal(table) {
