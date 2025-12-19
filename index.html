@@ -666,24 +666,24 @@ createApp({
       gifts: [],
       contacts: [
           // 聯絡人列表已從 Contact.xlsx 匯入
-          { side: '男家', role: '新郎', name: 'Hei（周諾禧）', phone: '6746 5278', deleted: false },
-          { side: '男家', role: '伴郎．兄弟', name: '發', phone: '5373 4945', deleted: false },
-          { side: '男家', role: '兄弟（婚禮統籌）', name: '史', phone: '5307 2037', deleted: false },
-          { side: '男家', role: '兄弟', name: 'David Lo', phone: '6371 8721', deleted: false },
-          { side: '男家', role: '兄弟', name: 'Jayden', phone: '9667 8754', deleted: false },
-          { side: '男家', role: '兄弟', name: 'Jeff', phone: '6214 0987', deleted: false },
-          { side: '男家', role: '新郎爸爸', name: '周凱銘', phone: '9661 3140', deleted: false },
-          { side: '男家', role: '新郎媽媽', name: '周劍萍', phone: '9412 5902', deleted: false },
-          { side: '男家', role: '新郎妹妹', name: '周諾澄', phone: '6308 0613', deleted: false },
-          { side: '女家', role: '新娘', name: 'Vincy（丘穎怡）', phone: '6859 4866', deleted: false },
-          { side: '女家', role: '伴娘．姊妹', name: 'Vicky', phone: '6443 6416', deleted: false },
-          { side: '女家', role: '姊妹', name: 'Anna', phone: '9078 9287', deleted: false },
-          { side: '女家', role: '姊妹', name: 'Bonnie', phone: '6874 6391', deleted: false },
-          { side: '女家', role: '姊妹', name: 'Chelsie', phone: '6234 5708', deleted: false },
-          { side: '女家', role: '姊妹', name: 'Ling', phone: '5500 2330', deleted: false },
-          { side: '女家', role: '新娘爸爸', name: '丘明泰', phone: '9657 1689', deleted: false },
-          { side: '女家', role: '新娘媽媽', name: '蘇嘉禾', phone: '9551 4039', deleted: false },
-          { side: '女家', role: '新娘哥哥', name: '丘兆匡', phone: '6741 0673', deleted: false },
+          { side: '男家', role: '新郎', name: 'Hei（周諾禧）', phone: '67465278', deleted: false },
+          { side: '男家', role: '伴郎．兄弟', name: '發', phone: '53734945', deleted: false },
+          { side: '男家', role: '兄弟（婚禮統籌）', name: '史', phone: '53072037', deleted: false },
+          { side: '男家', role: '兄弟', name: 'David Lo', phone: '63718721', deleted: false },
+          { side: '男家', role: '兄弟', name: 'Jayden', phone: '96678754', deleted: false },
+          { side: '男家', role: '兄弟', name: 'Jeff', phone: '62140987', deleted: false },
+          { side: '男家', role: '新郎爸爸', name: '周凱銘', phone: '96613140', deleted: false },
+          { side: '男家', role: '新郎媽媽', name: '周劍萍', phone: '94125902', deleted: false },
+          { side: '男家', role: '新郎妹妹', name: '周諾澄', phone: '63080613', deleted: false },
+          { side: '女家', role: '新娘', name: 'Vincy（丘穎怡）', phone: '68594866', deleted: false },
+          { side: '女家', role: '伴娘．姊妹', name: 'Vicky', phone: '64436416', deleted: false },
+          { side: '女家', role: '姊妹', name: 'Anna', phone: '90789287', deleted: false },
+          { side: '女家', role: '姊妹', name: 'Bonnie', phone: '68746391', deleted: false },
+          { side: '女家', role: '姊妹', name: 'Chelsie', phone: '62345708', deleted: false },
+          { side: '女家', role: '姊妹', name: 'Ling', phone: '55002330', deleted: false },
+          { side: '女家', role: '新娘爸爸', name: '丘明泰', phone: '96571689', deleted: false },
+          { side: '女家', role: '新娘媽媽', name: '蘇嘉禾', phone: '95514039', deleted: false },
+          { side: '女家', role: '新娘哥哥', name: '丘兆匡', phone: '67410673', deleted: false },
           { side: '其他', role: '逸東酒店', name: 'Katy', phone: '68084055', deleted: false },
           { side: '其他', role: '恆寶（旅遊巴公司）', name: 'Apple', phone: '65557418', deleted: false },
           { side: '其他', role: 'Wemember', name: 'May Chu', phone: '69241730', deleted: false },
@@ -817,6 +817,19 @@ createApp({
         this.modalTitle = '新增聯絡人';
         this.modalConfirmText = '新增';
         this.activeModal = 'addContact';
+    },
+    getWhatsAppLink(phone) {
+        if (!phone) return '#';
+        
+        // 確保電話號碼為純數字。這是最關鍵的一步！
+        let cleaned = phone.replace(/[^\d]/g, ''); 
+        
+        // 檢查是否已包含區號，如果號碼是 8 位且沒有區號，則預設加上香港區號 852
+        if (cleaned.length === 8) {
+            cleaned = '852' + cleaned;
+        }
+
+        return `https://wa.me/${cleaned}`;
     },
     openEditContact(contact) {
         this.currentContact = JSON.parse(JSON.stringify(contact));
