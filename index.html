@@ -478,7 +478,7 @@ const { createApp, ref, computed } = Vue
 createApp({
   data() {
     return {
-      tab: 'contact',
+      tab: 'schedule',
       infoTab: 'items',
       pageTitle: 'Wedding Planner',
       nowTick: Date.now(),
@@ -564,9 +564,9 @@ createApp({
           { side: '其他', role: '司琴', name: '張樂謙', phone: '95117436', deleted: false },
           { side: '其他', role: '花車', name: '張樂謙', phone: '95117436', deleted: false },
           { side: '其他', role: '花車', name: '陳昆賸', phone: '67615807', deleted: false },
-          { side: '其他', role: '65座司機1', name: 'TBC', phone: 'TBC', deleted: false },
-          { side: '其他', role: '65座司機2', name: 'TBC', phone: 'TBC', deleted: false },
-          { side: '其他', role: '28座司機（時租12:15–18:15）', name: 'TBC', phone: 'TBC', deleted: false },
+          { side: '其他', role: '65座司機1', name: '65座司機1', phone: 'TBC', deleted: false },
+          { side: '其他', role: '65座司機2', name: '65座司機2', phone: 'TBC', deleted: false },
+          { side: '其他', role: '28座司機（時租12:15–18:15）', name: '28座司機', phone: 'TBC', deleted: false },
           { side: '其他', role: '晚宴MC', name: '陳純雅 Kathy', phone: '60748285', deleted: false },
       ],
       contactCats: ['男家', '女家', '其他'],
@@ -618,18 +618,21 @@ createApp({
         return this.gifts.filter(x=>!x.deleted).reduce((s,g)=>s+(Number(g.amount)||0), 0)
     },
     filteredContacts() {
-        // 先按 filter 過濾
-        let filtered = this.contacts.filter(c => c.side === this.contactFilter)
+        // 1. 取得搜尋關鍵字並轉為小寫 (去除前後空白)
+        const search = this.contactSearch ? this.contactSearch.trim().toLowerCase() : '';
 
-        // 再按 search 過濾
-        if(this.contactSearch) {
-            const search = this.contactSearch.toLowerCase();
-            filtered = filtered.filter(c => 
+        // 2. 邏輯判斷：
+        // 如果有輸入搜尋文字 -> 搜尋「所有」聯絡人 (忽略 contactFilter 分類)
+        if (search) {
+            return this.contacts.filter(c => 
                 (c.name?.toLowerCase() || '').includes(search) || 
-                (c.role?.toLowerCase() || '').includes(search)
-            )
+                (c.role?.toLowerCase() || '').includes(search) ||
+                (c.phone?.toLowerCase() || '').includes(search) // 順便加入了電話號碼搜尋，方便您用電話找人
+            );
         }
-        return filtered
+
+        // 3. 如果搜尋框是空的 -> 依照原本邏輯，只顯示目前分頁 (如：男家/女家)
+        return this.contacts.filter(c => c.side === this.contactFilter);
     },
     // 座位表篩選與排序
     filteredSeatTables() {
