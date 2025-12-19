@@ -510,7 +510,7 @@ const { createApp } = Vue
 createApp({
   data() {
     return {
-      tab: 'schedule', // *** 修正: 初始頁面設為 'schedule' ***
+      tab: 'schedule', // 初始頁面設為 'schedule'
       infoTab: 'seat', 
       pageTitle: 'Wedding Planner',
       nowTick: Date.now(),
@@ -678,7 +678,7 @@ createApp({
         }
       ],
       seatSearch: '',
-      currentTable: null, // 修正：初始設為 null，在開啟 Modal 時才賦值
+      currentTable: null, 
       editingTableIndex: -1,
 
       contactSearch: '',
@@ -691,9 +691,56 @@ createApp({
       contactCats: ['男家', '女家', '其他'],
       contactFilter: '其他',
       
+      // === 影相次序資料 (已根據 CSV 檔案更新) ===
       photoSchedules: [
-         { title: "教堂拍照名單 (18組)", groups: [{name: "主禮人", count: 7, cat: "other"}, {name: "新郎家人", count: 3, cat: "male"}, {name: "新郎及親戚", count: 40, cat: "male"}, {name: "雙方家人", count: 6, cat: "other"}, {name: "新娘家人", count: 3, cat: "female"}, {name: "兄弟姊妹團", count: 10, cat: "other"}] },
-         { title: "晚宴拍照名單 (20組)", groups: [{name: "新郎父母", count: 2, cat: "male"}, {name: "雙方父母", count: 4, cat: "other"}, {name: "老爺親戚(周氏)", count: 12, cat: "male"}, {name: "外父親戚(丘氏)", count: 10, cat: "female"}, {name: "兄弟姊妹團", count: 12, cat: "other"}] }
+          { 
+              title: "教堂拍照名單 (18組)", 
+              groups: [
+                  { name: "主禮人", count: 7, cat: "other" },
+                  { name: "新郎家人", count: 3, cat: "male" },
+                  { name: "新郎家人及親戚", count: 40, cat: "male" },
+                  { name: "雙方家人", count: 6, cat: "other" },
+                  { name: "新娘家人", count: 3, cat: "female" },
+                  { name: "新娘家人及親戚", count: 40, cat: "female" },
+                  { name: "兄弟姊妹團", count: 10, cat: "other" },
+                  { name: "新郎埔浸小同事", count: 10, cat: "male" },
+                  { name: "新娘禮賢會同事", count: 10, cat: "female" },
+                  { name: "新娘運幼同事", count: 8, cat: "female" },
+                  { name: "新娘大學同學", count: 4, cat: "female" },
+                  { name: "新郎新娘中學師長及同學", count: 30, cat: "other" },
+                  { name: "新郎約瑟團弟兄姊妹", count: 30, cat: "male" },
+                  { name: "新郎以西結團弟兄姊妹", count: 30, cat: "male" },
+                  { name: "新郎安柱堂弟兄姊妹", count: 50, cat: "male" },
+                  { name: "新郎TTT導師", count: 15, cat: "male" },
+                  { name: "新娘CTYC弟兄姊妹", count: 20, cat: "female" },
+                  { name: "其他來賓及好友", count: 30, cat: "other" }
+              ] 
+          },
+          { 
+              title: "晚宴拍照名單 (20組)", 
+              groups: [
+                  { name: "新郎父母", count: 2, cat: "male" },
+                  { name: "新郎家人", count: 3, cat: "male" },
+                  { name: "雙方家人", count: 6, cat: "other" },
+                  { name: "雙方父母", count: 4, cat: "other" },
+                  { name: "新娘父母", count: 2, cat: "female" },
+                  { name: "新娘家人", count: 3, cat: "female" },
+                  { name: "老爺親戚(周氏家族)", count: 20, cat: "male" },
+                  { name: "奶奶親戚(周氏家族)", count: 20, cat: "male" },
+                  { name: "外父親戚(丘氏家族)", count: 24, cat: "female" },
+                  { name: "外母親戚(蘇氏家族)", count: 30, cat: "female" },
+                  { name: "新郎爸爸同事", count: 12, cat: "male" },
+                  { name: "新郎父母朋友", count: 10, cat: "male" },
+                  { name: "新娘大學同學", count: 4, cat: "female" },
+                  { name: "新郎新娘中學老師", count: 5, cat: "other" },
+                  { name: "新郎新娘中學同學", count: 7, cat: "other" },
+                  { name: "新郎TTT導師", count: 12, cat: "male" },
+                  { name: "新郎安柱堂弟兄姊妹", count: 25, cat: "male" },
+                  { name: "新娘CTYC弟兄姊妹", count: 11, cat: "female" },
+                  { name: "兄弟姊妹團", count: 10, cat: "other" },
+                  { name: "自由合照", count: 0, cat: "other" }
+              ] 
+          }
       ],
 
       showScheduleModal: false,
@@ -830,6 +877,10 @@ createApp({
       }
       // 影相管理
       else if(this.activeModal === 'editPhotoList') {
+         // 自動更新列表名稱中的組數
+         const groupCount = this.currentPhotoList.groups.filter(g => g.name).length;
+         this.currentPhotoList.title = this.currentPhotoList.title.split('(')[0].trim() + ` (${groupCount}組)`;
+         
          if(this.photoEditingIndex > -1) this.photoSchedules[this.photoEditingIndex] = this.currentPhotoList;
          else this.photoSchedules.push(this.currentPhotoList);
       }
@@ -965,7 +1016,10 @@ createApp({
     exportGiftCSV(){ this.downloadCSV('gift.csv', ['編號','類別','金額','對象','家系'], this.gifts.filter(x=>!x.deleted).map(x=>[x.no, x.type, x.amount, x.from, x.side])) }
   },
   mounted() {
-    const storageItems = ['wedding_items', 'scheduleList', 'goldList', 'giftList', 'contactList', 'photoSchedules', 'seatTables'];
+    // 修正：從 localStorage 載入數據時，故意不載入 'photoSchedules'，
+    // 以確保 data() 中的硬編碼新數據 (來自您上傳的 Excel) 能夠生效。
+    const storageItems = ['wedding_items', 'scheduleList', 'goldList', 'giftList', 'contactList', 'seatTables'];
+    
     storageItems.forEach(key => {
       const data = localStorage.getItem(key);
       if(data) {
@@ -976,7 +1030,6 @@ createApp({
           else if(key === 'goldList') this.golds = parsedData;
           else if(key === 'giftList') this.gifts = parsedData;
           else if(key === 'contactList') this.contacts = parsedData;
-          else if(key === 'photoSchedules') this.photoSchedules = parsedData;
           // 修正：從 LocalStorage 載入座位表後，確保所有 ID 都是數字類型
           else if(key === 'seatTables') this.seatTables = parsedData.map(t => ({...t, id: Number(t.id)}));
         } catch (e) {
@@ -984,6 +1037,10 @@ createApp({
         }
       }
     });
+    
+    // 關鍵修正：將 data() 中硬編碼的最新 photoSchedules 列表強制存回 Local Storage，覆蓋舊值。
+    this.sync('photoSchedules', this.photoSchedules);
+    
     this.initScheduleState();
     setInterval(() => { this.nowTick = Date.now(); }, 60000);
   }
