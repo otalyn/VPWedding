@@ -397,15 +397,20 @@ body {
       <textarea v-model="currentSchedule.items" class="w-full bg-white/50 border rounded-xl p-3 text-sm h-16" placeholder="物資清單 (選填)"></textarea>
       <textarea v-model="currentSchedule.note" class="w-full bg-white/50 border rounded-xl p-3 text-sm h-16" placeholder="備註 (選填)"></textarea>
       <div class="space-y-2">
-        <label class="text-[10px] text-gray-400 block">負責人 (可選多個)</label>
-        <div class="flex flex-wrap gap-2">
-            <div v-for="p in allExecutors" :key="p" @click="togglePerson(p)"
-                 :class="currentSchedule.people && currentSchedule.people.includes(p) ? getPersonColor(p) + ' text-white shadow-md' : 'bg-gray-100 text-gray-600'"
-                 class="px-3 py-1 text-xs rounded-full font-bold transition cursor-pointer">
-              {{ p }}
-            </div>
-        </div>
+  <label class="text-[10px] text-gray-400 block">負責人 (可選多個)</label>
+  <div class="flex flex-wrap gap-2">
+      <div v-for="p in allExecutors" :key="p" @click="togglePerson(p)"
+           :class="currentSchedule.people && currentSchedule.people.includes(p) ? getPersonColor(p) + ' text-white shadow-md' : 'bg-gray-100 text-gray-600'"
+           class="px-3 py-1 text-xs rounded-full font-bold transition cursor-pointer flex items-center gap-1">
+        
+        <span class="w-2 h-2 rounded-full" 
+              :class="currentSchedule.people && currentSchedule.people.includes(p) ? 'bg-white' : getPersonColor(p)">
+        </span>
+        
+        {{ p }}
       </div>
+  </div>
+</div>
       <div class="flex justify-end gap-4 pt-4">
         <button @click="showScheduleModal=false" class="text-gray-400 font-bold text-sm">取消</button>
         <button @click="saveSchedule" class="bg-purple-500 text-white px-6 py-2 rounded-xl font-bold text-sm">儲存</button>
@@ -793,6 +798,14 @@ createApp({
         return c==='男家'?'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-600 shadow-sm':
                c==='女家'?'bg-gradient-to-r from-pink-100 to-pink-200 text-pink-600 shadow-sm':
                'bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-600 shadow-sm';
+    },
+    getPersonColor(p){
+        // 粉紅色 (女家)
+        if(this.femaleSide.includes(p)) return 'bg-pink-400'; 
+        // 藍色 (男家)
+        if(this.maleSide.includes(p)) return 'bg-blue-400'; 
+        // 綠色 (其他)
+        return 'bg-emerald-400'; 
     },
     openAddContact() {
         this.currentContact = { side: this.contactFilter, role: '', name: '', phone: '', deleted: false };
