@@ -41,7 +41,7 @@ body {
   50% { box-shadow: 0 0 24px rgba(168,85,247,0.5); }
 }
 .soft-glow { animation: glowPulse 2.8s ease-in-out infinite; }
-.schedule-done { opacity: 0.5; filter: grayscale(50%); text-decoration: line-through; }
+.schedule-done { opacity: 0.5; filter: grayscale(50%); }
 
 .fab { transition: transform 0.1s; }
 .fab:active { transform: scale(0.95); }
@@ -288,7 +288,7 @@ body {
 
   </div>
 
-  <div class="h-20 border-t bg-white/80 backdrop-blur-md flex justify-around items-center text-[10px] font-bold shrink-0 z-50">
+  <div class="h-20 border-t bg-white/80 backdrop-blur-md flex justify-around items-center text-[10px] font-bold shrink-0 z-50 shadow-xl">
     <button @click="tab='schedule'" :class="tab==='schedule'?'text-purple-600 scale-110':''" class="flex flex-col items-center gap-1"><span class="text-xl">⛪</span>行程</button>
     <button @click="tab='gold'" :class="tab==='gold'?'text-amber-600 scale-110':''" class="flex flex-col items-center gap-1"><span class="text-xl">🏅</span>金器</button>
     <button @click="tab='gift'" :class="tab==='gift'?'text-rose-600 scale-110':''" class="flex flex-col items-center gap-1"><span class="text-xl">🧧</span>利是/禮物</button>
@@ -867,11 +867,33 @@ createApp({
           { name: "新郎新娘中學師長及同學", count: 30, cat: "other" }, 
           { name: "新郎約瑟團弟兄姊妹", count: 30, cat: "male" }, 
           { name: "新郎以西結團弟兄姊妹", count: 30, cat: "male" }, 
-          { name: "新郎迦密團弟兄姊妹", count: 30, cat: "male" }, 
-          { name: "新娘以利沙伯團", count: 10, cat: "female" }, 
-          { name: "攝影、攝錄、MUA", count: 7, cat: "other" }, 
-          { name: "自由合照", count: 0, cat: "other" } 
-        ] } 
+          { name: "新郎安柱堂弟兄姊妹", count: 30, cat: "male" }, 
+          { name: "新郎TTT導師", count: 10, cat: "male" }, 
+          { name: "新娘CTYC弟兄姊妹", count: 7, cat: "female" }, 
+          { name: "其他來賓及好友", count: 0, cat: "other" } 
+        ] },
+        {title: "晚宴拍照名單 (18組)", groups: [ 
+          { name: "新郎父母", count: 2, cat: "male" }, 
+          { name: "新郎家人", count: 3, cat: "male" }, 
+          { name: "雙方家人", count: 6, cat: "other" }, 
+          { name: "雙方父母", count: 4, cat: "other" }, 
+          { name: "新娘父母", count: 2, cat: "female" }, 
+          { name: "新娘家人", count: 3, cat: "female" }, 
+          { name: "老爺親戚(周氏家族)", count: 20, cat: "male" }, 
+          { name: "奶奶親戚(周氏家族)", count: 20, cat: "male" }, 
+          { name: "外父親戚(丘氏家族)", count: 24, cat: "female" }, 
+          { name: "外母親戚(蘇氏家族)", count: 30, cat: "female" }, 
+          { name: "新郎爸爸同事", count: 12, cat: "male" }, 
+          { name: "新郎父母朋友", count: 10, cat: "male" }, 
+          { name: "新娘大學同學", count: 4, cat: "female" }, 
+          { name: "新郎新娘中學老師", count: 5, cat: "other" }, 
+          { name: "新郎新娘中學同學", count: 7, cat: "other" }, 
+          { name: "新郎TTT導師", count: 12, cat: "male" }, 
+          { name: "新郎安柱堂弟兄姊妹", count: 25, cat: "male" }, 
+          { name: "新娘CTYC弟兄姊妹", count: 11, cat: "female" }, 
+          { name: "兄弟姊妹團", count: 10, cat: "other" }, 
+          { name: "自由合照", count: 0, cat: "other" }],
+        }, 
       ],
       showScheduleModal: false,
       showGoldModal: false,
