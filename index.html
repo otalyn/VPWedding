@@ -81,6 +81,16 @@ body {
   from { opacity: 0; transform: scale(0.98); }
   to { opacity: 1; transform: scale(1); }
 }
+
+/* 新增：用於強制時間輸入框在 iOS 窄屏下穩定 */
+.time-input-ios-fix {
+    /* 移除 Safari 預設外觀，防止其自動添加過大的內邊距 */
+    -webkit-appearance: none; 
+    appearance: none;
+    /* 確保文字不會緊貼邊緣，但比 p-3 (1rem) 更窄，讓出空間 */
+    padding-left: 0.5rem !important; 
+    padding-right: 0.5rem !important; 
+}
 </style>
 </head>
 <body class="flex items-center justify-center p-0">
@@ -400,9 +410,9 @@ body {
       <h3 class="text-center font-black text-gray-700">{{ currentSchedule.id?'編輯行程':'新增行程' }}</h3>
       <div class="grid grid-cols-2 gap-2">
         <div class="flex flex-col">
-            <label class="text-[10px] text-gray-400 block mb-1">開始</label><input type="time" step="60" v-model="currentSchedule.startTime" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
+            <label class="text-[10px] text-gray-400 mb-1">開始</label><input type="time" step="60" v-model="currentSchedule.startTime" class="w-full bg-white/50 border rounded-xl px-2 p-3 text-sm time-input-ios-fix"/></div>
         <div class="flex flex-col">
-            <label class="text-[10px] text-gray-400 block mb-1">結束</label><input type="time" step="60" v-model="currentSchedule.endTime" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
+            <label class="text-[10px] text-gray-400 mb-1">結束</label><input type="time" step="60" v-model="currentSchedule.endTime" class="w-full bg-white/50 border rounded-xl px-2 p-3 text-sm time-input-ios-fix"/></div>
       </div>
       <input v-model="currentSchedule.place" class="w-full bg-white/50 border rounded-xl p-3 text-sm" placeholder="地點"/>
       <input v-model="currentSchedule.title" class="w-full bg-white/50 border rounded-xl p-3 text-sm font-bold" placeholder="行程標題"/>
