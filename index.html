@@ -399,8 +399,8 @@ body {
     <div class="modal-content w-full max-w-sm rounded-[2rem] p-6 space-y-4 overflow-y-auto max-h-[85vh]">
       <h3 class="text-center font-black text-gray-700">{{ currentSchedule.id?'編輯行程':'新增行程' }}</h3>
       <div class="grid grid-cols-2 gap-2">
-        <div><label class="text-[10px] text-gray-400">開始</label><input type="time" step="60" v-model="currentSchedule.startTime" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
-        <div><label class="text-[10px] text-gray-400">結束</label><input type="time" step="60" v-model="currentSchedule.endTime" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
+        <div><label class="text-[10px] text-gray-400 block mb-1">開始</label><input type="time" step="60" v-model="currentSchedule.startTime" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
+        <div><label class="text-[10px] text-gray-400 block mb-1">結束</label><input type="time" step="60" v-model="currentSchedule.endTime" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
       </div>
       <input v-model="currentSchedule.place" class="w-full bg-white/50 border rounded-xl p-3 text-sm" placeholder="地點"/>
       <input v-model="currentSchedule.title" class="w-full bg-white/50 border rounded-xl p-3 text-sm font-bold" placeholder="行程標題"/>
