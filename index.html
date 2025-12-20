@@ -13,8 +13,19 @@
 body { 
     background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 50%, #8fd3f4 100%); 
     min-height: 100vh;
+    /* 【優化 2-1】為了在手機上實現更穩定的全屏效果，使用 100svh（如果瀏覽器支持） */
+    min-height: 100svh;
+    overflow: hidden; /* 確保 body 內容不會滾動，只讓 app 內部的內容滾動 */
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 【優化 2-2】新增：App 外框確保穩定佔滿視窗高度 */
+.app-container-full-height {
+    height: 100vh; /* 兼容性回退 */
+    height: 100svh; /* 在動態工具欄的移動設備上提供更穩定的視口高度 */
+    max-height: 100vh;
+    max-height: 100svh;
 }
 
 .glass-card { 
@@ -72,9 +83,9 @@ body {
 }
 </style>
 </head>
-<body class="flex items-center justify-center p-2">
+<body class="flex items-center justify-center p-0">
 
-<div id="app" v-cloak class="relative w-full max-w-md h-[94vh] glass-card rounded-[2.5rem] flex flex-col overflow-hidden">
+<div id="app" v-cloak class="relative w-full max-w-md h-screen app-container-full-height glass-card rounded-[2.5rem] flex flex-col overflow-hidden">
   
   <div class="p-5 text-center font-bold text-gray-700 text-lg tracking-widest border-b border-white/30 bg-white/20">
     {{ pageTitle }}
@@ -388,8 +399,8 @@ body {
     <div class="modal-content w-full max-w-sm rounded-[2rem] p-6 space-y-4 overflow-y-auto max-h-[85vh]">
       <h3 class="text-center font-black text-gray-700">{{ currentSchedule.id?'編輯行程':'新增行程' }}</h3>
       <div class="grid grid-cols-2 gap-2">
-        <div><label class="text-[10px] text-gray-400">開始</label><input type="time" v-model="currentSchedule.startTime" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
-        <div><label class="text-[10px] text-gray-400">結束</label><input type="time" v-model="currentSchedule.endTime" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
+        <div><label class="text-[10px] text-gray-400">開始</label><input type="time" step="60" v-model="currentSchedule.startTime" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
+        <div><label class="text-[10px] text-gray-400">結束</label><input type="time" step="60" v-model="currentSchedule.endTime" class="w-full bg-white/50 border rounded-xl p-3 text-sm"/></div>
       </div>
       <input v-model="currentSchedule.place" class="w-full bg-white/50 border rounded-xl p-3 text-sm" placeholder="地點"/>
       <input v-model="currentSchedule.title" class="w-full bg-white/50 border rounded-xl p-3 text-sm font-bold" placeholder="行程標題"/>
@@ -869,7 +880,7 @@ createApp({
           { name: "新郎以西結團弟兄姊妹", count: 30, cat: "male" }, 
           { name: "新郎安柱堂弟兄姊妹", count: 30, cat: "male" }, 
           { name: "新郎TTT導師", count: 10, cat: "male" }, 
-          { name: "新娘CTYC弟兄姊妹", count: 7, cat: "female" }, 
+          { name: "新娘CTYC弟兄姊妹", count: 7, cat: "other" }, 
           { name: "其他來賓及好友", count: 0, cat: "other" } 
         ] },
         {title: "晚宴拍照名單 (18組)", groups: [ 
