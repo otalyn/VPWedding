@@ -828,7 +828,7 @@ createApp({
             startTime: '08:30',
             endTime: '09:30',
             place: '沙田凱悅酒店 - 出門房',
-            title: '【新娘 姊妹 家人】拍換褂照 - 出門房',
+            title: '【新娘 姊妹 家人】拍換褂照',
             tasks: '【新娘】派姊妹利是+會撒紙碎\n【怡媽】幫新娘著上身+講心底話\n【姊妹】幫新娘著下身',
             items: '褂\n姊妹利是',
             note: '',
@@ -840,7 +840,7 @@ createApp({
             startTime: '08:30',
             endTime: '09:15',
             place: '沙田凱悅酒店 - 客房',
-            title: '【新郎】 化妝 - 客房',
+            title: '【新郎】 化妝',
             tasks: '房卡',
             items: '',
             note: '',
@@ -852,7 +852,7 @@ createApp({
             startTime: '08:45',
             endTime: '09:15',
             place: '沙田凱悅酒店 - 客房',
-            title: '【禧媽】 化妝 - 客房',
+            title: '【禧媽】 化妝',
             tasks: '',
             items: '',
             note: '',
@@ -863,14 +863,50 @@ createApp({
             id: 8,
             startTime: '09:15',
             endTime: '10:00',
-            place: '沙田凱悅酒店 - 客房',
-            title: '【兄弟】集合+合照 - 酒店樓下',
+            place: '沙田凱悅酒店 - 酒店樓下',
+            title: '【兄弟】集合+合照',
             tasks: '【攝影師Calvin Mak】到酒店樓下\n【新郎】比攝影師+兄弟利是+花球\n【兄弟】去男家房放袋+戴襟花',
             items: '兄弟利是\n攝影師利是\n兄弟襟花',
             note: '【禧爸】交房卡比兄弟',
             people: ['新郎','禧爸'],
             expanded: false
-        }
+        },
+        {
+            id: 9,
+            startTime: '10:00',
+            endTime: '10:00',
+            place: '沙田凱悅酒店',
+            title: '到達女家房',
+            tasks: '【新郎】比開門利是\n【Vicky、Chelsie】攔門花球\n【Anna】Facetime 新娘',
+            items: '開門利是\n花球 攔門花球',
+            note: '',
+            people: ['新郎','Vicky','Chelsie','Anna'],
+            expanded: false
+        },
+        {
+            id: 10,
+            startTime: '21:45',
+            endTime: '22:30',
+            place: '逸東Maggie',
+            title: '按影相次序合照',
+            tasks: '',
+            items: '影相次序List',
+            note: '',
+            people: ['新郎','新娘'],
+            expanded: false
+        },
+        {
+            id: 11,
+            startTime: '22:30',
+            endTime: '23:00',
+            place: '逸東Maggie',
+            title: '【新人、家人】送客',
+            tasks: '點物資、清場、埋單',
+            items: '',
+            note: '將部份物資(禮物、相簿、相架、金器、花球)放上禧爸車',
+            people: ['新郎','禧媽','禧爸','Jeff','Jayden','David Lo','史','TC','發','新娘','怡媽','怡爸','Vicky','Bonnie','Ling','Anna','Chelsie'],
+            expanded: false
+        },
       ],
       golds: [],
       goldCategories: ['耳環','頸鍊','吊墜','手扼','手鍊','戒指','擺件'],
@@ -977,6 +1013,63 @@ createApp({
     }
   },
   computed: {
+    sortedScheduleList() {
+        // 獲取當前時間戳
+        const now = this.nowTick;
+        // 使用輔助函式將時間字串轉換為時間戳
+        const getTs = (timeStr) => this.getTimestampFromTime(timeStr, now);
+
+        let currentSchedule = null;
+        let nextSchedule = null;
+        let minNextStartTime = Infinity;
+
+        // 第一步：遍歷清單，找出「現在進行中」和「下一個」行程
+        this.scheduleList.forEach(s => {
+            const startTs = getTs(s.startTime);
+            let endTs = s.endTime ? getTs(s.endTime) : Infinity;
+
+            // 處理跨日行程 (結束時間早於開始時間, 例如 23:00~01:00)
+            if (s.endTime && endTs < startTs) {
+                endTs += 24 * 60 * 60 * 1000;
+            }
+
+            // A. 找出現在進行中的行程： start <= now < end
+            if (startTs <= now && now < endTs) {
+                currentSchedule = s;
+            }
+
+            // B. 找出下一個行程： start > now 且開始時間最近
+            if (startTs > now) {
+                if (startTs < minNextStartTime) {
+                    minNextStartTime = startTs;
+                    nextSchedule = s;
+                }
+            }
+        });
+
+        // 第二步：使用自訂排序邏輯
+        return [...this.scheduleList].sort((a, b) => {
+            // 1. 最高優先級：現在進行中的行程
+            if (a === currentSchedule) return -3;
+            if (b === currentSchedule) return 3;
+
+            // 2. 第二優先級：下一個行程
+            if (a === nextSchedule) return -2;
+            if (b === nextSchedule) return 2;
+
+            // 3. 剩餘行程：按時間順序排序 (數值越小越早)
+            const startA = getTs(a.startTime);
+            const startB = getTs(b.startTime);
+            
+            if (startA === startB) {
+                // 如果開始時間相同，按結束時間排 (結束時間早的優先)
+                const endA = a.endTime ? getTs(a.endTime) : Infinity;
+                const endB = b.endTime ? getTs(b.endTime) : Infinity;
+                return endA - endB;
+            }
+            return startA - startB;
+        });
+    },
     allExecutors() {
         return [...this.maleSide, ...this.femaleSide]
     },
@@ -1025,6 +1118,22 @@ createApp({
     }
   },
   methods: {
+    /**
+     * 新增：將 HH:MM 字串轉換成今天日期的時間戳 (Timestamp)
+     * @param {string} timeStr - 時間字串，格式為 HH:MM
+     * @param {number} referenceDate - 參考的時間戳 (通常是 this.nowTick)
+     * @returns {number | null} - 毫秒時間戳
+     */
+    getTimestampFromTime(timeStr, referenceDate) {
+        if (!timeStr) return null;
+        // 使用參考日期（nowTick）來設定日期部分
+        const date = new Date(referenceDate);
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        
+        // 設定時/分/秒/毫秒
+        date.setHours(hours, minutes, 0, 0);
+        return date.getTime();
+    },
     // ==================== 聯絡人邏輯 ====================
     getContactTagClass(c) {
         return c==='男家'?'bg-blue-200/50 text-blue-800':c==='女家'?'bg-pink-200/50 text-pink-800':'bg-emerald-200/50 text-emerald-800';
