@@ -402,42 +402,46 @@ body {
         </div>
       </div>
 
-      <div v-if="infoSubTab === 'tea'" class="space-y-3">
+      <div v-if="infoSubTab === 'tea'" class="space-y-4">
                 <div v-for="(tea, index) in teaList" :key="index" 
                      @click="tea.done = !tea.done"
-                     class="glass-card p-4 rounded-2xl shadow-sm border border-orange-50 cursor-pointer transition-all active:scale-95"
-                     :class="tea.done ? 'bg-gray-100/50 opacity-60' : 'bg-white/80'">
+                     class="glass-card p-5 rounded-[2rem] shadow-sm border border-orange-50 cursor-pointer transition-all active:scale-95"
+                     :class="tea.done ? 'bg-gray-100/50 opacity-60' : 'bg-white/90'">
                     
-                    <div class="flex items-start justify-between">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span v-if="tea.side === '男家'" class="bg-blue-100 text-blue-600 text-[10px] px-2 py-0.5 rounded font-bold">男家</span>
-                                <span v-else class="bg-pink-100 text-pink-600 text-[10px] px-2 py-0.5 rounded font-bold">女家</span>
-                                
-                                <h4 class="font-black text-gray-700" :class="tea.done ? 'line-through text-gray-400' : ''">
-                                    {{ tea.identity }}
-                                </h4>
-                            </div>
-
-                            <div class="grid grid-cols-1 gap-y-1 text-[11px]" :class="tea.done ? 'text-gray-300' : 'text-gray-500'">
-                                <p><span class="font-bold text-orange-400/80">時段：</span>{{ tea.timeSlot }}</p>
-                                <p><span class="font-bold text-orange-400/80">方式：</span>{{ tea.method }}</p>
-                                <p><span class="font-bold text-orange-400/80">茶杯：</span>{{ tea.cupType }}</p>
-                                <p v-if="tea.remark"><span class="font-bold text-orange-400/80">Remark：</span>{{ tea.remark }}</p>
-                            </div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-3">
+                            <span v-if="tea.side === '男家'" class="bg-blue-500 text-white text-[11px] px-2.5 py-1 rounded-full font-bold shadow-sm">男家</span>
+                            <span v-else class="bg-pink-500 text-white text-[11px] px-2.5 py-1 rounded-full font-bold shadow-sm">女家</span>
+                            
+                            <h4 class="font-black text-gray-800 text-lg" :class="tea.done ? 'line-through text-gray-400' : ''">
+                                {{ tea.identity }}
+                            </h4>
                         </div>
 
-                        <div class="flex-shrink-0 ml-2">
-                            <div class="w-6 h-6 rounded-full border-2 transition-all flex items-center justify-center"
-                                 :class="tea.done ? 'bg-green-500 border-green-500 text-white' : 'border-orange-200 bg-white'">
-                                <span v-if="tea.done" class="text-[10px]">✓</span>
-                            </div>
+                        <div class="w-7 h-7 rounded-full border-2 transition-all flex items-center justify-center shadow-inner"
+                             :class="tea.done ? 'bg-green-500 border-green-500 text-white' : 'border-orange-200 bg-white'">
+                            <span v-if="tea.done" class="text-xs font-bold">✓</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-orange-100/50 pt-3 text-sm" :class="tea.done ? 'text-gray-300' : 'text-gray-600'">
+                        <div class="flex items-center gap-2">
+                            <span>🕒</span> {{ tea.timeSlot }}
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span>🍵</span> {{ tea.cupType }}
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span>🤲🏻</span> {{ tea.method }}
+                        </div>
+                        <div class="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
+                            <span>💡</span> {{ tea.remark || '---' }}
                         </div>
                     </div>
                 </div>
-                <p class="text-[10px] text-gray-400 text-center mt-4 italic">💡 點擊項目即可劃掉已完成的敬茶</p>
+                <p class="text-xs text-gray-400 text-center mt-6 pb-10">💡 點擊長輩卡片即可標記完成</p>
             </div>
-    </div>
+         </div>
 
     <div v-if="tab==='contact'" class="space-y-4">
       <input v-model="contactSearch" placeholder="搜尋姓名 / 身份" class="w-full rounded-2xl border-none bg-white/50 px-4 py-3 text-sm shadow-inner focus:ring-2 focus:ring-emerald-200" />
@@ -630,7 +634,7 @@ infoSubTab: 'tea',
           { 
                 side: '女家', 
                 identity: '父母', 
-                timeSlot: '朝早敬茶', 
+                timeSlot: '朝早敬茶☀️', 
                 method: '兩手一杯', 
                 cupType: '瓦杯', 
                 remark: '',
@@ -639,7 +643,7 @@ infoSubTab: 'tea',
             { 
                 side: '男家', 
                 identity: '父母', 
-                timeSlot: '朝早敬茶', 
+                timeSlot: '朝早敬茶☀️', 
                 method: '兩手一杯', 
                 cupType: '瓦杯', 
                 remark: '',
@@ -648,7 +652,7 @@ infoSubTab: 'tea',
             { 
                 side: '男家', 
                 identity: '婆婆', 
-                timeSlot: '朝早敬茶', 
+                timeSlot: '朝早敬茶☀️', 
                 method: '兩手一杯', 
                 cupType: '瓦杯', 
                 remark: '國語',
@@ -657,7 +661,7 @@ infoSubTab: 'tea',
             { 
                 side: '男家', 
                 identity: '大舅父、大舅母', 
-                timeSlot: '朝早敬茶', 
+                timeSlot: '朝早敬茶☀️', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '國語',
@@ -666,7 +670,7 @@ infoSubTab: 'tea',
             { 
                 side: '男家', 
                 identity: '三舅父、三舅母', 
-                timeSlot: '朝早敬茶', 
+                timeSlot: '朝早敬茶☀️', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '國語',
@@ -675,7 +679,7 @@ infoSubTab: 'tea',
             { 
                 side: '男家', 
                 identity: '姨丈、阿姨', 
-                timeSlot: '朝早敬茶', 
+                timeSlot: '朝早敬茶☀️', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '',
@@ -684,7 +688,7 @@ infoSubTab: 'tea',
             { 
                 side: '男家', 
                 identity: '大伯、伯娘', 
-                timeSlot: '朝早敬茶', 
+                timeSlot: '朝早敬茶☀️', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '',
@@ -693,7 +697,7 @@ infoSubTab: 'tea',
             { 
                 side: '男家', 
                 identity: '姑丈、姑媽', 
-                timeSlot: '朝早敬茶', 
+                timeSlot: '朝早敬茶☀️', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '',
@@ -702,7 +706,7 @@ infoSubTab: 'tea',
             { 
                 side: '男家', 
                 identity: '三伯娘', 
-                timeSlot: '朝早敬茶', 
+                timeSlot: '朝早敬茶☀️', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '',
@@ -711,7 +715,7 @@ infoSubTab: 'tea',
             { 
                 side: '男家', 
                 identity: '四伯', 
-                timeSlot: '朝早敬茶', 
+                timeSlot: '朝早敬茶☀️', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '',
@@ -720,7 +724,7 @@ infoSubTab: 'tea',
             { 
                 side: '男家', 
                 identity: '明叔、米嬸', 
-                timeSlot: '朝早敬茶', 
+                timeSlot: '朝早敬茶☀️', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '',
@@ -729,7 +733,7 @@ infoSubTab: 'tea',
             { 
                 side: '女家', 
                 identity: '婆婆', 
-                timeSlot: '夜晚補敬', 
+                timeSlot: '夜晚補敬🌙', 
                 method: '兩手一杯', 
                 cupType: '紙杯', 
                 remark: '',
@@ -738,7 +742,7 @@ infoSubTab: 'tea',
             { 
                 side: '女家', 
                 identity: '大舅父、大舅母', 
-                timeSlot: '夜晚補敬', 
+                timeSlot: '夜晚補敬🌙', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '',
@@ -747,7 +751,7 @@ infoSubTab: 'tea',
             { 
                 side: '女家', 
                 identity: '細舅父、細舅母', 
-                timeSlot: '夜晚補敬', 
+                timeSlot: '夜晚補敬🌙', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '',
@@ -756,7 +760,7 @@ infoSubTab: 'tea',
             { 
                 side: '女家', 
                 identity: '姑媽', 
-                timeSlot: '夜晚補敬', 
+                timeSlot: '夜晚補敬🌙', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '',
@@ -765,7 +769,7 @@ infoSubTab: 'tea',
             { 
                 side: '女家', 
                 identity: '大伯', 
-                timeSlot: '夜晚補敬', 
+                timeSlot: '夜晚補敬🌙', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '',
@@ -774,7 +778,7 @@ infoSubTab: 'tea',
             { 
                 side: '女家', 
                 identity: '二伯、伯娘', 
-                timeSlot: '夜晚補敬', 
+                timeSlot: '夜晚補敬🌙', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '',
@@ -783,7 +787,7 @@ infoSubTab: 'tea',
             { 
                 side: '女家', 
                 identity: '叔叔、嬸嬸', 
-                timeSlot: '夜晚補敬', 
+                timeSlot: '夜晚補敬🌙', 
                 method: '四手一杯', 
                 cupType: '紙杯', 
                 remark: '',
