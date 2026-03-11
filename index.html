@@ -13,17 +13,15 @@
 body { 
     background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 50%, #8fd3f4 100%); 
     min-height: 100vh;
-    /* 【優化 2-1】為了在手機上實現更穩定的全屏效果，使用 100svh（如果瀏覽器支持） */
     min-height: 100svh;
-    overflow: hidden; /* 確保 body 內容不會滾動，只讓 app 內部的內容滾動 */
+    overflow: hidden; 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* 【優化 2-2】新增：App 外框確保穩定佔滿視窗高度 */
 .app-container-full-height {
-    height: 100vh; /* 兼容性回退 */
-    height: 100svh; /* 在動態工具欄的移動設備上提供更穩定的視口高度 */
+    height: 100vh; 
+    height: 100svh; 
     max-height: 100vh;
     max-height: 100svh;
 }
@@ -34,6 +32,28 @@ body {
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.5); 
     box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1); 
+}
+
+.filter-slide-enter-active,
+.filter-slide-leave-active {
+  transition: all 0.3s ease-out;
+  overflow: hidden; 
+}
+
+.filter-slide-enter-from,
+.filter-slide-leave-to {
+  opacity: 0;
+  max-height: 0px; 
+  padding-top: 0; 
+  padding-bottom: 0; 
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.filter-slide-enter-to,
+.filter-slide-leave-from {
+  opacity: 1;
+  max-height: 100px; 
 }
 
 /* Modal 專用樣式 */
@@ -57,24 +77,8 @@ body {
 .fab { transition: transform 0.1s; }
 .fab:active { transform: scale(0.95); }
 
-/* 管理清單按鈕顏色 */
 .bg-manage-btn { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); }
-
 .item-checked { text-decoration: line-through; opacity: 0.5; }
-
-/* 影相顏色標籤 */
-.cat-tag-male { background-color: #60a5fa; color: white; }
-.cat-tag-female { background-color: #f472b6; color: white; }
-.cat-tag-other { background-color: #34d399; color: white; }
-
-/* 座位表專用樣式 */
-.seat-guest-active {
-    background: linear-gradient(135deg, #312e81 0%, #4338ca 100%); /* Deep Indigo */
-    color: white !important;
-    border: 1px solid rgba(255,255,255,0.2);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-}
-.seat-guest-active span { color: rgba(255,255,255,0.8) !important; }
 
 .animate-fade-in { animation: fadeIn 0.2s ease-out; }
 @keyframes fadeIn {
@@ -82,46 +86,41 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
-/* 新增：用於強制時間輸入框在 iOS 窄屏下穩定 */
 .time-input-ios-fix {
-    /* 移除 Safari 預設外觀，防止其自動添加過大的內邊距 */
     -webkit-appearance: none; 
     appearance: none;
-    /* 確保文字不會緊貼邊緣，但比 p-3 (1rem) 更窄，讓出空間 */
     padding-left: 0.5rem !important; 
     padding-right: 0.5rem !important; 
 }
-/* 【優化 5-1】新增紀念碑谷風格漸變按鈕樣式 */
+
 .btn-gradient-blue {
-    background-image: linear-gradient(135deg, #9bb9ed 0%, #7ccaf0 100%); /* 藍色主題：男家 */
+    background-image: linear-gradient(135deg, #9bb9ed 0%, #7ccaf0 100%); 
     color: white;
     font-weight: bold;
     transition: all 0.2s ease-in-out;
 }
 .btn-gradient-pink {
-    background-image: linear-gradient(135deg, #fab6e6 0%, #fb8185 100%); /* 粉色主題：女家 */
+    background-image: linear-gradient(135deg, #fab6e6 0%, #fb8185 100%); 
     color: white;
     font-weight: bold;
     transition: all 0.2s ease-in-out;
 }
 .btn-gradient-red {
-    background-image: linear-gradient(135deg, #f8898d 0%, #fe6584 100%); /* 紅色主題：利是 */
+    background-image: linear-gradient(135deg, #f8898d 0%, #fe6584 100%); 
     color: white;
     font-weight: bold;
     transition: all 0.2s ease-in-out;
 }
 .btn-gradient-mint {
-    background-image: linear-gradient(135deg, #6ffac7 0%, #4adeb9 100%); /* 薄荷綠主題：禮物 */
-    color: #4a5568; /* 深色文字 */
+    background-image: linear-gradient(135deg, #6ffac7 0%, #4adeb9 100%); 
+    color: #4a5568; 
     font-weight: bold;
     transition: all 0.2s ease-in-out;
 }
-/* 【優化 6-1】新增：深藍色漸變 (用於 Item 管理清單按鈕，模擬座位表到場賓客色) */
 .btn-gradient-dark-blue {
     background-image: linear-gradient(135deg, #4c669f 0%, #3b5998 50%, #2b498f 100%); 
     color: white;
     font-weight: bold;
-    /* 確保按鈕有陰影效果，模擬紀念碑谷風格的浮動感 */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
     transition: all 0.2s ease-in-out;
 }
@@ -142,11 +141,48 @@ body {
         <div class="text-4xl mb-2">⏱️</div>
         <div class="text-sm">尚未新增行程</div>
       </div>
-      <div v-else class="border-l-2 border-gray-300 ml-4 space-y-6">
-        <div v-for="s in sortedScheduleList" :key="s.id" class="relative pl-6">
+      <div v-if="scheduleList.length > 0" class="sticky top-4 z-50 h-0 overflow-visible ml-1">
+        <div class="absolute top-0 left-0 flex flex-col items-start gap-2">
+            
+            <button @click="isFilterCollapsed = !isFilterCollapsed" 
+                    class="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-white/60 text-purple-600 font-bold flex items-center justify-center transition-transform active:scale-95">
+                <span v-if="isFilterCollapsed" class="text-lg">🔍</span>
+                <span v-else class="text-lg">✕</span>
+            </button>
+            
+            <div v-if="isFilterCollapsed && responsibleFilter !== '全部'" 
+                 @click="isFilterCollapsed = false"
+                 class="bg-purple-500/90 text-white text-[10px] px-3 py-1 rounded-full shadow-md backdrop-blur font-bold cursor-pointer animate-fade-in">
+                 {{ responsibleFilter }}
+            </div>
+
+            <div v-show="!isFilterCollapsed" 
+                 class="bg-white/95 backdrop-blur-xl p-3 rounded-2xl shadow-2xl border border-white/60 w-40 flex flex-col gap-2 max-h-[60vh] overflow-y-auto animate-fade-in">
+                 
+                 <div class="text-[10px] text-gray-400 font-bold ml-1 mb-1">篩選負責人</div>
+                 
+                 <button @click="responsibleFilter='全部'; isFilterCollapsed=true; scrollToCurrentSchedule();"
+                         :class="responsibleFilter==='全部' ? 'bg-purple-500 text-white shadow' : 'bg-gray-100 text-gray-600'"
+                         class="py-2 px-3 rounded-xl text-xs font-bold text-left transition-all">
+                     全部
+                 </button>
+
+                 <button v-for="p in uniqueResponsibles" :key="p" 
+                         @click="responsibleFilter=p; isFilterCollapsed=true; scrollToCurrentSchedule();"
+                         :class="responsibleFilter===p ? 'bg-purple-500 text-white shadow' : 'bg-gray-100 text-gray-600'"
+                         class="py-2 px-3 rounded-xl text-xs font-bold text-left transition-all">
+                     {{ p }}
+                 </button>
+            </div>
+        </div>
+      </div>
+      <div v-if="scheduleList.length > 0" class="border-l-2 border-gray-300 ml-4 space-y-6">
+        <div v-for="s in filteredScheduleList" :key="s.id" class="relative pl-6">
           <div class="absolute -left-[7px] top-4 w-3 h-3 rounded-full"
                :class="isOngoing(s.startTime,s.endTime)?'bg-violet-400 shadow-md':'bg-gray-400'"></div>
           <div @click="toggleCard(s.id)"
+               :id="isOngoing(s.startTime, s.endTime) ? 'current-schedule-item' : null" 
+               :data-id="s.id"
                class="rounded-2xl p-4 bg-white/60 shadow-sm transition-all cursor-pointer relative"
                :class="{'soft-glow border-2 border-purple-300': isOngoing(s.startTime,s.endTime), 'schedule-done': isFinished(s.startTime,s.endTime)}">
             <div class="text-xs text-gray-500 font-medium">
@@ -170,64 +206,84 @@ body {
           </div>
         </div>
       </div>
+      <div v-if="responsibleFilter !== '全部' && filteredScheduleList.length === 0" class="text-center p-6 text-gray-500">
+                <p>找不到負責人為「{{ responsibleFilter }}」的行程。</p>
+            </div>
       <button @click="openAddSchedule" class="fab fixed bottom-24 right-8 w-14 h-14 rounded-full bg-gradient-to-br from-violet-400 to-fuchsia-400 text-white text-3xl shadow-lg z-40">+</button>
     </div>
 
-    <div v-if="tab==='gold'" class="space-y-4">
-      <div class="flex justify-between items-center px-1">
-        <span class="text-xs text-gray-500">已記錄: {{ golds.length }} 件</span>
-        <button @click="exportGoldCSV" class="text-xs text-amber-700 bg-amber-100 px-3 py-1 rounded-full font-bold">匯出 CSV</button>
-      </div>
-      <div v-for="g in golds" :key="g.id" class="glass-card rounded-2xl p-4 transition-all" :class="g.deleted ? 'opacity-40 grayscale' : ''">
-        <div class="flex justify-between items-start">
-          <div>
-            <div class="text-sm font-black text-gray-700">#{{ g.no }} {{ g.category }} × {{ g.qty }}</div>
-            <div class="text-[11px] mt-1 font-bold" :class="g.side==='男家'?'text-blue-500':'text-pink-500'">
-              <span class="inline-block w-2 h-2 rounded-full mr-1" :class="g.side==='男家'?'bg-blue-400':'bg-pink-400'"></span>{{ g.side }}
+    <div v-if="tab==='bus'" class="space-y-4 px-2">
+        <div class="relative border-l-2 border-blue-300 ml-4 space-y-8">
+            <div v-for="(bus, index) in busSchedule" :key="index" class="relative pl-6">
+                <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-blue-400 shadow-md border-2 border-white"></div>
+                <div class="bg-white/70 rounded-2xl p-4 shadow-sm relative">
+                    <div class="text-xs text-blue-600 font-black mb-1 tracking-wider">{{ bus.time }} 出發</div>
+                    <div class="font-bold text-gray-700 text-base mb-3 leading-tight">
+                        <span class="text-gray-500 text-sm">由</span> {{ bus.from }} <br/>
+                        <span class="text-gray-500 text-sm">至</span> <span class="text-indigo-600">{{ bus.to }}</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 text-[11px] bg-white/50 p-3 rounded-xl border border-blue-50">
+                        <div class="col-span-2 flex items-center gap-1 border-b border-gray-100 pb-1 mb-1">
+                            <span class="text-gray-400 font-bold min-w-[50px]">對象:</span> 
+                            <span class="font-bold text-gray-700">{{ bus.target }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-gray-400 font-bold">車型及數量:</span> 
+                            <span class="font-bold text-gray-700">{{ bus.type }} <span class="text-blue-500">× {{ bus.qty }}</span></span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-gray-400 font-bold">車牌/司機:</span> 
+                            <span class="font-mono font-bold text-gray-700">{{ bus.plate }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="text-right">
-            <div class="text-xs font-medium text-gray-600">{{ g.from }}</div>
-          </div>
+            <div v-if="busSchedule.length === 0" class="text-center text-gray-400 pt-10">尚未新增旅遊巴班次</div>
         </div>
-        <img v-if="g.image" :src="g.image" class="mt-3 w-full h-32 object-cover rounded-xl shadow-inner" />
-        <div class="flex gap-4 text-xs mt-3 pt-3 border-t border-white/30">
-          <button v-if="!g.deleted" @click="openEditGold(g)" class="text-blue-600 font-bold">編輯</button>
-          <button v-if="!g.deleted" @click="softDeleteGold(g)" class="text-red-500 font-bold">刪除</button>
-          <button v-if="g.deleted" @click="restoreGold(g)" class="text-green-600 font-bold">復原</button>
-        </div>
-      </div>
-      <button @click="openAddGold" class="fab fixed bottom-24 right-8 w-14 h-14 rounded-full bg-gradient-to-br from-amber-300 to-orange-400 text-white text-3xl shadow-lg z-40">+</button>
     </div>
 
-    <div v-if="tab==='gift'" class="space-y-4">
-      <div class="flex justify-between items-center px-1">
-        <span class="text-xs text-gray-500">總金額: ${{ totalGiftAmount }}</span>
-        <button @click="exportGiftCSV" class="text-xs text-rose-700 bg-rose-100 px-3 py-1 rounded-full font-bold">匯出 CSV</button>
-      </div>
-      <div v-for="g in gifts" :key="g.id" class="glass-card rounded-2xl p-4" :class="g.deleted ? 'opacity-40 grayscale' : ''">
-        <div class="flex justify-between">
-          <div class="text-sm font-black text-gray-700">#{{ g.no }} {{ g.type }} <span v-if="g.type==='禮物'" class="text-gray-500 font-normal">({{ g.desc }})</span> × {{ g.qty }}</div>
-          <div class="text-rose-600 font-bold text-sm">${{ g.amount }}</div>
+    <div v-if="tab==='game'" class="space-y-4">
+        <div v-if="!gameUnlocked" class="flex flex-col items-center justify-center pt-10">
+            <div class="text-center mb-6">
+                <div class="text-4xl mb-2">🔒</div>
+                <h2 class="text-xl font-black text-gray-700">解鎖環節</h2>
+                <p class="text-xs text-gray-500 mt-1">請輸入姊妹團專屬密碼</p>
+            </div>
+            
+            <div class="flex justify-center gap-4 mb-8">
+                <div v-for="i in 4" :key="i" class="w-4 h-4 rounded-full border-2 border-orange-400 transition-colors duration-200" :class="gamePin.length >= i ? 'bg-orange-500 shadow-inner' : 'bg-white/50'"></div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4 w-64">
+                <button v-for="n in [1,2,3,4,5,6,7,8,9]" :key="n" @click="addGamePin(n)" class="w-16 h-16 rounded-full bg-white/80 shadow-sm border border-orange-100 text-2xl font-black text-gray-700 active:scale-95 active:bg-orange-100 transition-all">{{ n }}</button>
+                <button @click="clearGamePin()" class="w-16 h-16 rounded-full bg-red-50/80 shadow-sm border border-red-100 text-sm font-bold text-red-500 active:scale-95 transition-all">清除</button>
+                <button @click="addGamePin(0)" class="w-16 h-16 rounded-full bg-white/80 shadow-sm border border-orange-100 text-2xl font-black text-gray-700 active:scale-95 active:bg-orange-100 transition-all">0</button>
+                <button @click="submitGamePin()" class="w-16 h-16 rounded-full bg-orange-100/80 shadow-sm border border-orange-200 text-sm font-bold text-orange-600 active:scale-95 transition-all">進入</button>
+            </div>
         </div>
-        <div class="flex items-center gap-2 mt-2">
-            <span class="text-[11px] font-bold px-2 py-0.5 rounded-md" :class="g.side==='男家'?'bg-blue-100 text-blue-600':'bg-pink-100 text-pink-600'">{{ g.side }}</span>
-            <span class="text-xs text-gray-500">{{ g.from }}</span>
+        
+        <div v-else class="space-y-4 animate-fade-in">
+            <div v-for="(card, index) in gameCards" :key="index" class="glass-card rounded-[2rem] p-5 transition-all overflow-hidden border border-orange-100 shadow-sm">
+                <div @click="card.expanded = !card.expanded" class="flex justify-between items-center cursor-pointer">
+                    <h3 class="font-black text-lg text-orange-700">{{ card.title }}</h3>
+                    <div class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-orange-400 font-bold transition-transform duration-300" :class="card.expanded ? 'rotate-180' : ''">▼</div>
+                </div>
+                <div v-show="card.expanded" class="mt-4 pt-4 border-t border-orange-200/50 text-sm text-gray-600 space-y-2">
+                    <p class="italic text-gray-400">詳細內容等待姊妹團輸入及優化...</p>
+                </div>
+            </div>
         </div>
-        <div class="flex gap-4 text-xs mt-3 pt-3 border-t border-white/30">
-          <button v-if="!g.deleted" @click="openEditGift(g)" class="text-blue-600 font-bold">編輯</button>
-          <button v-if="!g.deleted" @click="softDeleteGift(g)" class="text-red-500 font-bold">刪除</button>
-          <button v-if="g.deleted" @click="restoreGift(g)" class="text-green-600 font-bold">復原</button>
-        </div>
-      </div>
-      <button @click="openAddGift" class="fab fixed bottom-24 right-8 w-14 h-14 rounded-full bg-gradient-to-br from-rose-400 to-red-500 text-white text-3xl shadow-lg z-40">+</button>
     </div>
 
     <div v-if="tab==='info'">
+      <a href="https://docs.google.com/spreadsheets/d/1LLIA5CHwH2UZVtbwljNW1wxcVNdwTBYoZhrzlR2Gbao/edit?gid=0#gid=0" target="_blank" class="flex items-center justify-center gap-2 w-full bg-white/80 border border-green-200 rounded-2xl p-4 mb-5 text-sm font-black text-green-700 shadow-sm transition-transform active:scale-95 hover:bg-green-50">
+          <span class="text-xl">📊</span> 完整統籌試算表 (Google Sheet)
+      </a>
+
       <div class="flex p-1 bg-white/40 rounded-2xl mb-6 gap-1 border border-white/50 shadow-inner">
-        <button @click="infoTab='items'" :class="infoTab==='items' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500'" class="flex-1 py-2 text-[10px] font-black rounded-xl transition-all">📦 物資表</button>
-        <button @click="infoTab='photo'" :class="infoTab==='photo' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500'" class="flex-1 py-2 text-[10px] font-black rounded-xl transition-all">📸 影相次序</button>
-        <button @click="infoTab='seat'" :class="infoTab==='seat' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500'" class="flex-1 py-2 text-[10px] font-black rounded-xl transition-all">🍽️ 晚宴座位</button>
+        <button @click="infoTab='items'" :class="infoTab==='items' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500'" class="flex-1 py-2 text-[11px] font-black rounded-xl transition-all">📦 物資表</button>
+        <button @click="infoTab='tea'" :class="infoTab==='tea' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500'" class="flex-1 py-2 text-[11px] font-black rounded-xl transition-all">🍵 敬茶名單</button>
       </div>
       
       <div v-if="infoTab==='items'" class="space-y-3 relative">
@@ -258,74 +314,26 @@ body {
         </div>
       </div>
 
-      <div v-if="infoTab==='photo'" class="space-y-4 pb-20">
-    
-    <div v-for="(list, listIdx) in photoSchedules" :key="listIdx" class="bg-white/40 rounded-2xl p-4 border border-white/50 relative">
-        
-        <div @click="togglePhotoGroup(list.title)" class="flex justify-between items-center cursor-pointer">
-            <h4 class="font-bold text-gray-700 text-sm">📸 {{ list.title }}</h4>
+      <div v-if="infoTab==='tea'" class="space-y-4 pb-20">
+        <div v-for="(tea, index) in teaList" :key="index" class="glass-card rounded-2xl p-4 shadow-sm flex flex-col relative transition-transform hover:scale-[1.01]">
+            <div class="absolute top-4 right-4 text-[10px] px-2 py-0.5 rounded-md font-bold shadow-sm" 
+                 :class="tea.session === '朝早敬茶' ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'">
+                 {{ tea.session }}
+            </div>
+            <div class="font-black text-gray-700 text-base mb-3 pr-16">{{ tea.relative }}</div>
             
-            <svg :class="{'rotate-90': !collapsedPhotoGroups[list.title]}" class="w-5 h-5 text-gray-500 transition-transform duration-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </div>
-        
-        <button @click="openEditPhotoList(listIdx)" class="absolute top-4 right-4 text-[10px] text-indigo-500 font-bold bg-indigo-50 px-2 py-1 rounded-md z-10">編輯</button>
-
-        <div v-show="!collapsedPhotoGroups[list.title]" class="mt-3">
-            <div class="space-y-2">
-                <div v-for="(p, pIdx) in list.groups" :key="pIdx" class="flex items-center gap-3 py-1.5 border-b border-white/5 font-medium">
-                    <span class="text-[10px] font-bold text-gray-400 w-5">#{{ pIdx + 1 }}</span>
-                    <span class="flex-1 text-[13px] text-gray-700">{{ p.name }}</span>
-                    <div class="flex items-center gap-1">
-                        <span v-if="p.count" class="text-[10px] text-gray-500 font-mono">{{ p.count }}人</span>
-                        <span class="w-2 h-2 rounded-full" :class="getPhotoCatColor(p.cat)"></span>
-                    </div>
+            <div class="grid grid-cols-2 gap-2 mt-auto">
+                <div class="bg-white/50 rounded-xl p-2 border border-white flex items-center justify-center flex-col">
+                    <span class="text-[9px] text-gray-400 font-bold mb-0.5">敬茶方式</span>
+                    <span class="text-[11px] font-black text-gray-600">{{ tea.method }}</span>
+                </div>
+                <div class="bg-white/50 rounded-xl p-2 border border-white flex items-center justify-center flex-col">
+                    <span class="text-[9px] text-gray-400 font-bold mb-0.5">茶杯種類</span>
+                    <span class="text-[11px] font-black text-gray-600">{{ tea.cup }}</span>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <button @click="openAddPhotoList" class="w-full py-3 text-sm font-bold text-indigo-600 bg-indigo-50/50 border border-dashed border-indigo-200 rounded-2xl">+ 新增影相次序</button>
-</div>
-
-      <div v-if="infoTab==='seat'" class="space-y-4 pb-24">
-        <input v-model="seatSearch" placeholder="🔍 搜尋姓名、身份、桌號..." class="w-full bg-white/60 border-white/50 border rounded-2xl px-5 py-3 text-sm shadow-sm outline-none focus:ring-2 focus:ring-purple-200 transition-all">
-        
-        <div v-for="table in filteredSeatTables" :key="table.id" class="glass-card rounded-[2rem] p-5 shadow-sm transition-all hover:shadow-md">
-          <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200/50">
-            <div>
-                <h4 class="font-black text-gray-800 text-lg">Table {{ table.id }}</h4>
-                <div class="text-xs text-purple-600 font-bold mt-0.5">{{ table.category }}</div>
-            </div>
-            <div class="flex flex-col items-end">
-                <span class="text-[10px] text-white font-bold bg-gray-400/80 px-2 py-1 rounded-full shadow-sm mb-1">
-                    已到 {{ table.guests.filter(g=>g.present).length }} / {{ table.guests.length }}
-                </span>
-            </div>
-          </div>
-          
-          <div class="grid grid-cols-2 gap-2">
-            <div v-for="(guest, idx) in table.guests" :key="idx" 
-                 @click="toggleGuestPresent(table.id, idx)"
-                 class="p-2.5 rounded-xl text-center cursor-pointer transition-all duration-200 flex flex-col justify-center min-h-[56px] select-none"
-                 :class="guest.present ? 'seat-guest-active scale-[1.02]' : 'bg-white/50 text-gray-600 border border-transparent hover:bg-white/80'">
-              <span class="font-black text-[13px] truncate leading-tight">{{ guest.name || guest.role }}</span>
-              <span v-if="guest.name && guest.role" class="text-[9px] opacity-70 truncate mt-0.5">({{ guest.role }})</span>
-              <span v-else-if="!guest.name && guest.role" class="text-[9px] opacity-70 truncate mt-0.5">(未知姓名)</span>
-            </div>
-          </div>
-          
-          <button @click="openEditSeatModal(table)" class="w-full mt-4 py-2 text-[11px] text-gray-500 font-bold bg-gray-50/50 rounded-xl hover:bg-gray-100 transition-colors">
-            ⚙️ 編輯呢圍
-          </button>
-        </div>
-
-        <div v-if="filteredSeatTables.length === 0" class="text-center text-gray-400 py-10">
-            沒有找到符合的座位或賓客
-        </div>
-
-        <button @click="addSeatTable" class="w-full py-3 text-sm font-bold text-indigo-600 bg-indigo-50/80 border border-dashed border-indigo-300 rounded-2xl shadow-sm hover:bg-indigo-100 transition-all">
-          + 加多一圍
-        </button>
+        <div v-if="teaList.length === 0" class="text-center text-gray-400 py-10">尚未新增敬茶名單</div>
       </div>
     </div>
 
@@ -358,11 +366,11 @@ body {
   </div>
 
   <div class="h-20 border-t bg-white/80 backdrop-blur-md flex justify-around items-center text-[10px] font-bold shrink-0 z-50 shadow-xl">
-    <button @click="tab='schedule'" :class="tab==='schedule'?'text-purple-600 scale-110':''" class="flex flex-col items-center gap-1"><span class="text-xl">⛪</span>行程</button>
-    <button @click="tab='gold'" :class="tab==='gold'?'text-amber-600 scale-110':''" class="flex flex-col items-center gap-1"><span class="text-xl">🏅</span>金器</button>
-    <button @click="tab='gift'" :class="tab==='gift'?'text-rose-600 scale-110':''" class="flex flex-col items-center gap-1"><span class="text-xl">🧧</span>利是/禮物</button>
-    <button @click="tab='info'" :class="tab==='info'?'text-gray-700 scale-110':''" class="flex flex-col items-center gap-1"><span class="text-xl">📝</span>資訊</button>
-    <button @click="tab='contact'" :class="tab==='contact'?'text-emerald-600 scale-110':''" class="flex flex-col items-center gap-1"><span class="text-xl">📞</span>聯絡</button>
+    <button @click="tab='schedule'" :class="tab==='schedule'?'text-purple-600 scale-110':''" class="flex flex-col items-center gap-1 transition-transform"><span class="text-xl">⛪</span>行程</button>
+    <button @click="tab='bus'" :class="tab==='bus'?'text-blue-600 scale-110':''" class="flex flex-col items-center gap-1 transition-transform"><span class="text-xl">🚌</span>旅遊巴</button>
+    <button @click="tab='game'" :class="tab==='game'?'text-orange-600 scale-110':''" class="flex flex-col items-center gap-1 transition-transform"><span class="text-xl">🎮</span>玩新郎</button>
+    <button @click="tab='info'" :class="tab==='info'?'text-gray-700 scale-110':''" class="flex flex-col items-center gap-1 transition-transform"><span class="text-xl">📝</span>資訊</button>
+    <button @click="tab='contact'" :class="tab==='contact'?'text-emerald-600 scale-110':''" class="flex flex-col items-center gap-1 transition-transform"><span class="text-xl">📞</span>聯絡</button>
   </div>
 
   <div v-if="activeModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-6">
@@ -387,51 +395,6 @@ body {
               {{ name }}
             </div>
         </div>
-      </div>
-
-      <div v-if="activeModal === 'editPhotoList'" class="space-y-3 flex-1 overflow-hidden flex flex-col">
-         <input v-model="currentPhotoList.title" placeholder="列表標題" class="w-full bg-gray-100 rounded-xl p-3 text-sm font-bold shrink-0">
-         <div class="flex-1 overflow-y-auto space-y-2 pr-1">
-           <div v-for="(g, idx) in currentPhotoList.groups" :key="idx" class="flex gap-2 items-center bg-white/50 p-2 rounded-lg border">
-             <input v-model="g.name" class="flex-1 bg-transparent text-xs" placeholder="名稱">
-             <input v-model="g.count" type="number" class="w-10 bg-transparent text-xs text-center" placeholder="人數">
-             <select v-model="g.cat" class="text-[10px] bg-gray-100 rounded">
-               <option value="other">其他</option><option value="male">男家</option><option value="female">女家</option>
-             </select>
-             <button @click="removePhotoGroup(idx)" class="text-red-400">✕</button>
-           </div>
-           <button @click="addPhotoGroup" class="text-xs text-indigo-500 font-bold w-full text-center py-2">+ 新增分組</button>
-         </div>
-         <div class="pt-2 border-t flex justify-between shrink-0">
-           <button @click="deletePhotoList" class="text-red-500 text-xs font-bold">刪除此列表</button>
-         </div>
-      </div>
-
-      <div v-if="activeModal === 'editSeatTable' && currentTable" class="space-y-3 flex-1 overflow-hidden flex flex-col">
-          <div class="grid grid-cols-4 gap-2 shrink-0">
-              <div class="col-span-1">
-                  <label class="text-[9px] text-gray-400 pl-1">桌號</label>
-                  <input v-model.number="currentTable.id" type="number" class="w-full bg-gray-100 rounded-xl p-2 text-center text-sm font-bold">
-              </div>
-              <div class="col-span-3">
-                  <label class="text-[9px] text-gray-400 pl-1">分類名稱</label>
-                  <input v-model="currentTable.category" class="w-full bg-gray-100 rounded-xl p-2 text-sm">
-              </div>
-          </div>
-          
-          <div class="flex-1 overflow-y-auto space-y-2 pr-1 border-t border-gray-100 pt-2">
-              <div v-for="(g, idx) in currentTable.guests" :key="idx" class="flex gap-2 items-center bg-white/60 p-2 rounded-lg border border-gray-100">
-                  <div class="flex-1 grid grid-cols-2 gap-2">
-                      <input v-model="g.name" placeholder="姓名" class="bg-transparent text-xs font-bold text-gray-700 outline-none border-b border-dashed border-gray-300 py-1">
-                      <input v-model="g.role" placeholder="身份 / 職位" class="bg-transparent text-xs text-gray-500 outline-none border-b border-dashed border-gray-300 py-1">
-                  </div>
-                  <button @click="removeGuestFromCurrent(idx)" class="text-red-400 text-xs px-2 transition-colors">✕</button>
-              </div>
-              <button @click="addGuestToCurrent" class="w-full py-2 text-[10px] text-indigo-500 font-bold bg-indigo-50/50 rounded-lg dashed-border mt-2 hover:bg-indigo-100 transition">+ 新增賓客</button>
-          </div>
-          <div class="pt-2 border-t flex justify-between items-center shrink-0">
-            <button @click="deleteCurrentTable" class="text-rose-500 text-xs font-bold px-2 py-1 rounded hover:bg-rose-50">🗑️ 刪除整桌</button>
-          </div>
       </div>
 
       <div v-if="activeModal === 'editContact' || activeModal === 'addContact'" class="space-y-3 shrink-0">
@@ -468,128 +431,19 @@ body {
       <textarea v-model="currentSchedule.items" class="w-full bg-white/50 border rounded-xl p-3 text-sm h-16" placeholder="物資清單 (選填)"></textarea>
       <textarea v-model="currentSchedule.note" class="w-full bg-white/50 border rounded-xl p-3 text-sm h-16" placeholder="備註 (選填)"></textarea>
       <div class="space-y-2">
-  <label class="text-[10px] text-gray-400 block">負責人 (可選多個)</label>
-  <div class="flex flex-wrap gap-2">
-      <div v-for="p in allExecutors" :key="p" @click="togglePerson(p)"
-           :class="currentSchedule.people && currentSchedule.people.includes(p) ? getPersonColor(p) + ' text-white shadow-md' : 'bg-gray-100 text-gray-600'"
-           class="px-3 py-1 text-xs rounded-full font-bold transition cursor-pointer flex items-center gap-1">
-        
-        <span class="w-2 h-2 rounded-full" 
-              :class="currentSchedule.people && currentSchedule.people.includes(p) ? 'bg-white' : getPersonColor(p)">
-        </span>
-        
-        {{ p }}
+        <label class="text-[10px] text-gray-400 block">負責人 (可選多個)</label>
+        <div class="flex flex-wrap gap-2">
+            <div v-for="p in allExecutors" :key="p" @click="togglePerson(p)"
+                 :class="currentSchedule.people && currentSchedule.people.includes(p) ? getPersonColor(p) + ' text-white shadow-md' : 'bg-gray-100 text-gray-600'"
+                 class="px-3 py-1 text-xs rounded-full font-bold transition cursor-pointer flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full" :class="currentSchedule.people && currentSchedule.people.includes(p) ? 'bg-white' : getPersonColor(p)"></span>
+              {{ p }}
+            </div>
+        </div>
       </div>
-  </div>
-</div>
       <div class="flex justify-end gap-4 pt-4">
         <button @click="showScheduleModal=false" class="text-gray-400 font-bold text-sm">取消</button>
         <button @click="saveSchedule" class="bg-purple-500 text-white px-6 py-2 rounded-xl font-bold text-sm">儲存</button>
-      </div>
-    </div>
-  </div>
-
-  <div v-if="showGoldModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
-    <div class="modal-content w-full max-w-sm rounded-[2rem] p-6 space-y-4 overflow-y-auto max-h-[85vh]">
-      <h3 class="text-center font-black text-gray-700">管理金器</h3>
-      
-      <div>
-        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">編號 (No.)</label>
-        <div class="w-full bg-gray-100 text-gray-500 border rounded-xl p-3 text-sm font-mono">#{{ currentGold.no }}</div>
-      </div>
-
-      <div>
-        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">類別</label>
-        <div class="flex flex-wrap gap-2">
-            <button v-for="cat in goldCategories" :key="cat" @click="currentGold.category = cat"
-                    :class="currentGold.category === cat ? 'bg-amber-500 text-white shadow-md' : 'bg-gray-100 text-gray-600'"
-                    class="px-3 py-2 rounded-lg text-xs font-bold transition">
-                {{ cat }}
-            </button>
-        </div>
-      </div>
-
-      <div>
-        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">數量</label>
-        <input type="number" v-model.number="currentGold.qty" class="w-full bg-white/50 border rounded-xl p-3 text-sm font-bold" min="1" />
-      </div>
-
-      <div>
-        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">家系</label>
-        <div class="flex gap-2">
-            <button @click="currentGold.side='男家'" :class="currentGold.side==='男家'?'btn-gradient-blue text-white shadow-md':'bg-gray-100 text-gray-500'" class="flex-1 py-3 rounded-xl text-xs font-bold transition">🤵🏻‍♂️ 男家</button>
-            <button @click="currentGold.side='女家'" :class="currentGold.side==='女家'?'btn-gradient-pink text-white shadow-md':'bg-gray-100 text-gray-500'" class="flex-1 py-3 rounded-xl text-xs font-bold transition">👰🏻‍♀️ 女家</button>
-        </div>
-      </div>
-
-      <div>
-        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">送禮人</label>
-        <input v-model="currentGold.from" class="w-full bg-white/50 border rounded-xl p-3 text-sm" placeholder="如: 嫲嫲"/>
-      </div>
-
-      <div>
-        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">圖片</label>
-        <div class="flex items-center gap-2 bg-gray-50 p-2 rounded-xl border border-dashed border-gray-300">
-          <input type="file" @change="loadGoldImage" class="text-[10px] text-gray-500 w-full file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:bg-amber-100 file:text-amber-700">
-        </div>
-        <img v-if="currentGold.image" :src="currentGold.image" class="w-full h-32 object-cover rounded-xl border border-white shadow-sm mt-2">
-      </div>
-
-      <div class="flex justify-end gap-4 pt-4 border-t border-gray-100 mt-2">
-        <button @click="showGoldModal=false" class="text-gray-400 font-bold text-sm">取消</button>
-        <button @click="saveGold" class="bg-amber-500 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-md active:scale-95 transition">儲存</button>
-      </div>
-    </div>
-  </div>
-
-  <div v-if="showGiftModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
-    <div class="modal-content w-full max-w-sm rounded-[2rem] p-6 space-y-4 overflow-y-auto max-h-[85vh]">
-      <h3 class="text-center font-black text-gray-700">管理利是/禮物</h3>
-      
-      <div>
-         <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">編號 (No.)</label>
-         <div class="w-full bg-gray-100 text-gray-500 border rounded-xl p-3 text-sm font-mono">#{{ currentGift.no }}</div>
-      </div>
-
-      <div class="flex bg-gray-100 rounded-xl p-1 gap-1">
-        <button @click="currentGift.type='利是'" :class="currentGift.type==='利是'?'btn-gradient-red text-white shadow-sm':'text-gray-400 hover:bg-gray-200'" class="flex-1 py-2 rounded-lg text-xs font-bold transition">🧧 利是</button>
-        <button @click="currentGift.type='禮物'" :class="currentGift.type==='禮物'?'btn-gradient-mint text-white shadow-sm':'text-gray-400 hover:bg-gray-200'" class="flex-1 py-2 rounded-lg text-xs font-bold transition">🎁 禮物</button>
-      </div>
-
-      <div v-if="currentGift.type==='禮物'" class="animate-fade-in">
-        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">禮物描述</label>
-        <input v-model="currentGift.desc" class="w-full bg-white/50 border rounded-xl p-3 text-sm focus:ring-2 ring-emerald-200 outline-none" placeholder="如: Dyson風筒"/>
-      </div>
-
-      <div>
-        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">數量</label>
-        <input type="number" v-model.number="currentGift.qty" class="w-full bg-white/50 border rounded-xl p-3 text-sm font-bold" min="1"/>
-      </div>
-
-      <div>
-        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">家系</label>
-        <div class="flex gap-2">
-            <button @click="currentGift.side='男家'" :class="currentGift.side==='男家'?'btn-gradient-blue text-white shadow-md':'bg-gray-100 text-gray-500'" class="flex-1 py-3 rounded-xl text-xs font-bold transition">🤵🏻‍♂️ 男家</button>
-            <button @click="currentGift.side='女家'" :class="currentGift.side==='女家'?'btn-gradient-pink text-white shadow-md':'bg-gray-100 text-gray-500'" class="flex-1 py-3 rounded-xl text-xs font-bold transition">👰🏻‍♀️ 女家</button>
-        </div>
-      </div>
-
-      <div>
-        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">送禮人</label>
-        <input v-model="currentGift.from" class="w-full bg-white/50 border rounded-xl p-3 text-sm" placeholder="如: John Lee"/>
-      </div>
-
-      <div>
-        <label class="text-[10px] text-gray-400 font-bold pl-1 mb-1 block">總金額 / 價值</label>
-        <div class="relative">
-            <span class="absolute left-4 top-3 text-gray-400 font-bold">$</span>
-            <input type="number" v-model.number="currentGift.amount" class="w-full bg-white/50 border rounded-xl p-3 pl-8 text-sm font-mono font-bold text-rose-600 outline-none focus:ring-2 ring-rose-200" placeholder="0"/>
-        </div>
-      </div>
-
-      <div class="flex justify-end gap-4 pt-4 border-t border-gray-100 mt-2">
-        <button @click="showGiftModal=false" class="text-gray-400 font-bold text-sm">取消</button>
-        <button @click="saveGift" class="bg-rose-500 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-md active:scale-95 transition">儲存</button>
       </div>
     </div>
   </div>
@@ -607,6 +461,38 @@ createApp({
       pageTitle: 'Wedding Planner',
       nowTick: Date.now(),
       
+      responsibleFilter: '全部',
+      isFilterCollapsed: true,
+      customResponsibleOrder: [
+            '新娘', 'Vicky', 'Bonnie', 'Ling', 'Anna', 'Chelsie', 
+            '新郎', '發', '史', 'Jeff', 'Jayden', 'David Lo', 'TC', 
+            '怡媽', '怡爸', '禧媽', '禧爸'
+        ],
+
+      // === 玩新郎 (Game) 相關 ===
+      gameUnlocked: false,
+      gamePin: '',
+      gameCards: [
+          { title: 'Game 1', expanded: true },
+          { title: 'Game 2', expanded: true },
+          { title: '懲罰', expanded: true }
+      ],
+
+      // === 旅遊巴行程 (Bus) ===
+      busSchedule: [
+          { time: '14:45', from: '沙田凱悅酒店', to: '中大崇基禮拜堂', target: '兄弟姊妹及家人', type: '28座', qty: 1, plate: '待定 (TBC)' },
+          { time: '17:30', from: '中大崇基禮拜堂', to: '逸東酒店', target: '家人及賓客', type: '65座', qty: 2, plate: '待定 (TBC)' },
+          { time: '17:30', from: '中大崇基禮拜堂', to: '逸東酒店', target: '兄弟姊妹、化妝師等', type: '28座', qty: 1, plate: '待定 (TBC)' }
+      ],
+
+      // === 敬茶名單 (Tea) ===
+      teaList: [
+          { relative: '男家長輩 (老爺奶奶、嫲嫲婆婆等)', session: '朝早敬茶', method: '兩手一杯', cup: '瓦杯' },
+          { relative: '女家父母 (怡爸怡媽)', session: '朝早敬茶', method: '兩手一杯', cup: '瓦杯' },
+          { relative: '親戚 A', session: '夜晚補敬', method: '四手一杯', cup: '紙杯' },
+          { relative: '親戚 B', session: '夜晚補敬', method: '四手一杯', cup: '紙杯' }
+      ],
+
       // === 物資清單 ===
       itemLists: { 
         "上頭(去Hyatt)": [{name: "扁柏", checked: false}, {name: "碌柚葉", checked: false}, {name: "龍鳳餅", checked: false}, {name: "水果", checked: false}, {name: "利是", checked: false}, {name: "紅枱布", checked: false}, {name: "紅拖鞋", checked: false}, {name: "紅睡衣", checked: false}, {name: "上頭用品", checked: false}, {name: "蒸氣熨斗", checked: false}],
@@ -629,335 +515,22 @@ createApp({
       modalConfirmText: '確認',
       modalSelectedList: '',
       showManageSubMenu: false,
-      currentPhotoList: { title: '', groups: [] },
-      photoEditingIndex: -1,
-      collapsedPhotoGroups: {},
-
-      // === 座位表資料 ===
-      seatTables: [
-        {
-          id: 1, category: "主家席 (女家)",
-          guests: [
-            {name:"丘明泰", role:"爸爸", present:false}, {name:"蘇嘉禾", role:"媽媽", present:false},
-            {name:"丘兆匡", role:"哥哥", present:false}, {name:"丘庚有", role:"大伯", present:false},
-            {name:"張美珍", role:"伯娘", present:false}, {name:"丘義友", role:"二伯", present:false},
-            {name:"", role:"二伯女朋友", present:false}, {name:"丘鳳英", role:"姑姐", present:false},
-            {name:"鄧祥", role:"舅公", present:false}, {name:"", role:"舅婆", present:false},
-            {name:"區子維", role:"表哥", present:false}, {name:"", role:"表嫂", present:false}
-          ]
-        },
-        {
-          id: 2, category: "主家席 (男家)",
-          guests: [
-            {name:"周諾禧", role:"新郎", present:false}, {name:"丘穎怡", role:"新娘", present:false},
-            {name:"周凱銘", role:"爸爸", present:false}, {name:"周劍萍", role:"媽媽", present:false},
-            {name:"周諾澄", role:"妹妹", present:false}, {name:"鄧潔儀", role:"婆婆", present:false},
-            {name:"李嬋玉", role:"嫲嫲", present:false}, {name:"周盈盈", role:"姑媽", present:false},
-            {name:"周偉文", role:"大舅父", present:false}, {name:"周偉賢", role:"二舅父", present:false},
-            {name:"郭佩華", role:"二舅母", present:false}, {name:"周凱旋", role:"大伯", present:false}
-          ]
-        },
-        {
-          id: 3, category: "女家親友、姊妹",
-          guests: [
-            {name:"邱東平", role:"爸爸朋友", present:false}, {name:"傅亞平", role:"", present:false},
-            {name:"邱奕思", role:"", present:false}, {name:"丘德成", role:"爸爸朋友", present:false},
-            {name:"蘇家碧", role:"姨媽", present:false}, {name:"黎偉俊", role:"", present:false},
-            {name:"Suky", role:"", present:false}, {name:"陳榭椿", role:"二姨", present:false},
-            {name:"蘇家茹", role:"", present:false}, {name:"李蔚然", role:"表姐", present:false}
-          ]
-        },
-        {
-          id: 4, category: "男家親戚",
-          guests: [
-            {name:"", role:"伯娘", present:false}, {name:"周梓朗", role:"堂弟", present:false},
-            {name:"周溢朗", role:"堂弟", present:false}, {name:"", role:"姑婆", present:false},
-            {name:"", role:"姑丈公", present:false}, {name:"黃舜華", role:"大表姑姐", present:false},
-            {name:"陳穎彤", role:"表姐", present:false}, {name:"黃舜琼", role:"二表姑姐", present:false},
-            {name:"黃舜瑜", role:"細表姑姐", present:false}, {name:"張高俊", role:"姑丈", present:false},
-            {name:"", role:"細表姑姐女兒", present:false}, {name:"李潔佩", role:"Kitty表姑媽", present:false}
-          ]
-        },
-        {
-          id: 5, category: "男家媽媽親戚",
-          guests: [
-            {name:"", role:"姻伯母", present:false}, {name:"", role:"二舅母女", present:false},
-            {name:"", role:"女婿", present:false}, {name:"", role:"姑姐", present:false},
-            {name:"", role:"二家姐", present:false}, {name:"", role:"二姐夫", present:false},
-            {name:"", role:"表姐", present:false}, {name:"", role:"表哥", present:false},
-            {name:"", role:"細舅父", present:false}, {name:"", role:"細舅母", present:false},
-            {name:"", role:"姻世伯", present:false}, {name:"", role:"姻伯母", present:false}
-          ]
-        },
-        {
-          id: 6, category: "女家親戚",
-          guests: [
-            {name:"陳茂興", role:"表哥", present:false}, {name:"蘇耀駒", role:"四舅父", present:false},
-            {name:"郭志貞", role:"四舅母", present:false}, {name:"蘇瑋豐", role:"表弟", present:false},
-            {name:"蘇瑋欣", role:"表妹", present:false}, {name:"李紫婷", role:"姊妹", present:false},
-            {name:"梁凱鈴", role:"中同", present:false}
-          ]
-        },
-        {
-          id: 7, category: "女家媽媽親友、姊妹",
-          guests: [
-            {name:"蘇家星", role:"三姨", present:false}, {name:"沈偉樑", role:"三姨丈", present:false},
-            {name:"陳偉成", role:"朋友", present:false}, {name:"張玉娟", role:"朋友妻", present:false},
-            {name:"梁國志", role:"朋友", present:false}, {name:"張玉嬋", role:"朋友妻", present:false},
-            {name:"蘇耀堅", role:"七舅父", present:false}, {name:"May", role:"舅母", present:false},
-            {name:"李茵茵", role:"表姐", present:false}, {name:"曾瑋晴", role:"姊妹", present:false},
-            {name:"周穎章", role:"中同", present:false}, {name:"陳鈺珊", role:"中同", present:false}
-          ]
-        },
-        {
-          id: 8, category: "女家媽媽親戚",
-          guests: [
-            {name:"劉展強", role:"六姨丈", present:false}, {name:"蘇家順", role:"六姨", present:false},
-            {name:"劉子健", role:"表哥", present:false}, {name:"劉子洋", role:"表哥", present:false},
-            {name:"莫文傑", role:"表姐夫", present:false}, {name:"沈麗敏", role:"Yoyo表姐", present:false},
-            {name:"莫斐", role:"莫然媽", present:false}, {name:"莫然", role:"小朋友", present:false},
-            {name:"容鉻強", role:"William表姐夫", present:false}, {name:"沈麗珠", role:"Jojo表姐", present:false},
-            {name:"Soso", role:"小朋友", present:false}, {name:"Momo", role:"小朋友", present:false}
-          ]
-        },
-        {
-          id: 9, category: "男家爸爸同事",
-          guests: [
-            {name:"", role:"愛禮信同事", present:false}
-          ]
-        },
-        {
-          id: 10, category: "中學老師、新娘教會",
-          guests: [
-            {name:"洪穎芝", role:"CTYC", present:false}, {name:"陳志豪", role:"CTYC", present:false},
-            {name:"張智堯", role:"Terry", present:false}, {name:"關小玲", role:"老師", present:false},
-            {name:"楊啟玲", role:"老師", present:false}, {name:"黃偉強", role:"老師", present:false},
-            {name:"林校長", role:"老師", present:false}, {name:"Emily", role:"老師", present:false},
-            {name:"陳頌甄", role:"Didi", present:false}
-          ]
-        },
-        {
-          id: 11, category: "新郎教會",
-          guests: [
-            {name:"史文傑", role:"兄弟", present:false}, {name:"鄭燕星", role:"安柱堂", present:false},
-            {name:"王棟永", role:"一家四人", present:false}, {name:"劉曉君", role:"安柱堂", present:false},
-            {name:"黃偉聰", role:"安柱堂", present:false}, {name:"陳純雅", role:"MC", present:false},
-            {name:"張樂謙", role:"安柱堂", present:false}, {name:"區國年", role:"安柱堂", present:false},
-            {name:"周惠文", role:"安柱堂", present:false}, {name:"陳有樑", role:"安柱堂", present:false}
-          ]
-        },
-        {
-          id: 12, category: "新郎教會 (續)",
-          guests: [
-            {name:"David Lo", role:"兄弟", present:false}, {name:"劉嘉慧", role:"安柱堂", present:false},
-            {name:"王美玲", role:"安柱堂", present:false}, {name:"陳昆賸", role:"安柱堂", present:false},
-            {name:"林子萌", role:"安柱堂", present:false}, {name:"何焯華", role:"安柱堂", present:false},
-            {name:"梁詩樺", role:"安柱堂", present:false}, {name:"郭子健", role:"兄弟", present:false},
-            {name:"黎卓恩", role:"安柱堂", present:false}, {name:"鄭嘉發", role:"兄弟", present:false},
-            {name:"香仲華", role:"安柱堂", present:false}
-          ]
-        },
-        {
-          id: 13, category: "新娘同學、同事",
-          guests: [
-            {name:"楊芷彤", role:"Saki", present:false}, {name:"李綵綸", role:"中同", present:false},
-            {name:"陳盈嘉", role:"中同", present:false}, {name:"蔡宛真", role:"中同", present:false},
-            {name:"葉湘雪", role:"CTYC", present:false}, {name:"蕭寶沂", role:"中同", present:false},
-            {name:"莫程嵐", role:"姊妹", present:false}, {name:"黃彥婷", role:"Edith", present:false},
-            {name:"鄭栩妍", role:"Nicole", present:false}, {name:"許盈盈", role:"Cassie", present:false},
-            {name:"簡泳妍", role:"Kira", present:false}, {name:"陳柏鴻", role:"舊同事", present:false}
-          ]
-        }
-      ],
-      seatSearch: '',
-      currentTable: null,
-      editingTableIndex: -1,
 
       // === 聯絡人資料 ===
       contactSearch: '',
-      
-      // === 行程資料 (已從 Excel 匯入並格式化) ===
-      scheduleList: [
-        {
-            id: 1,
-            startTime: '05:30',
-            endTime: '',
-            place: '沙田凱悅酒店 - 出門房',
-            title: '【新娘】 化妝 - 出門房',
-            tasks: '【新娘】比化妝師利是',
-            items: '紅睡衣\n化妝師利是',
-            note: '',
-            people: ['新娘'],
-            expanded: false
-        },
-        {
-            id: 2,
-            startTime: '06:15',
-            endTime: '07:00',
-            place: '沙田凱悅酒店 - 出門房',
-            title: '【怡媽、姊妹】化妝 - 出門房',
-            tasks: '【怡媽】化妝\n【Vicky】化妝+戴手花',
-            items: '',
-            note: '',
-            people: ['怡媽','Vicky'],
-            expanded: false
-        },
-        {
-            id: 3,
-            startTime: '07:00',
-            endTime: '07:45',
-            place: '沙田凱悅酒店 - 出門房',
-            title: '【怡媽、姊妹】化妝、準備',
-            tasks: '【Bonnie、Ling】化妝+戴手花\n【怡媽】準備金器俾攝影師影相\n【Vicky】準備帖(中西式各1張)+戒指+褂+褂鞋俾攝影師影\n【Anna、Chelsie】準備敬茶物資+煲水+清洗',
-            items: '姊妹手花\n敬茶物資(茶具、紅棗、蓮子、茶葉、紙杯、跪墊1套)\n褂 褂鞋',
-            note: '',
-            people: ['怡媽','Vicky','Bonnie','Ling','Anna','Chelsie'],
-            expanded: false
-        },
-        {
-            id: 4,
-            startTime: '07:45',
-            endTime: '08:30',
-            place: '沙田凱悅酒店 - 出門房',
-            title: '【怡媽、姊妹】化妝、準備',
-            tasks: '【Chelsie 、Anna】化妝+戴手花\n【Bonnie、Ling】預備玩新郎物資',
-            items: '姊妹手花\n玩新郎物資',
-            note: '',
-            people: ['怡媽','Bonnie','Ling','Anna','Chelsie'],
-            expanded: false
-        },
-        {
-            id: 5,
-            startTime: '08:30',
-            endTime: '09:30',
-            place: '沙田凱悅酒店 - 出門房',
-            title: '【新娘 姊妹 家人】拍換褂照',
-            tasks: '【新娘】派姊妹利是+會撒紙碎\n【怡媽】幫新娘著上身+講心底話\n【姊妹】幫新娘著下身',
-            items: '褂\n姊妹利是',
-            note: '',
-            people: ['新娘','怡媽'],
-            expanded: false
-        },
-        {
-            id: 6,
-            startTime: '08:30',
-            endTime: '09:15',
-            place: '沙田凱悅酒店 - 客房',
-            title: '【新郎】 化妝',
-            tasks: '房卡',
-            items: '',
-            note: '',
-            people: ['新郎'],
-            expanded: false
-        },
-        {
-            id: 7,
-            startTime: '08:45',
-            endTime: '09:15',
-            place: '沙田凱悅酒店 - 客房',
-            title: '【禧媽】 化妝',
-            tasks: '',
-            items: '',
-            note: '',
-            people: ['禧媽'],
-            expanded: false
-        },
-        {
-            id: 8,
-            startTime: '09:15',
-            endTime: '10:00',
-            place: '沙田凱悅酒店 - 酒店樓下',
-            title: '【兄弟】集合+合照',
-            tasks: '【攝影師Calvin Mak】到酒店樓下\n【新郎】比攝影師+兄弟利是+花球\n【兄弟】去男家房放袋+戴襟花',
-            items: '兄弟利是\n攝影師利是\n兄弟襟花',
-            note: '【禧爸】交房卡比兄弟',
-            people: ['新郎','禧爸'],
-            expanded: false
-        },
-        {
-            id: 9,
-            startTime: '10:00',
-            endTime: '10:00',
-            place: '沙田凱悅酒店',
-            title: '到達女家房',
-            tasks: '【新郎】比開門利是\n【Vicky、Chelsie】攔門花球\n【Anna】Facetime 新娘',
-            items: '開門利是\n花球 攔門花球',
-            note: '',
-            people: ['新郎','Vicky','Chelsie','Anna'],
-            expanded: false
-        },
-        {
-            id: 10,
-            startTime: '21:45',
-            endTime: '22:30',
-            place: '逸東Maggie',
-            title: '按影相次序合照',
-            tasks: '',
-            items: '影相次序List',
-            note: '',
-            people: ['新郎','新娘'],
-            expanded: false
-        },
-        {
-            id: 11,
-            startTime: '22:30',
-            endTime: '23:00',
-            place: '逸東Maggie',
-            title: '【新人、家人】送客',
-            tasks: '點物資、清場、埋單',
-            items: '',
-            note: '將部份物資(禮物、相簿、相架、金器、花球)放上禧爸車',
-            people: ['新郎','禧媽','禧爸','Jeff','Jayden','David Lo','史','TC','發','新娘','怡媽','怡爸','Vicky','Bonnie','Ling','Anna','Chelsie'],
-            expanded: false
-        },
-        {
-            id: 12,
-            startTime: '13:45',
-            endTime: '14:00',
-            place: '',
-            title: '【新人、(攝影師、MUA)】乘28座到中大',
-            tasks: '',
-            items: '新人隨身袋\n團體訪客入校申請表',
-            note: '',
-            people: ['新郎','新娘'],
-            expanded: false
-        },
-        {
-            id: 13,
-            startTime: '14:45',
-            endTime: '15:30',
-            place: '',
-            title: '【雙方家人、兄弟姊妹】乘28座到中大',
-            tasks: '【Ling】拎金器\n【Bonnie】聯絡28座到溋玥樓下\n【兄弟】拎禮服+行禮物資+晚宴物資+文具\n【兄弟姊妹】搬物資上28座，14:45出車',
-            items: '金器\n禮服\n教堂物資\n晚宴物資\n團體訪客入校申請表\n團體訪客入校申請表',
-            note: '',
-            people: ['禧媽','禧爸','Jeff','Jayden','David Lo','史','TC','發','怡媽','怡爸','Vicky','Bonnie','Ling','Anna','Chelsie'],
-            expanded: false
-        },
-      ],
-      golds: [],
-      goldCategories: ['耳環','頸鍊','吊墜','手扼','手鍊','戒指','擺件'],
-      gifts: [],
       contacts: [
-          // 聯絡人列表
-          { side: '男家', role: '新郎', name: 'Hei（周諾禧）', phone: '67465278', deleted: false },
-          { side: '男家', role: '伴郎．兄弟', name: '發', phone: '53734945', deleted: false },
-          { side: '男家', role: '兄弟（婚禮統籌）', name: '史', phone: '53072037', deleted: false },
-          { side: '男家', role: '兄弟', name: 'David Lo', phone: '63718721', deleted: false },
-          { side: '男家', role: '兄弟', name: 'Jayden', phone: '96678754', deleted: false },
-          { side: '男家', role: '兄弟', name: 'Jeff', phone: '62140987', deleted: false },
-          { side: '男家', role: '新郎爸爸', name: '周凱銘', phone: '96613140', deleted: false },
-          { side: '男家', role: '新郎媽媽', name: '周劍萍', phone: '94125902', deleted: false },
-          { side: '男家', role: '新郎妹妹', name: '周諾澄', phone: '63080613', deleted: false },
-          { side: '女家', role: '新娘', name: 'Vincy（丘穎怡）', phone: '68594866', deleted: false },
-          { side: '女家', role: '伴娘．姊妹', name: 'Vicky', phone: '64436416', deleted: false },
-          { side: '女家', role: '姊妹', name: 'Anna', phone: '90789287', deleted: false },
-          { side: '女家', role: '姊妹', name: 'Bonnie', phone: '68746391', deleted: false },
-          { side: '女家', role: '姊妹', name: 'Chelsie', phone: '62345708', deleted: false },
-          { side: '女家', role: '姊妹', name: 'Ling', phone: '55002330', deleted: false },
-          { side: '女家', role: '新娘爸爸', name: '丘明泰', phone: '96571689', deleted: false },
-          { side: '女家', role: '新娘媽媽', name: '蘇嘉禾', phone: '95514039', deleted: false },
-          { side: '女家', role: '新娘哥哥', name: '丘兆匡', phone: '67410673', deleted: false },
+          { side: '男家', role: '新郎', name: 'H', phone: '', deleted: false },
+          { side: '男家', role: '伴郎．兄弟', name: 'F', phone: '', deleted: false },
+          { side: '男家', role: '兄弟（婚禮統籌）', name: 'S', phone: '', deleted: false },
+          { side: '男家', role: '兄弟', name: 'DL', phone: '', deleted: false },
+          { side: '男家', role: '兄弟', name: 'J', phone: '', deleted: false },
+          { side: '男家', role: '兄弟', name: 'J', phone: '', deleted: false },
+          { side: '女家', role: '新娘', name: 'V', phone: '', deleted: false },
+          { side: '女家', role: '伴娘．姊妹', name: 'V', phone: '', deleted: false },
+          { side: '女家', role: '姊妹', name: 'A', phone: '', deleted: false },
+          { side: '女家', role: '姊妹', name: 'B', phone: '', deleted: false },
+          { side: '女家', role: '姊妹', name: 'C', phone: '', deleted: false },
+          { side: '女家', role: '姊妹', name: 'L', phone: '', deleted: false },
           { side: '其他', role: '逸東酒店', name: 'Katy', phone: '68084055', deleted: false },
           { side: '其他', role: '恆寶（旅遊巴公司）', name: 'Apple', phone: '65557418', deleted: false },
           { side: '其他', role: 'Wemember', name: 'May Chu', phone: '69241730', deleted: false },
@@ -965,202 +538,141 @@ createApp({
           { side: '其他', role: '新娘化妝師', name: 'Candy Mak', phone: '61574889', deleted: false },
           { side: '其他', role: '攝影師', name: 'Calvin Mak', phone: '54480122', deleted: false },
           { side: '其他', role: '錄影師', name: 'Yu', phone: '59910511', deleted: false },
-          { side: '其他', role: '讀經', name: '陳昆賸', phone: '67615807', deleted: false },
-          { side: '其他', role: '讀經', name: '王美玲', phone: '63713619', deleted: false },
-          { side: '其他', role: '祈禱', name: '洪穎芝', phone: '95105021', deleted: false },
-          { side: '其他', role: '訓勉', name: '黃偉強', phone: '93002430', deleted: false },
-          { side: '其他', role: '主席', name: '陳志豪', phone: '62567511', deleted: false },
-          { side: '其他', role: '證婚牧師', name: '高國雄（CC林小姐）', phone: '39436982', deleted: false },
-          { side: '其他', role: '司琴', name: '張樂謙', phone: '95117436', deleted: false },
-          { side: '其他', role: '花車', name: '張樂謙', phone: '95117436', deleted: false },
-          { side: '其他', role: '花車', name: '陳昆賸', phone: '67615807', deleted: false },
           { side: '其他', role: '65座司機1', name: '65座司機1', phone: 'TBC', deleted: false },
           { side: '其他', role: '65座司機2', name: '65座司機2', phone: 'TBC', deleted: false },
           { side: '其他', role: '28座司機（時租12:15–18:15）', name: '28座司機', phone: 'TBC', deleted: false },
-          { side: '其他', role: '晚宴MC', name: '陳純雅 Kathy', phone: '60748285', deleted: false },
+          { side: '其他', role: '晚宴MC', name: 'Kathy', phone: '60748285', deleted: false },
       ],
       contactCats: ['男家', '女家', '其他'],
       contactFilter: '女家',
-
-      // === 影相次序資料 ===
-      photoSchedules: [ 
-        { title: "教堂拍照名單 (18組)", groups: [ 
-          { name: "主禮人", count: 7, cat: "other" }, 
-          { name: "新郎家人", count: 3, cat: "male" }, 
-          { name: "新郎家人及親戚", count: 40, cat: "male" }, 
-          { name: "雙方家人", count: 6, cat: "other" }, 
-          { name: "新娘家人", count: 3, cat: "female" }, 
-          { name: "新娘家人及親戚", count: 40, cat: "female" }, 
-          { name: "兄弟姊妹團", count: 10, cat: "other" }, 
-          { name: "新郎埔浸小同事", count: 10, cat: "male" }, 
-          { name: "新娘禮賢會同事", count: 10, cat: "female" }, 
-          { name: "新娘運幼同事", count: 8, cat: "female" }, 
-          { name: "新娘大學同學", count: 4, cat: "female" }, 
-          { name: "新郎新娘中學師長及同學", count: 30, cat: "other" }, 
-          { name: "新郎約瑟團弟兄姊妹", count: 30, cat: "male" }, 
-          { name: "新郎以西結團弟兄姊妹", count: 30, cat: "male" }, 
-          { name: "新郎安柱堂弟兄姊妹", count: 30, cat: "male" }, 
-          { name: "新郎TTT導師", count: 10, cat: "male" }, 
-          { name: "新娘CTYC弟兄姊妹", count: 7, cat: "other" }, 
-          { name: "其他來賓及好友", count: 0, cat: "other" } 
-        ] },
-        {title: "晚宴拍照名單 (18組)", groups: [ 
-          { name: "新郎父母", count: 2, cat: "male" }, 
-          { name: "新郎家人", count: 3, cat: "male" }, 
-          { name: "雙方家人", count: 6, cat: "other" }, 
-          { name: "雙方父母", count: 4, cat: "other" }, 
-          { name: "新娘父母", count: 2, cat: "female" }, 
-          { name: "新娘家人", count: 3, cat: "female" }, 
-          { name: "老爺親戚(周氏家族)", count: 20, cat: "male" }, 
-          { name: "奶奶親戚(周氏家族)", count: 20, cat: "male" }, 
-          { name: "外父親戚(丘氏家族)", count: 24, cat: "female" }, 
-          { name: "外母親戚(蘇氏家族)", count: 30, cat: "female" }, 
-          { name: "新郎爸爸同事", count: 12, cat: "male" }, 
-          { name: "新郎父母朋友", count: 10, cat: "male" }, 
-          { name: "新娘大學同學", count: 4, cat: "female" }, 
-          { name: "新郎新娘中學老師", count: 5, cat: "other" }, 
-          { name: "新郎新娘中學同學", count: 7, cat: "other" }, 
-          { name: "新郎TTT導師", count: 12, cat: "male" }, 
-          { name: "新郎安柱堂弟兄姊妹", count: 25, cat: "male" }, 
-          { name: "新娘CTYC弟兄姊妹", count: 11, cat: "female" }, 
-          { name: "兄弟姊妹團", count: 10, cat: "other" }, 
-          { name: "自由合照", count: 0, cat: "other" }],
-        }, 
+      
+      // === 行程資料 ===
+      scheduleList: [
+        {
+            id: 1, startTime: '05:30', endTime: '', place: '沙田凱悅酒店 - 出門房', title: '【新娘】 化妝 - 出門房', tasks: '【新娘】比化妝師利是', items: '紅睡衣\n化妝師利是', note: '', people: ['新娘'], expanded: false
+        },
+        {
+            id: 2, startTime: '06:00', endTime: '06:45', place: '沙田凱悅酒店 - 出門房', title: '【怡媽、姊妹】化妝 - 出門房', tasks: '【怡媽】化妝\n【Vicky】化妝+戴手花', items: '手花', note: '', people: ['怡媽','Vicky'], expanded: false
+        },
+        {
+            id: 3, startTime: '06:45', endTime: '07:30', place: '沙田凱悅酒店 - 出門房', title: '【怡媽、姊妹】化妝、準備', tasks: '【Bonnie、Ling】化妝+戴手花\n【怡媽】準備金器俾攝影師影相\n【Vicky】準備帖(中西式各1張)+戒指+褂+褂鞋俾攝影師影\n【Anna、Chelsie】準備敬茶物資+煲水+清洗', items: '姊妹手花\n敬茶物資(茶具、紅棗、蓮子、茶葉、紙杯、跪墊1套)\n褂 褂鞋', note: '', people: ['怡媽','Vicky','Bonnie','Ling','Anna','Chelsie'], expanded: false
+        },
+        {
+            id: 8, startTime: '09:15', endTime: '10:00', place: '沙田凱悅酒店 - 酒店樓下', title: '【兄弟】集合+合照', tasks: '【攝影師Calvin Mak】到酒店樓下\n【新郎】比攝影師+兄弟利是+花球\n【兄弟】去男家房放袋+戴襟花', items: '兄弟利是\n攝影師利是\n兄弟襟花', note: '【禧爸】交房卡比兄弟', people: ['新郎','禧爸','Jeff','Jayden','David Lo','史','TC','發'], expanded: false
+        },
+        {
+            id: 10, startTime: '10:00', endTime: '10:20', place: '沙田凱悅酒店 - 出門房', title: '玩新郎', tasks: '【Ling、Bonnie】Hold遊戲\n【新郎、兄弟】一齊玩', items: '遊戲物資', note: '', people: ['新郎','新娘','Jeff','Jayden','David Lo','史','TC','發','Vicky','Bonnie','Ling','Anna','Chelsie'], expanded: false
+        },
+        {
+            id: 12, startTime: '10:35', endTime: '10:55', place: '沙田凱悅酒店 - 出門房', title: '女家敬茶、家庭合照', tasks: '【Anna】備茶+添茶/放紅棗蓮子\n【Vicky】拎托盤+上鏡遞茶\n【Bonnie】講吉利說話\n【Ling】影金器(連長輩樣)+貼label\n【Chelsie】記錄利是+袋利是+戴金器', items: '敬茶用品\nLabel\n金器袋\n利是袋', note: '', people: ['新郎','新娘','怡媽','怡爸', 'Anna', 'Vicky', 'Bonnie', 'Ling','Chelsie'], expanded: false
+        },
+        {
+            id: 26, startTime: '17:30', endTime: '18:15', place: '', title: '離場+前往逸東', tasks: '【Group 1: Vicky、Anna、Bonnie、Chelsie、Ling、發、David Lo、攝影師、化妝師】乘28座往逸東\n【Group 2: 新郎、新娘、TC、陳昆賸、王美玲】乘TC車往逸東\n【Group 3: 史、Jeff、Jayden、匡、澄、家人、賓客】乘65座x2往逸東', items: '行禮物資\n晚宴物資\n禮服', note: '', people: ['新郎','新娘','Jeff','Jayden','David Lo','史','TC','發','Vicky','Bonnie','Ling','Anna','Chelsie'], expanded: false
+        }
       ],
+      
       showScheduleModal: false,
-      showGoldModal: false,
-      showGiftModal: false,
       showContactModal: false,
       currentSchedule: {},
-      currentGold: {},
-      currentGift: {},
       currentContact: {},
       maleSide: ['新郎','禧媽','禧爸','Jeff','Jayden','David Lo','史','TC','發'],
       femaleSide: ['新娘','怡媽','怡爸','Vicky','Bonnie','Ling','Anna','Chelsie']
     }
   },
   computed: {
-    sortedScheduleList() {
-        // 獲取當前時間戳
-        const now = this.nowTick;
-        // 使用輔助函式將時間字串轉換為時間戳
-        const getTs = (timeStr) => this.getTimestampFromTime(timeStr, now);
-
-        let currentSchedule = null;
-        let nextSchedule = null;
-        let minNextStartTime = Infinity;
-
-        // 第一步：遍歷清單，找出「現在進行中」和「下一個」行程
+    uniqueResponsibles() {
+        const allPeople = new Set();
         this.scheduleList.forEach(s => {
-            const startTs = getTs(s.startTime);
-            let endTs = s.endTime ? getTs(s.endTime) : Infinity;
-
-            // 處理跨日行程 (結束時間早於開始時間, 例如 23:00~01:00)
-            if (s.endTime && endTs < startTs) {
-                endTs += 24 * 60 * 60 * 1000;
-            }
-
-            // A. 找出現在進行中的行程： start <= now < end
-            if (startTs <= now && now < endTs) {
-                currentSchedule = s;
-            }
-
-            // B. 找出下一個行程： start > now 且開始時間最近
-            if (startTs > now) {
-                if (startTs < minNextStartTime) {
-                    minNextStartTime = startTs;
-                    nextSchedule = s;
-                }
+            if (s.people && Array.isArray(s.people)) {
+                s.people.forEach(p => {
+                    if (p.trim()) {
+                        allPeople.add(p.trim());
+                    }
+                });
             }
         });
+        
+        const peopleArray = Array.from(allPeople);
 
-        // 第二步：使用自訂排序邏輯
-        return [...this.scheduleList].sort((a, b) => {
-            // 1. 最高優先級：現在進行中的行程
-            if (a === currentSchedule) return -3;
-            if (b === currentSchedule) return 3;
+        peopleArray.sort((a, b) => {
+            const indexA = this.customResponsibleOrder.indexOf(a);
+            const indexB = this.customResponsibleOrder.indexOf(b);
 
-            // 2. 第二優先級：下一個行程
-            if (a === nextSchedule) return -2;
-            if (b === nextSchedule) return 2;
+            if (indexA !== -1 && indexB !== -1) {
+                return indexA - indexB; 
+            } 
+            if (indexA !== -1) return -1;
+            if (indexB !== -1) return 1;
 
-            // 3. 剩餘行程：按時間順序排序 (數值越小越早)
-            const startA = getTs(a.startTime);
-            const startB = getTs(b.startTime);
-            
-            if (startA === startB) {
-                // 如果開始時間相同，按結束時間排 (結束時間早的優先)
-                const endA = a.endTime ? getTs(a.endTime) : Infinity;
-                const endB = b.endTime ? getTs(b.endTime) : Infinity;
-                return endA - endB;
-            }
-            return startA - startB;
+            return a.localeCompare(b);
         });
+
+        return peopleArray; 
     },
+
+    filteredScheduleList() {
+        let list = [...this.scheduleList];
+
+        if (this.responsibleFilter !== '全部') {
+            const filterName = this.responsibleFilter;
+            list = list.filter(s => 
+                s.people && Array.isArray(s.people) && s.people.includes(filterName)
+            );
+        }
+
+        list.sort((a, b) => {
+            return a.startTime.localeCompare(b.startTime);
+        });
+
+        return list;
+    },
+    
     allExecutors() {
         return [...this.maleSide, ...this.femaleSide]
     },
-    sortedScheduleList() {
-        return [...this.scheduleList].sort((a,b)=>a.startTime.localeCompare(b.startTime))
-    },
-    totalGiftAmount() {
-        return this.gifts.filter(x=>!x.deleted).reduce((s,g)=>s+(Number(g.amount)||0), 0)
-    },
+    
     filteredContacts() {
-        // 1. 取得搜尋關鍵字並轉為小寫 (去除前後空白)
         const search = this.contactSearch ? this.contactSearch.trim().toLowerCase() : '';
 
-        // 2. 邏輯判斷：
-        // 如果有輸入搜尋文字 -> 搜尋「所有」聯絡人 (忽略 contactFilter 分類)
         if (search) {
             return this.contacts.filter(c => 
                 (c.name?.toLowerCase() || '').includes(search) || 
                 (c.role?.toLowerCase() || '').includes(search) ||
-                (c.phone?.toLowerCase() || '').includes(search) // 順便加入了電話號碼搜尋，方便您用電話找人
+                (c.phone?.toLowerCase() || '').includes(search) 
             );
         }
 
-        // 3. 如果搜尋框是空的 -> 依照原本邏輯，只顯示目前分頁 (如：男家/女家)
         return this.contacts.filter(c => c.side === this.contactFilter);
-    },
-    // 座位表篩選與排序
-    filteredSeatTables() {
-        // 先排序
-        let tables = [...this.seatTables].sort((a,b) => a.id - b.id);
-        
-        if(!this.seatSearch) return tables;
-
-        const s = this.seatSearch.toLowerCase();
-
-        return tables.filter(t => 
-            // 修正：確保 t.id 轉為字串以進行包含檢查
-            String(t.id).includes(s) || 
-            (t.category && t.category.toLowerCase().includes(s)) ||
-            t.guests.some(g => 
-                // 修正：使用 ?. 鏈接確保在 name/role 為 null/undefined 時不拋出錯誤
-                (g.name?.toLowerCase() || '').includes(s) || 
-                (g.role?.toLowerCase() || '').includes(s)
-            )
-        )
     }
   },
   methods: {
-    /**
-     * 新增：將 HH:MM 字串轉換成今天日期的時間戳 (Timestamp)
-     * @param {string} timeStr - 時間字串，格式為 HH:MM
-     * @param {number} referenceDate - 參考的時間戳 (通常是 this.nowTick)
-     * @returns {number | null} - 毫秒時間戳
-     */
     getTimestampFromTime(timeStr, referenceDate) {
         if (!timeStr) return null;
-        // 使用參考日期（nowTick）來設定日期部分
         const date = new Date(referenceDate);
         const [hours, minutes] = timeStr.split(':').map(Number);
         
-        // 設定時/分/秒/毫秒
         date.setHours(hours, minutes, 0, 0);
         return date.getTime();
     },
+
+    // ==================== 玩新郎 (Game) ====================
+    addGamePin(num) {
+        if (this.gamePin.length < 4) {
+            this.gamePin += num.toString();
+        }
+    },
+    clearGamePin() {
+        this.gamePin = '';
+    },
+    submitGamePin() {
+        if (this.gamePin === '5555') {
+            this.gameUnlocked = true;
+        } else {
+            alert('密碼錯誤！這只是給姊妹團的專屬環節哦 😈');
+            this.gamePin = '';
+        }
+    },
+
     // ==================== 聯絡人邏輯 ====================
     getContactTagClass(c) {
         return c==='男家'?'bg-blue-200/50 text-blue-800':c==='女家'?'bg-pink-200/50 text-pink-800':'bg-emerald-200/50 text-emerald-800';
@@ -1173,21 +685,12 @@ createApp({
                c==='女家'?'bg-gradient-to-r from-pink-100 to-pink-200 text-pink-600 shadow-sm':
                'bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-600 shadow-sm';
     },
-    getPersonColor(p){
-        // 粉紅色 (女家)
-        if(this.femaleSide.includes(p)) return 'bg-pink-400'; 
-        // 藍色 (男家)
-        if(this.maleSide.includes(p)) return 'bg-blue-400'; 
-        // 綠色 (其他)
-        return 'bg-emerald-400'; 
-    },
     openAddContact() {
         this.currentContact = { side: this.contactFilter, role: '', name: '', phone: '', deleted: false };
         this.modalTitle = '新增聯絡人';
         this.modalConfirmText = '新增';
         this.activeModal = 'addContact';
     },
-    
     openEditContact(contact) {
         this.currentContact = JSON.parse(JSON.stringify(contact));
         this.modalTitle = '編輯聯絡人';
@@ -1199,14 +702,12 @@ createApp({
         const contactToSave = { 
             ...this.currentContact, 
             id: this.currentContact.id || Date.now(), 
-            side: this.currentContact.side || '其他' // 確保有分類
+            side: this.currentContact.side || '其他' 
         };
 
         if (index !== -1) {
-            // Edit
             this.contacts.splice(index, 1, contactToSave);
         } else {
-            // Add
             this.contacts.push(contactToSave);
         }
         this.sync('contactList', this.contacts);
@@ -1220,92 +721,12 @@ createApp({
     },
     getWhatsAppLink(phone) {
         if (!phone) return '#';
-        
-        // 確保電話號碼為純數字。這是最關鍵的一步！
         let cleaned = phone.replace(/[^\d]/g, ''); 
-        
-        // 檢查是否已包含區號，如果號碼是 8 位且沒有區號，則預設加上香港區號 852
         if (cleaned.length === 8) {
             cleaned = '852' + cleaned;
         }
-
         return `https://wa.me/${cleaned}`;
     },
-
-    // ==================== 座位表邏輯 ====================
-    openEditSeatModal(table) {
-        // 找到 index 確保更新正確
-        this.editingTableIndex = this.seatTables.findIndex(t => t.id === table.id);
-        // 確保 deep copy，防止修改未儲存
-        this.currentTable = JSON.parse(JSON.stringify(table));
-        this.modalTitle = `編輯 Table ${table.id}`;
-        this.modalConfirmText = '儲存變更';
-        // 修正：最後再設定 activeModal
-        this.activeModal = 'editSeatTable';
-    },
-    addSeatTable() {
-        // 自動產生下一個 ID
-        const maxId = this.seatTables.reduce((max, t) => Math.max(max, t.id), 0);
-        // 修正：確保 id 為 Number
-        this.currentTable = { id: Number(maxId) + 1, category: '新圍桌', guests: [] };
-        this.editingTableIndex = -1; // -1 表示新增
-        this.modalTitle = '新增一圍';
-        this.modalConfirmText = '建立';
-        // 修正：最後再設定 activeModal
-        this.activeModal = 'editSeatTable';
-    },
-    saveSeatTable() {
-        if (!this.currentTable.id || !this.currentTable.category) {
-            alert('桌號和分類名稱不可為空');
-            return;
-        }
-
-        // 檢查 ID 是否重複 (除了編輯自己)
-        const isIdDuplicate = this.seatTables.some((t, index) => 
-            t.id === this.currentTable.id && index !== this.editingTableIndex
-        );
-
-        if (isIdDuplicate) {
-            alert('桌號重複，請使用其他號碼。');
-            return;
-        }
-
-        if (this.editingTableIndex > -1) {
-            // 編輯現有桌子
-            this.seatTables.splice(this.editingTableIndex, 1, this.currentTable);
-        } else {
-            // 新增桌子
-            this.seatTables.push(this.currentTable);
-        }
-
-        this.sync('seatTables', this.seatTables);
-        this.closeModal();
-    },
-    addGuestToCurrent() {
-        this.currentTable.guests.push({name: '', role: '', present: false});
-    },
-    removeGuestFromCurrent(idx) {
-        this.currentTable.guests.splice(idx, 1);
-    },
-    deleteCurrentTable() {
-        if(confirm('確定要刪除整圍桌子資料嗎？此動作無法復原。')) {
-            if(this.editingTableIndex > -1) {
-                this.seatTables.splice(this.editingTableIndex, 1);
-            }
-            this.saveInfo();
-            this.closeModal();
-        }
-    },
-    // 修正：確保 tableId 類型一致性
-    toggleGuestPresent(tableId, guestIdx) {
-        // 修正：使用 String() 轉換確保類型比較正確
-        const table = this.seatTables.find(t => String(t.id) === String(tableId));
-        if (table && table.guests[guestIdx]) {
-            table.guests[guestIdx].present = !table.guests[guestIdx].present;
-            this.saveInfo();
-        }
-    },
-
 
     // ==================== 物資清單邏輯 ====================
     toggleList(listName) {
@@ -1358,56 +779,6 @@ createApp({
         this.showManageSubMenu = false;
     },
 
-    // ==================== 影相次序邏輯 ====================
-    getPhotoCatColor(cat) {
-        if(cat==='male') return 'bg-blue-400';
-        if(cat==='female') return 'bg-pink-400';
-        return 'bg-emerald-400';
-    },
-    openAddPhotoList() {
-        this.currentPhotoList = { title: '新的影相列表', groups: [] };
-        this.photoEditingIndex = -1;
-        this.modalTitle = '新增影相列表';
-        this.modalConfirmText = '儲存';
-        this.activeModal = 'editPhotoList';
-    },
-    openEditPhotoList(index) {
-        this.photoEditingIndex = index;
-        this.currentPhotoList = JSON.parse(JSON.stringify(this.photoSchedules[index]));
-        this.modalTitle = '編輯影相列表';
-        this.modalConfirmText = '儲存';
-        this.activeModal = 'editPhotoList';
-    },
-    addPhotoGroup() {
-        this.currentPhotoList.groups.push({ name: '', count: null, cat: 'other' });
-    },
-    removePhotoGroup(index) {
-        this.currentPhotoList.groups.splice(index, 1);
-    },
-    savePhotoList() {
-        if (this.currentPhotoList.title === '') {
-            alert('請輸入列表標題');
-            return;
-        }
-
-        if (this.photoEditingIndex === -1) {
-            this.photoSchedules.push(this.currentPhotoList);
-        } else {
-            this.photoSchedules[this.photoEditingIndex] = this.currentPhotoList;
-        }
-
-        this.sync('photoSchedules', this.photoSchedules);
-        this.closeModal();
-    },
-    deletePhotoList() {
-        if(confirm('確定要刪除整個影相列表嗎？')) {
-            this.photoSchedules.splice(this.photoEditingIndex, 1);
-            this.sync('photoSchedules', this.photoSchedules);
-            this.closeModal();
-        }
-    },
-
-
     // ==================== 行程邏輯 ====================
     togglePerson(p) {
         if (!this.currentSchedule.people) {
@@ -1428,21 +799,11 @@ createApp({
     },
     openAddSchedule() {
         this.currentSchedule = { 
-            id: null, 
-            startTime: null, 
-            endTime: null, 
-            place: '', 
-            title: '', 
-            tasks: '', 
-            items: '', 
-            note: '', 
-            people: [],
-            expanded: true
+            id: null, startTime: null, endTime: null, place: '', title: '', tasks: '', items: '', note: '', people: [], expanded: true
         };
         this.showScheduleModal = true;
     },
     openEditSchedule(s) {
-        // Deep copy
         this.currentSchedule = JSON.parse(JSON.stringify(s)); 
         this.showScheduleModal = true;
     },
@@ -1466,111 +827,12 @@ createApp({
         this.initScheduleState();
     },
 
-    togglePhotoGroup(groupTitle) {
-    // 預設狀態為 true (收合)，然後切換
-    this.collapsedPhotoGroups[groupTitle] = !this.collapsedPhotoGroups[groupTitle];
-    },
-
-
-    // ==================== 金器邏輯 ====================
-    loadGoldImage(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                this.currentGold.image = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    },
-    openAddGold() {
-        // ID 邏輯修正: 不論軟刪除與否，永遠使用總長度+1，確保ID不會重複或變更
-        const nextId = this.golds.length + 1;
-        this.currentGold = { id: null, no: nextId, qty: 1, category: '手扼', from: '', side: '男家', image: '', deleted: false };
-        this.showGoldModal = true;
-    },
-    openEditGold(g) {
-        this.currentGold = JSON.parse(JSON.stringify(g));
-        this.showGoldModal = true;
-    },
-    saveGold() {
-        if (!this.currentGold.category) {
-            alert('類別為必選');
-            return;
-        }
-
-        if (!this.currentGold.id) {
-            this.currentGold.id = Date.now();
-            this.golds.push(this.currentGold);
-        } else {
-            const index = this.golds.findIndex(g => g.id === this.currentGold.id);
-            if (index !== -1) {
-                this.golds.splice(index, 1, this.currentGold);
-            }
-        }
-        this.sync('goldList', this.golds);
-        this.showGoldModal = false;
-    },
-    softDeleteGold(g) {
-        if(confirm(`確定刪除金器 #${g.no} (${g.category}) 嗎?`)) {
-            g.deleted = true;
-            this.sync('goldList', this.golds);
-        }
-    },
-    restoreGold(g) {
-        g.deleted = false;
-        this.sync('goldList', this.golds);
-    },
-
-
-    // ==================== 利是/禮物邏輯 ====================
-    openAddGift() {
-        const nextId = this.gifts.length + 1;
-        this.currentGift = { id: null, no: nextId, type: '利是', amount: null, qty: 1, from: '', side: '男家', desc: '', deleted: false };
-        this.showGiftModal = true;
-    },
-    openEditGift(g) {
-        this.currentGift = JSON.parse(JSON.stringify(g));
-        this.showGiftModal = true;
-    },
-    saveGift() {
-        if (!this.currentGift.no) {
-            alert('編號為必填');
-            return;
-        }
-
-        if (!this.currentGift.id) {
-            this.currentGift.id = Date.now();
-            this.gifts.push(this.currentGift);
-        } else {
-            const index = this.gifts.findIndex(g => g.id === this.currentGift.id);
-            if (index !== -1) {
-                this.gifts.splice(index, 1, this.currentGift);
-            }
-        }
-        this.sync('giftList', this.gifts);
-        this.showGiftModal = false;
-    },
-    softDeleteGift(g) {
-        if(confirm(`確定刪除 #${g.no} (${g.type}) 嗎?`)) {
-            g.deleted = true;
-            this.sync('giftList', this.gifts);
-        }
-    },
-    restoreGift(g) {
-        g.deleted = false;
-        this.sync('giftList', this.gifts);
-    },
-
-
     // ==================== 通用 Modal 確認邏輯 ====================
     closeModal() {
         this.activeModal = null;
-        this.currentTable = null;
         this.currentContact = {};
     },
     handleModalConfirm() {
-        // 物資表操作
         if(this.activeModal === 'addItem' && this.modalInput) {
             this.itemLists[this.modalSelectedList].push({ name: this.modalInput, checked: false });
         } else if(this.activeModal === 'addList' && this.modalInput) {
@@ -1582,17 +844,9 @@ createApp({
         } else if(this.activeModal === 'removeList' && this.modalSelectedList) {
             delete this.itemLists[this.modalSelectedList];
         } 
-        
-        // 座位表操作
-        else if (this.activeModal === 'editSeatTable') {
-            this.saveSeatTable();
-            return; // 不執行後續的 saveInfo 和 closeModal
-        } 
-        
-        // 聯絡人操作
         else if (this.activeModal === 'addContact' || this.activeModal === 'editContact') {
             this.saveContact();
-            return; // 不執行後續的 saveInfo 和 closeModal
+            return; 
         }
         
         this.saveInfo();
@@ -1602,7 +856,6 @@ createApp({
     // ==================== 通用功能 ====================
     saveInfo() {
         this.sync('wedding_items', this.itemLists);
-        this.sync('seatTables', this.seatTables);
     },
     isOngoing(s, e) {
         if(!s) return false;
@@ -1622,7 +875,6 @@ createApp({
         if(this.maleSide.includes(p)) return 'bg-blue-400';
         return 'bg-emerald-400';
     },
-    // 將數據同步到 LocalStorage
     sync(k, v){
         localStorage.setItem(k, JSON.stringify(v))
     },
@@ -1647,7 +899,6 @@ createApp({
         if(foundIdx !== -1) {
             sorted[foundIdx].expanded = true;
             this.scheduleList = sorted;
-            // 滾動到第一個進行中或未開始的行程
             this.$nextTick(() => {
                 const item = document.querySelector('.soft-glow') || document.querySelector('.relative.pl-6');
                 if (item) {
@@ -1656,34 +907,33 @@ createApp({
             });
         }
     },
-    downloadCSV(filename, headers, data){
-        const csvRows = [];
-        csvRows.push(headers.join(',')); 
+    scrollToCurrentSchedule() {
+        this.$nextTick(() => {
+            let target = document.getElementById('current-schedule-item');
 
-        for(const row of data) {
-            const values = row.map(String).map(s => `"${s.replace(/"/g, '""')}"`); // 處理逗號和引號
-            csvRows.push(values.join(','));
-        }
+            if (!target) {
+                const now = new Date();
+                const nowStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                
+                const upcoming = this.filteredScheduleList
+                    .filter(s => s.startTime > nowStr)
+                    .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-        const csvString = csvRows.join('\n');
-        const blob = new Blob(["\uFEFF" + csvString], { type: 'text/csv;charset=utf-8;' }); // 加入 BOM 以支援中文
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    },
-    exportGoldCSV(){
-        this.downloadCSV('gold.csv', ['編號','類別','數量','送出人','家系'], this.golds.filter(x=>!x.deleted).map(x=>[x.no, x.category, x.qty, x.from, x.side]))
-    },
-    exportGiftCSV(){
-        this.downloadCSV('gift.csv', ['編號','類別','金額','對象','家系','描述'], this.gifts.filter(x=>!x.deleted).map(x=>[x.no, x.type, x.amount, x.from, x.side, x.desc]))
+                if (upcoming.length > 0) {
+                    const nextId = upcoming[0].id;
+                    target = document.querySelector(`[data-id="${nextId}"]`);
+                }
+            }
+
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
     }
   },
   mounted() {
     // 載入 localStorage 數據
-    const storageItems = ['wedding_items', 'scheduleList', 'goldList', 'giftList', 'contactList', 'seatTables', 'photoSchedules'];
+    const storageItems = ['wedding_items', 'scheduleList', 'contactList'];
     
     storageItems.forEach(key => {
       const data = localStorage.getItem(key);
@@ -1691,14 +941,9 @@ createApp({
         try {
           const parsedData = JSON.parse(data);
           if(key === 'wedding_items') this.itemLists = parsedData;
-          // 行程數據故意不載入，以保留本次匯入的 CSV 資料
+          // 行程與聯絡人等可按需解開載入，此處保留預設不覆蓋 demo 資料
           // else if(key === 'scheduleList') this.scheduleList = parsedData;
-          else if(key === 'goldList') this.golds = parsedData;
-          else if(key === 'giftList') this.gifts = parsedData;
-          // 聯絡人列表故意不載入，以保留本次匯入的 Excel 資料
           // else if(key === 'contactList') this.contacts = parsedData; 
-          else if(key === 'seatTables') this.seatTables = parsedData.map(t => ({...t, id: Number(t.id)}));
-          else if(key === 'photoSchedules') this.photoSchedules = parsedData;
         } catch (e) {
           console.error(`Error parsing localStorage key ${key}:`, e);
         }
@@ -1707,16 +952,13 @@ createApp({
 
     this.initScheduleState();
     
-    // 每分鐘更新一次時間，用於行程高亮顯示
     setInterval(() => {
         this.nowTick = Date.now();
-        this.scheduleList = [...this.scheduleList]; // 觸發 Vue 更新
+        this.scheduleList = [...this.scheduleList]; 
+        if (this.tab === 'schedule') {
+            this.scrollToCurrentSchedule(); 
+        }
     }, 60000);
-    // 【優化 7-3】在 mounted 設置所有 photoSchedules 組別預設為收合
-  this.photoSchedules.forEach(group => {
-      // 預設將所有組別標記為收合 (true)
-      this.collapsedPhotoGroups[group.title] = true;
-  });
   }
 }).mount('#app')
 </script>
