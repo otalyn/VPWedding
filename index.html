@@ -11,7 +11,7 @@
 
 /* 紀念碑谷風格全域樣式 */
 body { 
-    background: linear-gradient(135deg, #c2fbdf 0%, #f8dd98 50%, #f4db8f 100%); 
+    background: linear-gradient(135deg, #a5f0cc 0%, #f3e796 50%, #f5d692 100%); 
     min-height: 100vh;
     min-height: 100svh;
     overflow: hidden; 
@@ -243,18 +243,16 @@ body {
         </div>
     </div>
 
-    <div v-if="tab==='game'" class="space-y-4">
+    <div v-if="tab==='game'" class="space-y-4 pb-10">
         <div v-if="!gameUnlocked" class="flex flex-col items-center justify-center pt-10">
             <div class="text-center mb-6">
                 <div class="text-4xl mb-2">🔒</div>
                 <h2 class="text-xl font-black text-gray-700">解鎖環節</h2>
-                <p class="text-xs text-gray-500 mt-1">請輸入姊妹團專屬密碼</p>
+                <p class="text-xs text-gray-500 mt-1">請輸入姊妹團專專屬密碼</p>
             </div>
-            
             <div class="flex justify-center gap-4 mb-8">
                 <div v-for="i in 4" :key="i" class="w-4 h-4 rounded-full border-2 border-orange-400 transition-colors duration-200" :class="gamePin.length >= i ? 'bg-orange-500 shadow-inner' : 'bg-white/50'"></div>
             </div>
-            
             <div class="grid grid-cols-3 gap-4 w-64">
                 <button v-for="n in [1,2,3,4,5,6,7,8,9]" :key="n" @click="addGamePin(n)" class="w-16 h-16 rounded-full bg-white/80 shadow-sm border border-orange-100 text-2xl font-black text-gray-700 active:scale-95 active:bg-orange-100 transition-all">{{ n }}</button>
                 <button @click="clearGamePin()" class="w-16 h-16 rounded-full bg-red-50/80 shadow-sm border border-red-100 text-sm font-bold text-red-500 active:scale-95 transition-all">清除</button>
@@ -264,21 +262,111 @@ body {
         </div>
         
         <div v-else class="space-y-4 animate-fade-in">
-            <div v-for="(card, index) in gameCards" :key="index" class="glass-card rounded-[2rem] p-5 transition-all overflow-hidden border border-orange-100 shadow-sm">
-                <div @click="card.expanded = !card.expanded" class="flex justify-between items-center cursor-pointer">
-                    <h3 class="font-black text-lg text-orange-700">{{ card.title }}</h3>
-                    <div class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-orange-400 font-bold transition-transform duration-300" :class="card.expanded ? 'rotate-180' : ''">▼</div>
+            
+            <div class="glass-card rounded-[2rem] p-5 border border-orange-100 shadow-sm">
+    <div @click="game1Expanded = !game1Expanded" class="flex justify-between items-center cursor-pointer">
+        <h3 class="font-black text-lg text-orange-700">🎯 Game 1: Robot Check</h3>
+        <div class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-orange-400 font-bold transition-transform duration-300" :class="game1Expanded ? 'rotate-180' : ''">▼</div>
+    </div>
+    
+    <div v-show="game1Expanded" class="mt-4 pt-4 border-t border-orange-200/50 space-y-6">
+        <div class="bg-orange-50/50 p-4 rounded-xl text-sm text-gray-700 leading-relaxed border border-orange-100">
+            <span class="font-bold text-orange-600">📝 玩法：</span><br>
+            而家姊妹攞住兩塊Robot Check板，新郎哥要指示兄弟喺正確答案度貼上tick號，但唔可以直接講number/上下左右，我地每一題都會有指定嘅表達方式嘅
+        </div>
+        
+        <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="bg-orange-400 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">Q1</span>
+                    <span class="text-[13px] font-bold text-gray-600">新娘鍾意嘅卡通人物 (動作)</span>
                 </div>
-                <div v-show="card.expanded" class="mt-4 pt-4 border-t border-orange-200/50 text-sm text-gray-600 space-y-2">
-                    <p class="italic text-gray-400">詳細內容等待姊妹團輸入及優化...</p>
+                <img src="https://lh3.googleusercontent.com/u/0/d/1a8yp8JHH67CC1Q7W5Y-94utNOjBG0RND" class="w-full h-auto rounded-xl shadow-sm border border-white bg-gray-100" alt="Q1">
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="bg-orange-400 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">Q2</span>
+                    <span class="text-[13px] font-bold text-gray-600">一齊睇過嘅戲 (動作)</span>
                 </div>
+                <img src="https://lh3.googleusercontent.com/u/0/d/1o13JQJvRc9Lwx__iktAetHFAoAJsTarE" class="w-full h-auto rounded-xl shadow-sm border border-white bg-gray-100" alt="Q2">
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="bg-orange-400 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">Q3</span>
+                    <span class="text-[13px] font-bold text-gray-600">慶祝週年紀念相 (普通話)</span>
+                </div>
+                <img src="https://lh3.googleusercontent.com/u/0/d/1HQeFzPOYDizHTytpsUO0HdQGhXYwus1V" class="w-full h-auto rounded-xl shadow-sm border border-white bg-gray-100" alt="Q3">
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="bg-orange-400 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">Q4</span>
+                    <span class="text-[13px] font-bold text-gray-600">新娘見到menu有就會想食嘅食物 (英文)</span>
+                </div>
+                <img src="https://lh3.googleusercontent.com/u/0/d/1bDNq_5OOpFO2YVuT7iePg9K4OO8sh7eD" class="w-full h-auto rounded-xl shadow-sm border border-white bg-gray-100" alt="Q4">
             </div>
         </div>
     </div>
+</div>
+
+            <div class="glass-card rounded-[2rem] p-5 border border-orange-100 shadow-sm">
+                <div @click="game2Expanded = !game2Expanded" class="flex justify-between items-center cursor-pointer">
+                    <h3 class="font-black text-lg text-orange-700">🎭 Game 2: 家好月圓</h3>
+                    <div class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-orange-400 font-bold transition-transform duration-300" :class="game2Expanded ? 'rotate-180' : ''">▼</div>
+                </div>
+                <div v-show="game2Expanded" class="mt-4 pt-4 border-t border-orange-200/50 space-y-3 text-sm text-gray-700">
+                    <p>眾所周知我地新娘子有一套好鍾意嘅TVB劇集嘅，請問新郎知唔知係邊套呢？
+                        <br>既然新娘子最鍾意《家好月圓》，咁就請你地演出一下氹佢開心啦！</br>
+                    </p>
+                    </p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-600 bg-white/40 p-3 rounded-xl border border-white/50">
+                        <li>播放主題曲副歌選段</li>
+                        <li>3 分鐘時間預備並演出</li>
+                        <li>即時上傳影片至兄弟姊妹 Group</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-[2rem] p-5 border border-red-100 shadow-sm bg-red-50/30">
+                <div @click="punishExpanded = !punishExpanded" class="flex justify-between items-center cursor-pointer">
+                    <h3 class="font-black text-lg text-red-700">☠️ 懲罰環節</h3>
+                    <div class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-400 font-bold transition-transform duration-300" :class="punishExpanded ? 'rotate-180' : ''">▼</div>
+                </div>
+                <div v-show="punishExpanded" class="mt-4 pt-4 border-t border-red-200/50 space-y-3 text-sm">
+                    <div class="space-y-3">
+                        <div class="p-3 bg-white/60 rounded-xl border border-red-100">
+                            <p class="font-bold text-red-800 mb-1">🎓 大學回憶</p>
+                            <p class="text-gray-600">新郎新娘係大學相識，咁就請新郎作一段大學生最鍾意嘅**四七**嚟讚新娘</p>
+                        </div>
+                        <div class="p-3 bg-white/60 rounded-xl border border-red-100">
+                            <p class="font-bold text-red-800 mb-1">🕺 Mirror 魂</p>
+                            <p class="text-gray-600">新娘曾經好鍾意 Mirror，咁就請新郎同兄弟一齊跳一次 **Mirror Ignited** 副歌（即場播住 MV）</p>
+                        </div>
+                        <div class="p-3 bg-white/60 rounded-xl border border-red-100">
+                            <p class="font-bold text-red-800 mb-1">💆🏻 泰式按摩</p>
+                            <p class="text-gray-600">新郎同新娘去泰國旅行嘅時候好鍾意做泰式按摩，咁就請兄弟幫新郎做 **1 分鐘泰式按摩**，要做到新郎有猙獰嘅表情</p>
+                        </div>
+                        <div class="p-3 bg-white/60 rounded-xl border border-red-100">
+                            <p class="font-bold text-red-800 mb-1">👾 呆呆獸化身</p>
+                            <p class="text-gray-600">新郎同新娘屋企養咗隻呆呆獸，呆呆獸今日嚟唔到，咁就請新郎戴**呆呆獸面具**同新娘講一段情深說話</p>
+                        </div>
+                        <div class="p-3 bg-white/60 rounded-xl border border-red-100">
+                            <p class="font-bold text-red-800 mb-1">👬🏻 永結同心</p>
+                            <p class="text-gray-600">新郎同兄弟做返新郎新娘**結婚相嘅動作**（共 5 張）</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 
     <div v-if="tab==='info'">
       <a href="https://docs.google.com/spreadsheets/d/1LLIA5CHwH2UZVtbwljNW1wxcVNdwTBYoZhrzlR2Gbao/edit?gid=0#gid=0" target="_blank" class="flex items-center justify-center gap-2 w-full bg-white/80 border border-green-200 rounded-2xl p-4 mb-5 text-sm font-black text-green-700 shadow-sm transition-transform active:scale-95 hover:bg-green-50">
-          <span class="text-xl">📊</span> 完整統籌試算表 (Google Sheet)
+          <span class="text-xl">📊</span> 完整婚禮Rundown (Google Sheet)
       </a>
 
       <div class="flex p-1 bg-white/40 rounded-2xl mb-6 gap-1 border border-white/50 shadow-inner">
@@ -464,19 +552,53 @@ createApp({
       responsibleFilter: '全部',
       isFilterCollapsed: true,
       customResponsibleOrder: [
-            '新娘', 'Vicky', 'Bonnie', 'Ling', 'Anna', 'Chelsie', 
-            '新郎', '發', '史', 'Jeff', 'Jayden', 'David Lo', 'TC', 
-            '怡媽', '怡爸', '禧媽', '禧爸'
+            '新娘', 'Anna', 'Christy', 'Ling', 'Bonnie', 'Vincy', 
+            '新郎', '達', 'Ivan', 'Alvin', 'Aaron', 'Ryan', 
+            '晴媽', '晴爸', '鵬媽', '鵬爸'
         ],
 
       // === 玩新郎 (Game) 相關 ===
       gameUnlocked: false,
       gamePin: '',
-      gameCards: [
-          { title: 'Game 1', expanded: true },
-          { title: 'Game 2', expanded: true },
-          { title: '懲罰', expanded: true }
-      ],
+      game1Expanded: true, 
+        game2Expanded: true,
+        punishExpanded: true,
+      // 在 data() 回傳的物件中找到 gameCards，替換成這段：
+gameCards: [
+  { 
+    title: 'Game 1: Robot Check', 
+    expanded: true,
+    description: '玩法：而家姊妹攞住兩塊 robot check 板，新郎哥要指示兄弟喺正確答案度貼上 tick 號，但唔可以直接講號碼/上下左右，我地每一題都會有指定嘅表達方式嘅。',
+    questions: [
+      { q: '1. 新娘曾經鍾意過嘅卡通人物', method: '動作', img: 'Game1第一題.jpg' },
+      { q: '2. 兩人一齊睇過既戲', method: '動作', img: 'Game1第二題.jpg' },
+      { q: '3. 慶祝週年紀念既相', method: '普通話', img: 'Game1第三題.jpg' },
+      { q: '4. 新娘見到 menu 有就會想食既食物', method: '英文', img: 'Game1第四題.jpg' }
+    ]
+  },
+  { 
+    title: 'Game 2: 家好月圓', 
+    expanded: true,
+    description: '眾所周知我地新娘子有一套好鍾意嘅 TVB 劇集嘅，請問新郎知唔知係邊套呢？<br>既然新娘子最鍾意《家好月圓》，咁就請你地演出一下氹佢開心啦！',
+    notes: [
+      '姊妹播放《家好月圓》主題曲副歌選段',
+      '俾新郎 & 兄弟 3 分鐘時間預備，然後演出',
+      '即時 send 條片上兄弟姊妹 group'
+    ]
+  },
+  { 
+    title: '懲罰環節', 
+    expanded: true,
+    description: '所有懲罰都係同新郎新娘嘅回憶有關～',
+    punishments: [
+      '新郎新娘係大學相識，咁就請新郎作一段大學生最鍾意嘅**四七**嚟讚新娘',
+      '新娘曾經好鍾意 Mirror，咁就請新郎同兄弟一齊跳一次 **Mirror Ignited** 副歌（即場播住 MV）',
+      '新郎同新娘去泰國旅行嘅時候好鍾意做泰式按摩，咁就請兄弟幫新郎做 **1 分鐘泰式按摩**，要做到新郎有猙獰嘅表情',
+      '新郎同新娘屋企養咗隻呆呆獸，呆呆獸今日嚟唔到，咁就請新郎戴**呆呆獸面具**同新娘講一段情深說話',
+      '新郎同兄弟做返新郎新娘**結婚相嘅動作**（共 5 張）'
+    ]
+  }
+],
 
       // === 旅遊巴行程 (Bus) ===
       busSchedule: [
@@ -575,8 +697,8 @@ createApp({
       showContactModal: false,
       currentSchedule: {},
       currentContact: {},
-      maleSide: ['新郎','禧媽','禧爸','Jeff','Jayden','David Lo','史','TC','發'],
-      femaleSide: ['新娘','怡媽','怡爸','Vicky','Bonnie','Ling','Anna','Chelsie']
+      maleSide: ['新郎','達','Ivan','Alvin','Aaron','Ryan','鵬媽','鵬爸'],
+      femaleSide: ['新娘','Anna','Christy','Ling','Bonnie','Ling','Vincy','晴媽','晴爸'],
     }
   },
   computed: {
