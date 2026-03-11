@@ -645,18 +645,18 @@ gameCards: [
       // === 聯絡人資料 ===
       contactSearch: '',
       contacts: [
-          { side: '男家', role: '新郎', name: 'H', phone: '', deleted: false },
-          { side: '男家', role: '伴郎．兄弟', name: 'F', phone: '', deleted: false },
-          { side: '男家', role: '兄弟（婚禮統籌）', name: 'S', phone: '', deleted: false },
-          { side: '男家', role: '兄弟', name: 'DL', phone: '', deleted: false },
-          { side: '男家', role: '兄弟', name: 'J', phone: '', deleted: false },
-          { side: '男家', role: '兄弟', name: 'J', phone: '', deleted: false },
+          { side: '男家', role: '新郎', name: 'P', phone: '', deleted: false },
+          { side: '男家', role: '兄弟', name: 'T', phone: '', deleted: false },
+          { side: '男家', role: '兄弟', name: 'I', phone: '', deleted: false },
+          { side: '男家', role: '兄弟', name: 'A', phone: '', deleted: false },
+          { side: '男家', role: '兄弟', name: 'A', phone: '', deleted: false },
+          { side: '男家', role: '兄弟', name: 'R', phone: '', deleted: false },
           { side: '女家', role: '新娘', name: 'V', phone: '', deleted: false },
-          { side: '女家', role: '伴娘．姊妹', name: 'V', phone: '', deleted: false },
           { side: '女家', role: '姊妹', name: 'A', phone: '', deleted: false },
-          { side: '女家', role: '姊妹', name: 'B', phone: '', deleted: false },
           { side: '女家', role: '姊妹', name: 'C', phone: '', deleted: false },
+          { side: '女家', role: '姊妹', name: 'B', phone: '', deleted: false },
           { side: '女家', role: '姊妹', name: 'L', phone: '', deleted: false },
+          { side: '女家', role: '姊妹', name: 'V', phone: '', deleted: false },
           { side: '其他', role: '逸東酒店', name: 'Katy', phone: '68084055', deleted: false },
           { side: '其他', role: '恆寶（旅遊巴公司）', name: 'Apple', phone: '65557418', deleted: false },
           { side: '其他', role: 'Wemember', name: 'May Chu', phone: '69241730', deleted: false },
@@ -675,26 +675,113 @@ gameCards: [
       // === 行程資料 ===
       scheduleList: [
         {
-            id: 1, startTime: '05:30', endTime: '', place: '沙田凱悅酒店 - 出門房', title: '【新娘】 化妝 - 出門房', tasks: '【新娘】比化妝師利是', items: '紅睡衣\n化妝師利是', note: '', people: ['新娘'], expanded: false
+            id: 1, 
+            startTime: '05:45', 
+            endTime: '', 
+            place: '九龍海逸君綽酒店 - 出門房', 
+            title: '【新娘】 化妝', 
+            tasks: '【新娘】比化妝師利是', 
+            items: '化妝師利是\n【新娘】著紅色晨袍、紅拖鞋\n拖板' , 
+            note: '', people: ['新娘'], 
+            expanded: false
         },
         {
-            id: 2, startTime: '06:00', endTime: '06:45', place: '沙田凱悅酒店 - 出門房', title: '【怡媽、姊妹】化妝 - 出門房', tasks: '【怡媽】化妝\n【Vicky】化妝+戴手花', items: '手花', note: '', people: ['怡媽','Vicky'], expanded: false
+            id: 2, 
+            startTime: '06:30', 
+            endTime: '07:15', 
+            place: '九龍海逸君綽酒店 - 出門房', 
+            title: '【姊妹】【晴媽】化妝', 
+            tasks: '【Vincy】化妝+戴手花\n【晴媽】化妝', 
+            items: '姊妹手花\n【晴爸媽】襟花', 
+            note: '', 
+            people: ['晴媽','Vincy'], 
+            expanded: false
         },
         {
-            id: 3, startTime: '06:45', endTime: '07:30', place: '沙田凱悅酒店 - 出門房', title: '【怡媽、姊妹】化妝、準備', tasks: '【Bonnie、Ling】化妝+戴手花\n【怡媽】準備金器俾攝影師影相\n【Vicky】準備帖(中西式各1張)+戒指+褂+褂鞋俾攝影師影\n【Anna、Chelsie】準備敬茶物資+煲水+清洗', items: '姊妹手花\n敬茶物資(茶具、紅棗、蓮子、茶葉、紙杯、跪墊1套)\n褂 褂鞋', note: '', people: ['怡媽','Vicky','Bonnie','Ling','Anna','Chelsie'], expanded: false
+            id: 3, 
+            startTime: '06:30', 
+            endTime: '07:00', 
+            place: '九龍海逸君綽酒店 - 入門房', 
+            title: '【新郎】化妝、叫外賣', 
+            tasks: '【新郎】化妝', 
+            items: '【新郎】著馬褂、皮鞋', 
+            note: '化妝前叫新郎新娘+姊妹+晴爸媽外賣', 
+            people: ['新郎'], 
+            expanded: false
         },
         {
-            id: 8, startTime: '09:15', endTime: '10:00', place: '沙田凱悅酒店 - 酒店樓下', title: '【兄弟】集合+合照', tasks: '【攝影師Calvin Mak】到酒店樓下\n【新郎】比攝影師+兄弟利是+花球\n【兄弟】去男家房放袋+戴襟花', items: '兄弟利是\n攝影師利是\n兄弟襟花', note: '【禧爸】交房卡比兄弟', people: ['新郎','禧爸','Jeff','Jayden','David Lo','史','TC','發'], expanded: false
+            id: 4, 
+            startTime: '07:15', 
+            endTime: '08:00', 
+            place: '九龍海逸君綽酒店 - 出門房', 
+            title: '【女家】早餐、化妝、預備', 
+            tasks: '【Christy】【Anna】化妝+戴手花\n【Vincy】【Ling】【Bonnie】食早餐+預備新郎game物資\n【晴爸】【晴媽】食早餐\n【新郎】化妝後攞外賣+分發到出門房&入門房', 
+            items: '姊妹手花\n新郎game物資', 
+            note: '', 
+            people: ['新郎','達','Anna','Christy','Ling','Bonnie','Vincy','晴媽','晴爸'], 
+            expanded: false
         },
         {
-            id: 10, startTime: '10:00', endTime: '10:20', place: '沙田凱悅酒店 - 出門房', title: '玩新郎', tasks: '【Ling、Bonnie】Hold遊戲\n【新郎、兄弟】一齊玩', items: '遊戲物資', note: '', people: ['新郎','新娘','Jeff','Jayden','David Lo','史','TC','發','Vicky','Bonnie','Ling','Anna','Chelsie'], expanded: false
+            id: 5, 
+            startTime: '07:00', 
+            endTime: '08:30', 
+            place: '九龍海逸君綽酒店 - 入門房', 
+            title: '【男家】早餐、化妝', 
+            tasks: '07:00-07:45【鵬媽】化妝@入門房\n07:45-08:30【靜蕙】化妝@入門房+戴手花\n【鵬爸媽】戴襟花+事前比定【鵬婆婆】襟花鵬媽\n【達】叫兄弟+福建親戚+鵬爸媽早餐\n08:00【福建親戚】到入門房食早餐', 
+            items: '襟花', 
+            note: '', 
+            people: ['新郎','達','鵬媽','鵬爸'], 
+            expanded: false
         },
         {
-            id: 12, startTime: '10:35', endTime: '10:55', place: '沙田凱悅酒店 - 出門房', title: '女家敬茶、家庭合照', tasks: '【Anna】備茶+添茶/放紅棗蓮子\n【Vicky】拎托盤+上鏡遞茶\n【Bonnie】講吉利說話\n【Ling】影金器(連長輩樣)+貼label\n【Chelsie】記錄利是+袋利是+戴金器', items: '敬茶用品\nLabel\n金器袋\n利是袋', note: '', people: ['新郎','新娘','怡媽','怡爸', 'Anna', 'Vicky', 'Bonnie', 'Ling','Chelsie'], expanded: false
+            id: 6, 
+            startTime: '08:00', 
+            endTime: '08:45', 
+            place: '九龍海逸君綽酒店 - 出門房', 
+            title: '【姊妹】化妝', 
+            tasks: '【Bonnie】【Ling】化妝+戴手花\n【Christy】【Vincy】食早餐\n【Anna】【Christy】早餐後預備敬茶物資+煲水裝暖水壺+清洗\n【Vincy】早餐後預備請帖、褂、褂扇、褂鞋、婚鞋、戒指比攝影師影相\n【所有姊妹、晴爸、晴媽】收拾所有個人物品，放出門房\n【Bonnie】收集3間細房房卡+keep出門房所有房卡', 
+            items: '姊妹手花\n請帖、戒指、褂、褂鞋、褂扇、婚鞋\n新郎game物資\n敬茶物資（水煲、陶瓷茶具、跪墊、托盤、紅棗、蓮子、茶葉）', 
+            note: '', 
+            people: ['新娘','Anna','Christy','Ling','Bonnie','Vincy','晴媽','晴爸'], 
+            expanded: false
         },
         {
-            id: 26, startTime: '17:30', endTime: '18:15', place: '', title: '離場+前往逸東', tasks: '【Group 1: Vicky、Anna、Bonnie、Chelsie、Ling、發、David Lo、攝影師、化妝師】乘28座往逸東\n【Group 2: 新郎、新娘、TC、陳昆賸、王美玲】乘TC車往逸東\n【Group 3: 史、Jeff、Jayden、匡、澄、家人、賓客】乘65座x2往逸東', items: '行禮物資\n晚宴物資\n禮服', note: '', people: ['新郎','新娘','Jeff','Jayden','David Lo','史','TC','發','Vicky','Bonnie','Ling','Anna','Chelsie'], expanded: false
-        }
+            id: 7, 
+            startTime: '08:15', 
+            endTime: '08:45', 
+            place: '九龍海逸君綽酒店樓下', 
+            title: '【新郎】【兄弟】攝影師到場&酒店樓下拍照', 
+            tasks: '【攝影師波記Team】到酒店樓下\n【兄弟】著好衫酒店樓下集合+戴襟花\n【新郎】比攝影師利是+兄弟利是+帶紅花球', 
+            items: '【鵬爸媽】襟花\n【靜蕙】手花', 
+            note: '【兄弟】如需換衫8:00前到入門房\n【福建親戚】留房食早餐', 
+            people: ['新郎','達','Ivan','Alvin','Aaron','Ryan'], 
+            expanded: false
+        },
+        {
+            id: 8, 
+            startTime: '08:45', 
+            endTime: '10:15', 
+            place: '九龍海逸君綽酒店 - 出門房', 
+            title: '【女家】拍換褂照', 
+            tasks: '【攝影師波記Team】8:45到出門房\n【新娘】派姊妹利是+攞姊妹禮物影相+玩閃片\n【晴媽】幫新娘著上身+講心底話\n【姊妹】幫新娘著下身+講心底話', 
+            items: '攝影師利是\n姊妹利是\n姊妹禮物\n閃片\n褂、褂鞋', 
+            note: '【男家】食早餐+休息@入門房/達房間', 
+            people: ['新娘','Anna','Christy','Ling','Bonnie','Vincy','晴媽','晴爸'], 
+            expanded: false
+        },
+        {
+            id: 9, 
+            startTime: '10:00', 
+            endTime: '11:00', 
+            place: '深圳灣口岸', 
+            title: '【達】東莞親戚旅遊巴', 
+            tasks: '【達】安排東莞親戚上旅遊巴', 
+            items: '', 
+            note: '', 
+            people: ['達'], 
+            expanded: false
+        },
+        
       ],
       
       showScheduleModal: false,
@@ -702,7 +789,7 @@ gameCards: [
       currentSchedule: {},
       currentContact: {},
       maleSide: ['新郎','達','Ivan','Alvin','Aaron','Ryan','鵬媽','鵬爸'],
-      femaleSide: ['新娘','Anna','Christy','Ling','Bonnie','Ling','Vincy','晴媽','晴爸'],
+      femaleSide: ['新娘','Anna','Christy','Ling','Bonnie','Vincy','晴媽','晴爸'],
     }
   },
   computed: {
