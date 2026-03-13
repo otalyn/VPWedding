@@ -213,35 +213,45 @@ body {
     </div>
 
     <div v-if="tab==='bus'" class="space-y-4 px-2">
-        <div class="relative border-l-2 border-blue-300 ml-4 space-y-8">
-            <div v-for="(bus, index) in busSchedule" :key="index" class="relative pl-6">
-                <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-blue-400 shadow-md border-2 border-white"></div>
-                <div class="bg-white/70 rounded-2xl p-4 shadow-sm relative">
-                    <div class="text-xs text-blue-600 font-black mb-1 tracking-wider">{{ bus.time }} 出發</div>
-                    <div class="font-bold text-gray-700 text-base mb-3 leading-tight">
-                        <span class="text-gray-500 text-sm">由</span> {{ bus.from }} <br/>
-                        <span class="text-gray-500 text-sm">至</span> <span class="text-indigo-600">{{ bus.to }}</span>
+    <div class="relative border-l-2 border-blue-300 ml-4 space-y-8">
+        <div v-for="(bus, index) in busSchedule" :key="index" class="relative pl-6">
+            <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-blue-400 shadow-md border-2 border-white"></div>
+            
+            <div class="bg-white/70 rounded-2xl p-4 shadow-sm relative overflow-hidden">
+                
+                <div class="absolute top-4 right-4 flex flex-col items-end">
+                    <span class="text-[9px] text-gray-400 font-bold tracking-wider mb-0.5">負責人</span>
+                    <span class="bg-blue-100/80 text-blue-700 text-[10px] px-2 py-0.5 rounded-lg font-black border border-blue-200/50 shadow-sm">
+                        {{ bus.contact || '未定' }}
+                    </span>
+                </div>
+
+                <div class="text-xs text-blue-600 font-black mb-1 tracking-wider">{{ bus.time }} 出發</div>
+                
+                <div class="font-bold text-gray-700 text-base mb-3 leading-tight pr-16">
+                    <span class="text-gray-500 text-sm">由</span> {{ bus.from }} <br/>
+                    <span class="text-gray-500 text-sm">至</span> <span class="text-indigo-600">{{ bus.to }}</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-2 text-[11px] bg-white/50 p-3 rounded-xl border border-blue-50">
+                    <div class="col-span-2 flex items-center gap-1 border-b border-gray-100 pb-1 mb-1">
+                        <span class="text-gray-400 font-bold min-w-[50px]">對象:</span> 
+                        <span class="font-bold text-gray-700">{{ bus.target }}</span>
                     </div>
-                    
-                    <div class="grid grid-cols-2 gap-2 text-[11px] bg-white/50 p-3 rounded-xl border border-blue-50">
-                        <div class="col-span-2 flex items-center gap-1 border-b border-gray-100 pb-1 mb-1">
-                            <span class="text-gray-400 font-bold min-w-[50px]">對象:</span> 
-                            <span class="font-bold text-gray-700">{{ bus.target }}</span>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-gray-400 font-bold">車型及數量:</span> 
-                            <span class="font-bold text-gray-700">{{ bus.type }} <span class="text-blue-500">× {{ bus.qty }}</span></span>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-gray-400 font-bold">車牌/司機:</span> 
-                            <span class="font-mono font-bold text-gray-700">{{ bus.plate }}</span>
-                        </div>
+                    <div class="flex flex-col">
+                        <span class="text-gray-400 font-bold">車型及數量:</span> 
+                        <span class="font-bold text-gray-700">{{ bus.type }} <span class="text-blue-500">× {{ bus.qty }}</span></span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-gray-400 font-bold">車牌/司機:</span> 
+                        <span class="font-mono font-bold text-gray-700">{{ bus.plate }}</span>
                     </div>
                 </div>
             </div>
-            <div v-if="busSchedule.length === 0" class="text-center text-gray-400 pt-10">尚未新增旅遊巴班次</div>
         </div>
+        <div v-if="busSchedule.length === 0" class="text-center text-gray-400 pt-10">尚未新增旅遊巴班次</div>
     </div>
+</div>
 
     <div v-if="tab==='game'" class="space-y-4 pb-10">
         <div v-if="!gameUnlocked" class="flex flex-col items-center justify-center pt-10">
@@ -622,14 +632,14 @@ gameCards: [
 
       // === 旅遊巴行程 (Bus) ===
       busSchedule: [
-          { time: '10:00', from: '深圳灣口岸', to: '九龍海逸君綽酒店', target: '東莞親戚', type: '49座', qty: 1, plate: '待定 (TBC)' },
-          { time: '15:30', from: '九龍海逸君綽酒店', to: '九龍灣國際交易中心', target: '新人、兄弟姊妹、工作人員', type: '65座', qty: 1, plate: '待定 (TBC)' },
-          { time: '16:10', from: '九龍海逸君綽酒店', to: '九龍灣國際交易中心', target: '福建親戚、東莞親戚、雙方父母', type: '65座', qty: 1, plate: '待定 (TBC)' },
-          { time: '16:50', from: '九龍灣站', to: '九龍灣國際交易中心', target: '賓客', type: '65座', qty: 1, plate: '待定 (TBC)' },
-          { time: '18:50', from: '九龍灣站', to: '九龍灣國際交易中心', target: '賓客', type: '65座', qty: 1, plate: '待定 (TBC)' },
-          { time: '22:15', from: '九龍灣國際交易中心', to: '九龍灣站', target: '賓客', type: '60座', qty: 3, plate: '待定 (TBC)' },
-          { time: '22:15', from: '九龍灣國際交易中心', to: '深圳灣口岸', target: '東莞親戚', type: '49座', qty: 1, plate: '待定 (TBC)' },
-      ],
+    { time: '10:00', from: '深圳灣口岸', to: '九龍海逸君綽酒店', target: '東莞親戚', type: '49座', qty: 1, plate: '待定 (TBC)', contact: '達' },
+    { time: '15:30', from: '九龍海逸君綽酒店', to: '九龍灣國際交易中心', target: '新人、兄弟姊妹、工作人員', type: '65座', qty: 1, plate: '待定 (TBC)', contact: 'Ivan' },
+    { time: '16:10', from: '九龍海逸君綽酒店', to: '九龍灣國際交易中心', target: '福建親戚、東莞親戚、雙方父母', type: '65座', qty: 1, plate: '待定 (TBC)', contact: '達' },
+    { time: '16:50', from: '九龍灣站', to: '九龍灣國際交易中心', target: '賓客', type: '65座', qty: 1, plate: '待定 (TBC)', contact: 'Ivan' },
+    { time: '18:50', from: '九龍灣站', to: '九龍灣國際交易中心', target: '賓客', type: '65座', qty: 1, plate: '待定 (TBC)', contact: 'Ivan' },
+    { time: '22:15', from: '九龍灣國際交易中心', to: '九龍灣站', target: '賓客', type: '60座', qty: 3, plate: '待定 (TBC)', contact: 'Ivan, Alvin' },
+    { time: '22:15', from: '九龍灣國際交易中心', to: '深圳灣口岸', target: '東莞親戚', type: '49座', qty: 1, plate: '待定 (TBC)', contact: '達' },
+],
 infoSubTab: 'tea',
       // === 敬茶名單 (Tea) ===
       teaList: [
