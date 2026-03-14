@@ -212,22 +212,27 @@ body {
       <button @click="openAddSchedule" class="fab fixed bottom-24 right-8 w-14 h-14 rounded-full bg-gradient-to-br from-violet-400 to-fuchsia-400 text-white text-3xl shadow-lg z-40">+</button>
     </div>
 
-    <div v-if="tab==='bus'" class="space-y-4 px-2">
+<div v-if="tab==='bus'" class="space-y-4 px-2">
     <div class="relative border-l-2 border-blue-300 ml-4 space-y-8">
         <div v-for="(bus, index) in busSchedule" :key="index" :data-bus-id="index" class="relative pl-6">
             <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-blue-400 shadow-md border-2 border-white"></div>
             
-            <div class="bg-white/70 rounded-2xl p-4 shadow-sm relative overflow-hidden">
+            <div class="bg-white/70 rounded-2xl p-4 shadow-sm relative overflow-hidden border border-white/50">
                 
-                <div class="absolute top-4 right-4 flex flex-col items-end">
-                    <span class="text-[9px] text-gray-400 font-bold tracking-wider mb-0.5">負責人</span>
-                    <span class="bg-blue-100/80 text-blue-700 text-[10px] px-2 py-0.5 rounded-lg font-black border border-blue-200/50 shadow-sm">
-                        {{ bus.contact || '未定' }}
-                    </span>
+                <div class="absolute top-3 right-3 flex flex-col items-end gap-2">
+                    <button @click="toggleBusEdit(index)" 
+                            class="text-[10px] px-2 py-0.5 rounded-full border border-blue-200 bg-white/80 font-bold text-blue-500 active:scale-95 transition-all">
+                        {{ bus.isEditing ? '✅ 儲存' : '✏️ 編輯' }}
+                    </button>
+                    <div class="flex flex-col items-end">
+                        <span class="text-[9px] text-gray-400 font-bold tracking-wider mb-0.5">負責人</span>
+                        <span class="bg-blue-100/80 text-blue-700 text-[10px] px-2 py-0.5 rounded-lg font-black border border-blue-200/50">
+                            {{ bus.contact || '未定' }}
+                        </span>
+                    </div>
                 </div>
 
                 <div class="text-xs text-blue-600 font-black mb-1 tracking-wider">{{ bus.time }} 出發</div>
-                
                 <div class="font-bold text-gray-700 text-base mb-3 leading-tight pr-16">
                     <span class="text-gray-500 text-sm">由</span> {{ bus.from }} <br/>
                     <span class="text-gray-500 text-sm">至</span> <span class="text-indigo-600">{{ bus.to }}</span>
@@ -242,9 +247,23 @@ body {
                         <span class="text-gray-400 font-bold">車型及數量:</span> 
                         <span class="font-bold text-gray-700">{{ bus.type }} <span class="text-blue-500">× {{ bus.qty }}</span></span>
                     </div>
+                    
                     <div class="flex flex-col">
                         <span class="text-gray-400 font-bold">車牌/司機:</span> 
-                        <span class="font-mono font-bold text-gray-700">{{ bus.plate }}</span>
+                        <input v-if="bus.isEditing" v-model="bus.plate" 
+                               class="mt-1 text-xs bg-white border border-blue-200 rounded px-1 py-0.5 outline-none focus:border-blue-400">
+                        <span v-else class="font-mono font-bold text-gray-700">{{ bus.plate || '未填寫' }}</span>
+                    </div>
+
+                    <div class="col-span-2 mt-1 pt-1 border-t border-gray-100">
+                        <span class="text-gray-400 font-bold">備註:</span> 
+                        <div v-if="bus.isEditing" class="mt-1">
+                            <input v-model="bus.note" placeholder="輸入備註（如：車牌、司機電話）"
+                                   class="w-full text-xs bg-white border border-blue-200 rounded px-2 py-1 outline-none focus:border-blue-400">
+                        </div>
+                        <div v-else class="text-gray-600 font-medium">
+                            {{ bus.note || '---' }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -490,7 +509,7 @@ body {
          </div>
         
 
-    <div v-if="tab==='contact'" class="space-y-4">
+    <div v-if="tab==='contact'" class="flex-1 overflow-y-auto space-y-4">
       <input v-model="contactSearch" placeholder="搜尋姓名 / 身份" class="w-full rounded-2xl border-none bg-white/50 px-4 py-3 text-sm shadow-inner focus:ring-2 focus:ring-emerald-200" />
       <div class="flex gap-2 p-1 bg-white/30 rounded-xl overflow-x-auto">
         <button v-for="c in contactCats" :key="c" @click="contactFilter=c" :class="['whitespace-nowrap flex-1 py-2 px-3 rounded-lg text-xs font-bold transition', contactFilter===c ? getContactActiveColor(c) : 'text-gray-500']">{{ c }}</button>
@@ -667,14 +686,15 @@ gameCards: [
 
       // === 旅遊巴行程 (Bus) ===
       busSchedule: [
-    { time: '10:00', from: '深圳灣口岸', to: '九龍海逸君綽酒店', target: '東莞親戚', type: '49座', qty: 1, plate: '待定 (TBC)', contact: '達' },
-    { time: '15:30', from: '九龍海逸君綽酒店', to: '九龍灣國際交易中心', target: '新人、兄弟姊妹、工作人員', type: '65座', qty: 1, plate: '待定 (TBC)', contact: 'Ivan' },
-    { time: '16:10', from: '九龍海逸君綽酒店', to: '九龍灣國際交易中心', target: '福建親戚、東莞親戚、雙方父母', type: '65座', qty: 1, plate: '待定 (TBC)', contact: '達' },
-    { time: '16:50', from: '九龍灣站', to: '九龍灣國際交易中心', target: '賓客', type: '65座', qty: 1, plate: '待定 (TBC)', contact: 'Ivan' },
-    { time: '18:50', from: '九龍灣站', to: '九龍灣國際交易中心', target: '賓客', type: '65座', qty: 1, plate: '待定 (TBC)', contact: 'Ivan' },
-    { time: '22:15', from: '九龍灣國際交易中心', to: '九龍灣站', target: '賓客', type: '60座', qty: 3, plate: '待定 (TBC)', contact: 'Ivan, Alvin' },
-    { time: '22:15', from: '九龍灣國際交易中心', to: '深圳灣口岸', target: '東莞親戚', type: '49座', qty: 1, plate: '待定 (TBC)', contact: '達' },
+    { time: '10:00', from: '深圳灣口岸', to: '九龍海逸君綽酒店', target: '東莞親戚', type: '49座', qty: 1, plate: '待定 (TBC)', contact: '達' , note: '', isEditing: false },
+    { time: '15:30', from: '九龍海逸君綽酒店', to: '九龍灣國際交易中心', target: '新人、兄弟姊妹、工作人員', type: '65座', qty: 1, plate: '待定 (TBC)', contact: 'Ivan', note: 'Ivan 15:15 call司機\n*新郎新娘車上和司機確認全天行程\n*下車時提司機16:10回酒店接下一批', isEditing: false },
+    { time: '16:10', from: '九龍海逸君綽酒店', to: '九龍灣國際交易中心', target: '福建親戚、東莞親戚、雙方父母', type: '65座', qty: 1, plate: '待定 (TBC)', contact: '達' , note: '*下車時提司機16:50到九龍灣站', isEditing: false },
+    { time: '16:50', from: '九龍灣站', to: '九龍灣國際交易中心', target: '賓客', type: '65座', qty: 1, plate: '待定 (TBC)', contact: 'Ivan' , note: 'Ivan 16:45確認司機將到達候車地點\nIvan 16:55到停車場接賓客到33\n*提司機18:50到九龍灣站', isEditing: false },
+    { time: '18:50', from: '九龍灣站', to: '九龍灣國際交易中心', target: '賓客', type: '65座', qty: 1, plate: '待定 (TBC)', contact: 'Ivan' , note: 'Ivan 18:45確認司機將到達候車地點\nIvan 18:55到停車場接賓客到33', isEditing: false },
+    { time: '22:15', from: '九龍灣國際交易中心', to: '九龍灣站', target: '賓客', type: '60座', qty: 3, plate: '待定 (TBC)', contact: 'Ivan, Alvin', note: 'Ivan、Alvin帶賓客到停車場上車', isEditing: false },
+    { time: '22:15', from: '九龍灣國際交易中心', to: '深圳灣口岸', target: '東莞親戚', type: '49座', qty: 1, plate: '待定 (TBC)', contact: '達' , note: '達帶親戚到停車場上車', isEditing: false },
 ],
+
 infoSubTab: 'tea',
       // === 敬茶名單 (Tea) ===
       teaList: [
@@ -1680,6 +1700,23 @@ infoSubTab: 'tea',
         return date.getTime();
     },
 
+    toggleBusEdit(index) {
+        const bus = this.busSchedule[index];
+        if (bus.isEditing) {
+            // 如果是從「編輯」變回「儲存」
+            bus.isEditing = false;
+            this.saveBusData(); // 儲存到本地
+        } else {
+            // 進入編輯模式
+            bus.isEditing = true;
+        }
+    },
+
+    saveBusData() {
+        // 將最新的巴士清單存入 localStorage，防止重新整理後消失
+        localStorage.setItem('busSchedule_v1', JSON.stringify(this.busSchedule));
+    },
+
     scrollToNextBus() {
       const now = new Date();
       // 取得現在時間，格式為 "HH:mm" (例如 "16:00")
@@ -2011,6 +2048,18 @@ infoSubTab: 'tea',
         }
       }
     });
+
+    // 新增：讀取巴士數據
+    const savedBus = localStorage.getItem('busSchedule_v1');
+    if (savedBus) {
+        try {
+            this.busSchedule = JSON.parse(savedBus);
+            // 確保載入後所有項目的編輯狀態都是關閉的
+            this.busSchedule.forEach(b => b.isEditing = false);
+        } catch (e) {
+            console.error("Error loading bus data", e);
+        }
+    }
 
     this.initScheduleState();
     
