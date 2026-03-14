@@ -402,14 +402,22 @@ body {
 
 
     <div v-if="tab==='info'">
-      <a href="https://docs.google.com/spreadsheets/d/1LLIA5CHwH2UZVtbwljNW1wxcVNdwTBYoZhrzlR2Gbao/edit?gid=0#gid=0" target="_blank" class="flex items-center justify-center gap-2 w-full bg-white/80 border border-green-200 rounded-2xl p-4 mb-5 text-sm font-black text-green-700 shadow-sm transition-transform active:scale-95 hover:bg-green-50">
-          <span class="text-xl">📊</span> 完整婚禮Rundown (Google Sheet)
-      </a>
+      
+      <div class="flex gap-3 w-full mb-5">
+        <a href="https://docs.google.com/spreadsheets/d/1LLIA5CHwH2UZVtbwljNW1wxcVNdwTBYoZhrzlR2Gbao/edit?gid=0#gid=0" target="_blank" class="flex-1 flex flex-col items-center justify-center gap-1 bg-white/80 border border-green-200 rounded-2xl p-3 shadow-sm transition-transform active:scale-95 hover:bg-green-50">
+            <span class="text-[11px] font-black text-green-700">婚禮 Rundown</span>
+        </a>
+        <a href="https://drive.google.com/file/d/1_jGLvtY_A4MTlSGpOwkAXEStPrTi-4VP/view?usp=drive_link" target="_blank" class="flex-1 flex flex-col items-center justify-center gap-1 bg-white/80 border border-red-200 rounded-2xl p-3 shadow-sm transition-transform active:scale-95 hover:bg-red-50">
+            <span class="text-[11px] font-black text-red-700">PDF檔</span>
+        </a>
+      </div>
 
       <div class="flex p-1 bg-white/40 rounded-2xl mb-6 gap-1 border border-white/50 shadow-inner">
         <button @click="infoTab='items'" :class="infoTab==='items' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500'" class="flex-1 py-2 text-[11px] font-black rounded-xl transition-all">📦 物資表</button>
         <button @click="infoTab='tea'" :class="infoTab==='tea' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500'" class="flex-1 py-2 text-[11px] font-black rounded-xl transition-all">🍵 敬茶名單</button>
       </div>
+      
+      
       
       <div v-if="infoTab==='items'" class="space-y-3 relative">
         <div v-for="(list, listName) in itemLists" :key="listName" class="bg-white/30 rounded-2xl border border-white/50 overflow-hidden">
@@ -836,17 +844,92 @@ infoSubTab: 'tea',
 
       // === 物資清單 ===
       itemLists: { 
-        "上頭(去Hyatt)": [{name: "扁柏", checked: false}, {name: "碌柚葉", checked: false}, {name: "龍鳳餅", checked: false}, {name: "水果", checked: false}, {name: "利是", checked: false}, {name: "紅枱布", checked: false}, {name: "紅拖鞋", checked: false}, {name: "紅睡衣", checked: false}, {name: "上頭用品", checked: false}, {name: "蒸氣熨斗", checked: false}],
-        "出入門(去Hyatt) 女家": [{name: "HK窗囍字貼", checked: false}, {name: "囍字裝飾", checked: false}, {name: "影相用閃片", checked: false}, {name: "紙杯", checked: false}, {name: "香片茶包", checked: false}, {name: "蓮子、紅棗", checked: false}, {name: "攔門花球", checked: false}, {name: "金器List", checked: false}, {name: "金器Label", checked: false}, {name: "姊姊手花", checked: false}, {name: "紅傘", checked: false}, {name: "扇", checked: false}, {name: "樽裝水 x 12", checked: false}, {name: "收禮List", checked: false}, {name: "金器大袋", checked: false}, {name: "裙褂", checked: false}, {name: "褂鞋", checked: false}, {name: "氣球/氣泵", checked: false}, {name: "敬茶茶具(Hyatt)", checked: false}],
-        "出入門(去Hyatt) 男家": [{name: "兄弟襟花", checked: false}, {name: "新郎襟花", checked: false}, {name: "馬褂", checked: false}, {name: "花球", checked: false}],
-        "禮服(教堂+晚宴)": [{name: "晚宴婚紗", checked: false}, {name: "晚宴飾品", checked: false}, {name: "高踭鞋 (晚宴)", checked: false}, {name: "波鞋 (影相用)", checked: false}, {name: "教堂禮服", checked: false}, {name: "教堂飾品", checked: false}, {name: "領帶/煲呔 (3套)", checked: false}, {name: "皮鞋", checked: false}, {name: "襪子 (白/黑)", checked: false}, {name: "內衣", checked: false}, {name: "婚戒 (2枚)", checked: false}],
-        "化妝物資": [{name: "MUA的利是", checked: false}, {name: "MUA的午餐", checked: false}, {name: "MUA的椅子", checked: false}, {name: "化妝燈 (如果MUA有帶)", checked: false}, {name: "化妝水、乳液 (保養)", checked: false}, {name: "面膜", checked: false}, {name: "髮夾", checked: false}, {name: "假睫毛", checked: false}, {name: "隱形眼鏡", checked: false}, {name: "潤唇膏", checked: false}],
-        "晚宴/教堂佈置": [{name: "簽名布/簿/筆", checked: false}, {name: "油畫", checked: false}, {name: "迎賓區裝飾", checked: false}, {name: "Photo Booth道具", checked: false}, {name: "回禮禮物 (婚宴)", checked: false}, {name: "糖果/朱古力", checked: false}, {name: "教堂佈置物資", checked: false}, {name: "絲帶", checked: false}],
-        "雜項": [{name: "手機充電器", checked: false}, {name: "相機充電器", checked: false}, {name: "旅行熨斗", checked: false}, {name: "針線包", checked: false}, {name: "醫藥箱 (胃藥、頭痛藥)", checked: false}, {name: "即棄牙刷", checked: false}, {name: "漱口水", checked: false}, {name: "電腦", checked: false}],
-        "文具": [{name: "剪刀 x 2", checked: false}, {name: "𠝹刀 x 2", checked: false}, {name: "封箱膠紙 x 2", checked: false}, {name: "皺紋膠 x 3", checked: false}, {name: "雙面膠紙 x 2", checked: false}, {name: "無痕膠紙 x 2", checked: false}, {name: "Blue tape x 2", checked: false}, {name: "原子筆 x 4", checked: false}, {name: "黑色marker x 2", checked: false}, {name: "扣針 x 1盒", checked: false}, {name: "釘書機 x 1", checked: false}, {name: "萬能膠 x 2", checked: false}, {name: "Label紙 x 1疊", checked: false}, {name: "紅繩 x 1捲", checked: false}],
-        "新娘袋": [{name: "銀包", checked: false}, {name: "紙巾", checked: false}, {name: "姊妹利是", checked: false}, {name: "MUA利是", checked: false}, {name: "充電器", checked: false}, {name: "充電線", checked: false}, {name: "Con水", checked: false}, {name: "Con", checked: false}, {name: "藥", checked: false}, {name: "M巾", checked: false}, {name: "糖", checked: false}, {name: "眼鏡盒(連眼鏡)", checked: false}],
-        "新郎袋": [{name: "銀包", checked: false}, {name: "電話", checked: false}, {name: "紙巾", checked: false}, {name: "兄弟利是", checked: false}, {name: "開門利是", checked: false}, {name: "攝影師利是", checked: false}, {name: "酒店員工利是", checked: false}, {name: "備用利是", checked: false}, {name: "充電器", checked: false}, {name: "充電線", checked: false}, {name: "糖", checked: false}]
-      },
+        "新娘隨身": [
+    { name: "nude bra", checked: false },
+    { name: "雙面膠紙", checked: false },
+    { name: "針線包", checked: false },
+    { name: "後備Con", checked: false },
+    { name: "身分證", checked: false },
+    { name: "牙縫刷", checked: false },
+    { name: "濕紙巾", checked: false },
+    { name: "求婚戒指", checked: false }
+  ],
+  "新郎隨身": [
+    { name: "兄弟利是", checked: false },
+    { name: "律師利是", checked: false },
+    { name: "MC利是", checked: false },
+    { name: "Candy Corner利是", checked: false },
+    { name: "33職員利是", checked: false },
+    { name: "旅遊巴司機利是", checked: false },
+    { name: "身分證", checked: false },
+    { name: "牙縫刷", checked: false },
+    { name: "戒指盒+對戒", checked: false }
+  ],
+  "出門房": [
+    { name: "窗貼", checked: false },
+    { name: "喜字裝飾", checked: false },
+    { name: "攔門花球", checked: false },
+    { name: "新郎game物資", checked: false },
+    { name: "跪墊", checked: false },
+    { name: "陶瓷敬茶套裝", checked: false },
+    { name: "即熱電熱水壺", checked: false },
+    { name: "大紫色暖水壺", checked: false },
+    { name: "樽裝大紅袍", checked: false },
+    { name: "紅棗、蓮子", checked: false },
+    { name: "金器label紙", checked: false },
+    { name: "褂", checked: false },
+    { name: "褂扇", checked: false }
+  ],
+  "入門房": [
+    { name: "窗貼", checked: false },
+    { name: "喜字裝飾", checked: false },
+    { name: "紅花球（帶去接新娘）", checked: false },
+    { name: "馬褂", checked: false },
+    { name: "繡球", checked: false },
+    { name: "皮鞋", checked: false },
+    { name: "金器label紙", checked: false },
+    { name: "紅棗、蓮子", checked: false },
+    { name: "紙杯", checked: false },
+    { name: "拖板", checked: false },
+    { name: "文具", checked: false },
+    { name: "兄弟襟花", checked: false },
+    { name: "水for兄弟", checked: false }
+  ],
+  "外影": [
+    { name: "花球", checked: false },
+    { name: "鵬晴萬里牌", checked: false },
+    { name: "晴外影婚紗", checked: false },
+    { name: "晴婚鞋", checked: false },
+    { name: "晴平底鞋", checked: false },
+    { name: "泡泡槍", checked: false },
+    { name: "鵬白色西裝", checked: false },
+    { name: "氣球泵", checked: false },
+    { name: "鵬襟花", checked: false },
+    { name: "氣球", checked: false }
+  ],
+  "證婚": [
+    { name: "結婚相油畫", checked: false },
+    { name: "Love story油畫", checked: false },
+    { name: "婚紗相相簿X2", checked: false },
+    { name: "簽名布", checked: false },
+    { name: "簽名筆", checked: false },
+    { name: "Seating Plan紙本", checked: false },
+    { name: "文具", checked: false },
+    { name: "利是封", checked: false },
+    { name: "結婚證書套", checked: false },
+    { name: "戒指盒+對戒", checked: false },
+    { name: "誓言卡", checked: false },
+    { name: "用黎拋既花球", checked: false },
+    { name: "地花", checked: false }
+  ],
+  "晚宴": [
+    { name: "紙杯", checked: false },
+    { name: "紅棗、蓮子", checked: false },
+    { name: "label紙", checked: false },
+    { name: "鵬敬酒西裝", checked: false },
+    { name: "晴敬酒晚裝", checked: false }
+  ]
+},
       expandedLists: [],
       activeModal: null,
       modalTitle: '',
@@ -1294,7 +1377,7 @@ infoSubTab: 'tea',
 
     // ==================== 通用功能 ====================
     saveInfo() {
-        this.sync('wedding_items', this.itemLists);
+        this.sync('wedding_items_v2', this.itemLists);
     },
     isOngoing(s, e) {
         if(!s) return false;
@@ -1372,14 +1455,14 @@ infoSubTab: 'tea',
   },
   mounted() {
     // 載入 localStorage 數據
-    const storageItems = ['wedding_items', 'scheduleList', 'contactList'];
+    const storageItems = ['wedding_items_v2', 'scheduleList', 'contactList'];
     
     storageItems.forEach(key => {
       const data = localStorage.getItem(key);
       if(data) {
         try {
           const parsedData = JSON.parse(data);
-          if(key === 'wedding_items') this.itemLists = parsedData;
+          if(key === 'wedding_items_v2') this.itemLists = parsedData;
           // 行程與聯絡人等可按需解開載入，此處保留預設不覆蓋 demo 資料
           // else if(key === 'scheduleList') this.scheduleList = parsedData;
           // else if(key === 'contactList') this.contacts = parsedData; 
