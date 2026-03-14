@@ -919,7 +919,7 @@ infoSubTab: 'tea',
     { name: "結婚證書套", checked: false },
     { name: "戒指盒+對戒", checked: false },
     { name: "誓言卡", checked: false },
-    { name: "用黎拋既花球", checked: false },
+    { name: "用黎拋嘅花球", checked: false },
     { name: "地花", checked: false }
   ],
   "晚宴": [
@@ -928,6 +928,18 @@ infoSubTab: 'tea',
     { name: "label紙", checked: false },
     { name: "鵬敬酒西裝", checked: false },
     { name: "晴敬酒晚裝", checked: false }
+  ],
+  "晚宴後服裝執拾表": [
+    { name: "鵬白色西裝", checked: false },
+    { name: "鵬黑白色西裝", checked: false },
+    { name: "鵬酒紅色西裝", checked: false },
+    { name: "晴證婚婚紗", checked: false },
+    { name: "晴晚宴婚紗", checked: false },
+    { name: "晴銀色晚裝", checked: false },
+    { name: "晴爸爸西裝", checked: false },
+    { name: "晴媽媽白色旗袍", checked: false },
+    { name: "晴媽媽綠色晚裝", checked: false },
+    { name: "晴媽媽配件", checked: false }
   ]
 },
       expandedLists: [],
@@ -955,17 +967,15 @@ infoSubTab: 'tea',
           { side: '女家', role: '姊妹', name: 'B', phone: '', deleted: false },
           { side: '女家', role: '姊妹', name: 'L', phone: '', deleted: false },
           { side: '女家', role: '姊妹', name: 'V', phone: '', deleted: false },
-          { side: '其他', role: '逸東酒店', name: 'Katy', phone: '68084055', deleted: false },
-          { side: '其他', role: '恆寶（旅遊巴公司）', name: 'Apple', phone: '65557418', deleted: false },
-          { side: '其他', role: 'Wemember', name: 'May Chu', phone: '69241730', deleted: false },
-          { side: '其他', role: '回禮禮物', name: 'Codekey Cookies', phone: '95896101', deleted: false },
-          { side: '其他', role: '新娘化妝師', name: 'Candy Mak', phone: '61574889', deleted: false },
-          { side: '其他', role: '攝影師', name: 'Calvin Mak', phone: '54480122', deleted: false },
-          { side: '其他', role: '錄影師', name: 'Yu', phone: '59910511', deleted: false },
-          { side: '其他', role: '65座司機1', name: '65座司機1', phone: 'TBC', deleted: false },
-          { side: '其他', role: '65座司機2', name: '65座司機2', phone: 'TBC', deleted: false },
-          { side: '其他', role: '28座司機（時租12:15–18:15）', name: '28座司機', phone: 'TBC', deleted: false },
-          { side: '其他', role: '晚宴MC', name: 'Kathy', phone: '60748285', deleted: false },
+          { side: '其他', role: '旅遊巴司機', name: '49座司機', phone: '', deleted: false },
+          { side: '其他', role: '旅遊巴司機', name: '65座司機', phone: '', deleted: false },
+          { side: '其他', role: '旅遊巴司機', name: '60座司機A', phone: '', deleted: false },
+          { side: '其他', role: '旅遊巴司機', name: '60座司機B', phone: '', deleted: false },
+          { side: '其他', role: '旅遊巴司機', name: '60座司機C', phone: '', deleted: false },
+          { side: '其他', role: '攝影師波記', name: '攝影師波記', phone: '', deleted: false },
+          { side: '其他', role: '化妝師', name: 'Aqua', phone: '', deleted: false },
+          { side: '其他', role: '晚宴MC', name: 'Jimmy', phone: '', deleted: false },
+          { side: '其他', role: '證婚律師', name: '顏偉業律師', phone: '', deleted: false },
       ],
       contactCats: ['男家', '女家', '其他'],
       contactFilter: '女家',
@@ -1559,13 +1569,37 @@ infoSubTab: 'tea',
   },
 
   watch: {
-    tab(newTab) {
-      if (newTab === 'bus') {
-        // 當使用者切換到巴士分頁後，等待 DOM 渲染完成再執行捲動
+    // 監控主分頁切換
+    tab(v) {
+      // 1. 處理原本的自動定位邏輯
+      if (v === 'schedule') {
+        this.scrollToNextItem();
+      }
+      if (v === 'bus') {
         this.$nextTick(() => {
           this.scrollToNextBus();
         });
       }
+      
+      // 2. 新增：切換分頁時，強制將該頁面滾動到最頂
+      this.$nextTick(() => {
+        // 尋找當前顯示中且具備滾動條的容器
+        const container = document.querySelector('main .overflow-y-auto');
+        if (container) {
+          container.scrollTop = 0;
+        }
+      });
+    },
+
+    // 3. 新增：監控「資訊」頁內部的子分頁切換 (物資表/敬茶名單)
+    infoTab(v) {
+      this.$nextTick(() => {
+        // 找出資訊頁的滾動容器並置頂
+        const container = document.querySelector('main .overflow-y-auto');
+        if (container) {
+          container.scrollTop = 0;
+        }
+      });
     }
   },
 
