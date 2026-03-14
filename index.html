@@ -214,7 +214,7 @@ body {
 
     <div v-if="tab==='bus'" class="space-y-4 px-2">
     <div class="relative border-l-2 border-blue-300 ml-4 space-y-8">
-        <div v-for="(bus, index) in busSchedule" :key="index" class="relative pl-6">
+        <div v-for="(bus, index) in busSchedule" :key="index" :data-bus-id="index" class="relative pl-6">
             <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-blue-400 shadow-md border-2 border-white"></div>
             
             <div class="bg-white/70 rounded-2xl p-4 shadow-sm relative overflow-hidden">
@@ -1058,7 +1058,7 @@ infoSubTab: 'tea',
         {
             id: 8, 
             startTime: '08:45', 
-            endTime: '10:15', 
+            endTime: '10:10', 
             place: '九龍海逸君綽酒店 - 出門房', 
             title: '【女家】拍換褂照', 
             tasks: '【攝影師波記Team】8:45到出門房\n【新娘】派姊妹利是+攞姊妹禮物影相+玩閃片\n【晴媽】幫新娘著上身+講心底話\n【姊妹】幫新娘著下身+講心底話', 
@@ -1069,11 +1069,11 @@ infoSubTab: 'tea',
         },
         {
             id: 9, 
-            startTime: '10:00', 
-            endTime: '11:00', 
+            startTime: '09:45', 
+            endTime: '10:00', 
             place: '深圳灣口岸', 
             title: '【達】東莞親戚旅遊巴', 
-            tasks: '【達】安排東莞親戚上旅遊巴', 
+            tasks: '【達】call東莞親戚旅遊巴', 
             items: '', 
             note: '', 
             people: ['達'], 
@@ -1091,6 +1091,31 @@ infoSubTab: 'tea',
             people: ['達'], 
             expanded: false
         },
+        {
+            id: 11, 
+            startTime: '10:10', 
+            endTime: '10:15', 
+            place: '九龍海逸君綽酒店 - 出門房', 
+            title: '接新娘', 
+            tasks: '【新郎、兄弟】到達出門房 *帶紅花球\n【新郎】俾開門利是\n【Christy】【Vincy】攔門花球\n【Christy】keep開門利是，事後分發', 
+            items: '攔門花球\n開門利是', 
+            note: '', 
+            people: ['新郎','達','Ivan','Alvin','Aaron','Ryan','Christy','Vincy'], 
+            expanded: false
+        },
+        {
+            id: 12, 
+            startTime: '10:15', 
+            endTime: '10:35', 
+            place: '九龍海逸君綽酒店 - 出門房', 
+            title: '玩新郎', 
+            tasks: '【Bonnie】【Ling】hold遊戲', 
+            items: '遊戲物資', 
+            note: '*新娘坐出嚟一齊睇!', 
+            people: ['新郎','達','Ivan','Alvin','Aaron','Ryan','Ling','Bonnie','新娘'], 
+            expanded: false
+        },
+        
       ],
       
       showScheduleModal: false,
@@ -1101,6 +1126,18 @@ infoSubTab: 'tea',
       femaleSide: ['新娘','Anna','Christy','Ling','Bonnie','Vincy','晴媽','晴爸'],
     }
   },
+
+  watch: {
+    tab(newTab) {
+      if (newTab === 'bus') {
+        // 當使用者切換到巴士分頁後，等待 DOM 渲染完成再執行捲動
+        this.$nextTick(() => {
+          this.scrollToNextBus();
+        });
+      }
+    }
+  },
+
   computed: {
     uniqueResponsibles() {
         const allPeople = new Set();
@@ -1168,6 +1205,7 @@ infoSubTab: 'tea',
     }
   },
   methods: {
+
     getTimestampFromTime(timeStr, referenceDate) {
         if (!timeStr) return null;
         const date = new Date(referenceDate);
@@ -1175,6 +1213,43 @@ infoSubTab: 'tea',
         
         date.setHours(hours, minutes, 0, 0);
         return date.getTime();
+    },
+
+    scrollToNextBus() {
+      const now = new Date();
+      // 取得現在時間，格式為 "HH:mm" (例如 "16:00")
+      const nowStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                     now.getMinutes().toString().padStart(2, '0');
+
+      // 尋找第一個時間大於或等於現在時間的項目
+      const index = this.busSchedule.findIndex(bus => bus.time >= nowStr);
+
+      // 如果找到了，或是已經過了最後一班車
+      const targetIndex = index !== -1 ? index : this.busSchedule.length - 1;
+
+      // 使用 $nextTick 確保 DOM 已經渲染
+      this.$nextTick(() => {
+        const target = document.querySelector(`[data-bus-id="${targetIndex}"]`);
+        if (target) {
+          target.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+          
+          // 增加一個柔和的高亮動畫效果
+          const card = target.querySelector('.bg-white\\/70');
+          if (card) {
+            card.style.transition = 'all 0.5s ease';
+            card.style.ring = "4px solid #60a5fa"; // 藍色邊框
+            card.style.transform = "scale(1.02)";  // 稍微放大
+            
+            setTimeout(() => {
+              card.style.ring = "";
+              card.style.transform = "";
+            }, 2500);
+          }
+        }
+      });
     },
 
     // ==================== 玩新郎 (Game) ====================
@@ -1481,7 +1556,11 @@ infoSubTab: 'tea',
             this.scrollToCurrentSchedule(); 
         }
     }, 60000);
-  }
+
+    if (this.tab === 'bus') {
+        setTimeout(() => this.scrollToNextBus(), 500);
+    }
+}
 }).mount('#app')
 </script>
 
