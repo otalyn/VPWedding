@@ -272,7 +272,7 @@ body {
     </div>
 </div>
 
-    <div v-if="tab==='game'" class="space-y-4 pb-10">
+    <div v-if="tab==='game'" class="flex-1 overflow-y-auto space-y-4 pb-10">
         <div v-if="!gameUnlocked" class="flex flex-col items-center justify-center pt-10">
             <div class="text-center mb-6">
                 <div class="text-4xl mb-2">🔒</div>
@@ -422,7 +422,7 @@ body {
 
     <div v-if="tab==='info'">
       
-      <div class="flex gap-3 w-full mb-5">
+      <div class="flex-1 overflow-y-auto flex gap-3 w-full mb-5">
         <a href="https://docs.google.com/spreadsheets/d/1LLIA5CHwH2UZVtbwljNW1wxcVNdwTBYoZhrzlR2Gbao/edit?gid=0#gid=0" target="_blank" class="flex-1 flex flex-col items-center justify-center gap-1 bg-white/80 border border-green-200 rounded-2xl p-3 shadow-sm transition-transform active:scale-95 hover:bg-green-50">
             <span class="text-[11px] font-black text-green-700">婚禮 Rundown</span>
         </a>
@@ -1604,7 +1604,7 @@ infoSubTab: 'tea',
       // 2. 新增：切換分頁時，強制將該頁面滾動到最頂
       this.$nextTick(() => {
         // 尋找當前顯示中且具備滾動條的容器
-        const container = document.querySelector('main .overflow-y-auto');
+        const container = document.querySelectorAll('overflow-y-auto');
         if (container) {
           container.scrollTop = 0;
         }
@@ -1615,7 +1615,7 @@ infoSubTab: 'tea',
     infoTab(v) {
       this.$nextTick(() => {
         // 找出資訊頁的滾動容器並置頂
-        const container = document.querySelector('main .overflow-y-auto');
+        const container = document.querySelectorAll('overflow-y-auto');
         if (container) {
           container.scrollTop = 0;
         }
