@@ -1954,7 +1954,7 @@ infoSubTab: 'tea',
 
     // ==================== 通用功能 ====================
     saveInfo() {
-        this.sync('wedding_items_v2', this.itemLists);
+        this.sync('wedding_items_v3', this.itemLists);
     },
     isOngoing(s, e) {
         if(!s) return false;
@@ -2032,14 +2032,14 @@ infoSubTab: 'tea',
   },
   mounted() {
     // 載入 localStorage 數據
-    const storageItems = ['wedding_items_v2', 'scheduleList', 'contactList'];
+    const storageItems = ['wedding_items_v3', 'scheduleList', 'contactList'];
     
     storageItems.forEach(key => {
       const data = localStorage.getItem(key);
       if(data) {
         try {
           const parsedData = JSON.parse(data);
-          if(key === 'wedding_items_v2') this.itemLists = parsedData;
+          if(key === 'wedding_items_v3') this.itemLists = parsedData;
           // 行程與聯絡人等可按需解開載入，此處保留預設不覆蓋 demo 資料
           // else if(key === 'scheduleList') this.scheduleList = parsedData;
           // else if(key === 'contactList') this.contacts = parsedData; 
